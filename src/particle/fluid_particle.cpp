@@ -6,14 +6,38 @@
 //
 //
 
+#include <cassert>
+#include <cmath>
+
+#include <ParticleSystem/type/Vector.hpp>
+#include <ParticleSystem/type/Scalar.h>
 #include <ParticleSystem/particle/fluid_particle.hpp>
 
 void fj::FluidParticle::updateProperty()
 {
-    for (const std::weak_ptr<fj::Particle>& neighborParticle : *getNeighborParticlesPtr())
+    const fj::Scalar kSquaredEffectRange = getSquaredEffectRange();
+    fj::Scalar sum(0);
+    
+    for (const std::weak_ptr<fj::Particle>& neighborParticleWeakPtr : *getNeighborParticlesPtr())
     {
+        const std::shared_ptr<fj::Particle>& neighborParticle = neighborParticleWeakPtr.lock();
         
+        // 近傍粒子が突然消えていたらバグ
+        assert( !neighborParticleWeakPtr.expired() );
+        
+        const fj::Scalar kSquaredDistance = (this->getPosition() - neighborParticle->getPosition()).squaredNorm();
+        const fj::Scalar kC = kSquaredEffectRange - kSquaredDistance;
+        
+        sum += std::pow(kC, 3);
     }
+    
+    this->setRho(sum);
+    this->setPressure(this->getRho());
+    this->inverseItsRho();
+    
+//    p_p.rho = sum * SPH_PMASS * Poly6Kern;
+//    p_p.prs = ( p_p.rho - SPH_RESTDENSITY ) * SPH_INTSTIFF;
+//    p_p.rho = 1.0 / p_p.rho;
 }
 
 fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticle)
