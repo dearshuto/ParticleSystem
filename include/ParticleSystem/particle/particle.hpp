@@ -9,8 +9,8 @@
 #ifndef particle_hpp
 #define particle_hpp
 
+#include <vector>
 #include <ParticleSystem/type/Vector.hpp>
-
 
 namespace fj {
     class Particle;
@@ -18,6 +18,10 @@ namespace fj {
 
 class fj::Particle
 {
+    /**
+     * 循環参照を起こさないように弱い参照で保持された近傍粒子
+     */
+    typedef std::vector<std::weak_ptr<fj::Particle>> NeighborParticles;
 public:
     Particle()
     : Particle(fj::Vector(0, 0, 0))
@@ -31,6 +35,23 @@ public:
     : m_position(position)
     {
         
+    }
+    
+    /**
+     * 近傍粒子を追加する
+     */
+    void addNeighborParticle(std::shared_ptr<fj::Particle> neighborParticle)
+    {
+        // 引数はsharedポインタだが、保持はweakポインタで行うので循環参照は発生しない
+        m_neighborParticles.push_back(neighborParticle);
+    }
+    
+    /**
+     * 保持していた近傍粒子を解放する
+     */
+    void clearNeighborParticles()
+    {
+        m_neighborParticles.clear();
     }
     
     void applyForce(const fj::Vector& force)
@@ -57,7 +78,17 @@ public:
         return m_appliedForce;
     }
     
+    const fj::Particle::NeighborParticles& getNeighborParticles()const
+    {
+        return m_neighborParticles;
+    }
+    
 private:
+    /**
+     * 地震の位置から一定の範囲内に存在するパーティクル
+     */
+    fj::Particle::NeighborParticles m_neighborParticles;
+    
     fj::Vector m_position;
     fj::Vector m_appliedForce;
 };
