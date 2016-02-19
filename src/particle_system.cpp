@@ -12,6 +12,10 @@
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
     
+    if (hasActivatedGravity()) {
+        applyGravity();
+    }
+    
 }
 
 void fj::ParticleSystem::createParticleAt(const float x, const float y, const float z)
@@ -24,5 +28,11 @@ void fj::ParticleSystem::createParticleAt(const float x, const float y, const fl
 
 void fj::ParticleSystem::applyGravity()
 {
+    const fj::Vector kGravity = getGravity();
+    
+    for (std::shared_ptr<fj::Particle>& particle : *getParticlesPtr())
+    {
+        particle->applyForce(kGravity);
+    }
     
 }
