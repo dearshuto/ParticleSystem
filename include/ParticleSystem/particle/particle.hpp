@@ -31,11 +31,17 @@ public:
     
     virtual~Particle() = default;
     
+    
+    Particle(const fj::Particle& other) = delete;
+    Particle& operator=(const fj::Particle& other) = delete;
+    
+    
     Particle(const fj::Vector& position)
     : m_position(position)
     {
         
     }
+    
     
     /**
      * 近傍粒子を追加する
