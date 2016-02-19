@@ -65,6 +65,7 @@ public:
 private:
     fj::Scalar m_pressure;
     fj::Scalar m_rho;
+    fj::Scalar m_Poly6Kernel;
 };
 
 #endif /* fluid_particle_hpp */
