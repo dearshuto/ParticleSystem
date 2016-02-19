@@ -7,6 +7,7 @@
 //
 
 #include <cmath>
+#include <iostream>
 
 #include <ParticleSystem/type/Scalar.h>
 #include <ParticleSystem/type/Vector.hpp>
@@ -29,6 +30,11 @@ fj::Vector fj::Vector::to(const fj::Vector &other)const
 fj::Vector fj::Vector::from(const fj::Vector &other)const
 {
     return (*this) - other;
+}
+
+void fj::Vector::print()const
+{
+    std::cout << "(" << this->x() << ", " << this->y() << ", " << this->z() << std::endl;
 }
 
 fj::Vector operator*(const fj::Scalar num, const fj::Vector& vector)

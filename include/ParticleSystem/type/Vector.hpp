@@ -111,6 +111,8 @@ public:
     
     fj::Vector from(const fj::Vector& other)const;
     
+    void print()const;
+    
 // getters & setters
 public:
     fj::Scalar& x()
