@@ -1,8 +1,8 @@
 //
 //  particle_system.hpp
-//  blood-simulation
+//  ParticleSystem
 //
-//  Created by Shuto Shikama on 2016/02/13.
+//  Created by Shuto Shikama on 2016/02/19.
 //
 //
 
