@@ -54,6 +54,11 @@ public:
         m_neighborParticles.clear();
     }
     
+    /**
+     * 近傍から受ける力を全て足し合す
+     */
+    void accumulateForce();
+    
     void applyForce(const fj::Vector& force)
     {
         m_appliedForce += force;
@@ -65,6 +70,10 @@ public:
         m_appliedForce = fj::Vector(0, 0, 0);
         return temp;
     }
+    
+protected:
+    void accumulateForceByNeighborParticles();
+    virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     
 // getters
 public:
@@ -81,6 +90,12 @@ public:
     const fj::Particle::NeighborParticles& getNeighborParticles()const
     {
         return m_neighborParticles;
+    }
+    
+protected:
+    fj::Particle::NeighborParticles* getNeighborParticlesPtr()
+    {
+        return &m_neighborParticles;
     }
     
 private:
