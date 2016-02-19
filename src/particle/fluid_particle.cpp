@@ -8,7 +8,7 @@
 
 #include <ParticleSystem/particle/fluid_particle.hpp>
 
-fj::Vector fj::Particle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticle)
+fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticle)
 {
     return fj::Vector(0, 0, 0);
 }
