@@ -8,24 +8,30 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-FILE(GLOB_RECURSE headers
-	${CMAKE_SOURCE_DIR}/include/*.hpp
+FILE(GLOB_RECURSE particle_systems
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/*.h
+	${CMAKE_SOURCE_DIR}/src/*.cpp
 )
 
 FILE(GLOB_RECURSE particles
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/particle/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/particle/*.h
 	${CMAKE_SOURCE_DIR}/src/particle/*.cpp
 )
 
 FILE(GLOB_RECURSE types
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/type/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/type/*.h
 	${CMAKE_SOURCE_DIR}/src/type/*.cpp
 )
 
-SOURCE_GROUP(header FILES ${headers})
+SOURCE_GROUP(particle_system FILES ${particle_systems})
 SOURCE_GROUP(particle FILES ${particles})
 SOURCE_GROUP(type FILES ${types})
 
 add_library(particle_system STATIC
-	${headers}
+	${particle_systems}
 	${particles}
 	${types}
 )
