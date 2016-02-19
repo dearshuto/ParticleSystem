@@ -9,6 +9,7 @@
 #ifndef particle_hpp
 #define particle_hpp
 
+#include <cmath>
 #include <vector>
 #include <ParticleSystem/type/Vector.hpp>
 
@@ -31,11 +32,19 @@ public:
     
     virtual~Particle() = default;
     
+    
+    Particle(const fj::Particle& other) = delete;
+    Particle& operator=(const fj::Particle& other) = delete;
+    
+    
     Particle(const fj::Vector& position)
-    : m_position(position)
+    : m_effectRange(0.01)
+    , m_squaredEffectRange( std::pow(m_effectRange, 2) )
+    , m_position(position)
     {
         
     }
+    
     
     /**
      * 近傍粒子を追加する
@@ -54,6 +63,11 @@ public:
         m_neighborParticles.clear();
     }
     
+    /**
+     * 近傍から受ける力を全て足し合す
+     */
+    void accumulateForce();
+    
     void applyForce(const fj::Vector& force)
     {
         m_appliedForce += force;
@@ -65,6 +79,14 @@ public:
         m_appliedForce = fj::Vector(0, 0, 0);
         return temp;
     }
+    
+protected:
+    
+    virtual void updateProperty() = 0;
+    
+    void accumulateForceByNeighborParticles();
+    
+    virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     
 // getters
 public:
@@ -83,11 +105,31 @@ public:
         return m_neighborParticles;
     }
     
+    fj::Scalar getEffectRange()const
+    {
+        return m_effectRange;
+    }
+    
+    fj::Scalar getSquaredEffectRange()const
+    {
+        return m_squaredEffectRange;
+    }
+    
+protected:
+    fj::Particle::NeighborParticles* getNeighborParticlesPtr()
+    {
+        return &m_neighborParticles;
+    }
+    
 private:
     /**
      * 地震の位置から一定の範囲内に存在するパーティクル
      */
     fj::Particle::NeighborParticles m_neighborParticles;
+    
+    fj::Scalar m_effectRange;
+    
+    fj::Scalar m_squaredEffectRange;
     
     fj::Vector m_position;
     fj::Vector m_appliedForce;
