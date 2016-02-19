@@ -38,6 +38,13 @@ public:
         m_appliedForce += force;
     }
     
+    fj::Vector popApliedForce()
+    {
+        const fj::Vector temp = getForce();
+        m_appliedForce = fj::Vector(0, 0, 0);
+        return temp;
+    }
+    
 // getters
 public:
     const fj::Vector& getPosition()const
