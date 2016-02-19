@@ -31,6 +31,7 @@ public:
         
     }
     
+    void updateProperty()override;
     fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
 };
 

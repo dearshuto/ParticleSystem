@@ -78,7 +78,11 @@ public:
     }
     
 protected:
+    
+    virtual void updateProperty() = 0;
+    
     void accumulateForceByNeighborParticles();
+    
     virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     
 // getters

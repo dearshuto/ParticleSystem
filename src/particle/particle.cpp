@@ -10,6 +10,7 @@
 
 void fj::Particle::accumulateForce()
 {
+    updateProperty();
     accumulateForceByNeighborParticles();
 }
 
