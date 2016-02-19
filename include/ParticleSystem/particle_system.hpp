@@ -74,6 +74,11 @@ public:
         m_gravity = fj::Vector(x, y, z);
     }
     
+protected:
+    std::vector<std::shared_ptr<fj::Particle>>* getParticlesPtr()
+    {
+        return &m_particles;
+    }
     
 private:
     std::vector< std::shared_ptr<fj::Particle> > m_particles;
