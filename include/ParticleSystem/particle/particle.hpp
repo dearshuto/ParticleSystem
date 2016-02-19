@@ -9,6 +9,7 @@
 #ifndef particle_hpp
 #define particle_hpp
 
+#include <cmath>
 #include <vector>
 #include <ParticleSystem/type/Vector.hpp>
 
@@ -37,7 +38,8 @@ public:
     
     
     Particle(const fj::Vector& position)
-    : m_position(position)
+    :m_squaredEffectRange( std::pow(0.01, 2) )
+    , m_position(position)
     {
         
     }
@@ -102,6 +104,11 @@ public:
         return m_neighborParticles;
     }
     
+    fj::Scalar getSquaredEffectRange()const
+    {
+        return m_squaredEffectRange;
+    }
+    
 protected:
     fj::Particle::NeighborParticles* getNeighborParticlesPtr()
     {
@@ -113,6 +120,8 @@ private:
      * 地震の位置から一定の範囲内に存在するパーティクル
      */
     fj::Particle::NeighborParticles m_neighborParticles;
+    
+    fj::Scalar m_squaredEffectRange;
     
     fj::Vector m_position;
     fj::Vector m_appliedForce;
