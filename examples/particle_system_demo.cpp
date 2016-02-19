@@ -7,8 +7,10 @@
 //
 
 #include <iostream>
+
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
+#include <ParticleSystem/type/Scalar.h>
 
 int main(int argc, char** argv)
 {
@@ -22,9 +24,11 @@ int main(int argc, char** argv)
         }
     }
     
+    particleSystem.stepSimulation( fj::Scalar(1) / fj::Scalar(60) );
+    
     for (const auto& particle: particleSystem.getParticles())
     {
-        particle->getPosition().print();
+        particle->popApliedForce().print();
     }
     
     return EXIT_SUCCESS;
