@@ -40,7 +40,32 @@ void fj::FluidParticle::updateProperty()
 //    p_p.rho = 1.0 / p_p.rho;
 }
 
-fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticle)
+fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
 {
+    const fj::Scalar kEffectRange = getEffectRange();
+    const std::shared_ptr<fj::Particle> neighborParticle = neighborParticleWeakPtr.lock();
+    
+    // 近傍粒子が突然消えていたらバグ
+    assert( !neighborParticleWeakPtr.expired() );
+    
+    if ( this->getPosition() == neighborParticle->getPosition()) {
+        return fj::Vector(0, 0, 0);
+    }
+    
+    const fj::Vector kRelativePosition = this->getPosition() - neighborParticle->getPosition();
+    const fj::Scalar kDistance = kRelativePosition.norm();
+    
+    if (kEffectRange < kDistance)
+    {
+        return fj::Vector(0, 0, 0);
+    }
+    
+//    pterm = -0.5 * c * SpikyKern * (p_p.prs + p_pj->prs) / r;
+//    vterm = LapKern * SPH_VISC;
+//    fcurr = dr * pterm + (p_pj->vel - p_p.vel) * vterm;
+//    fcurr *= c * p_p.rho * p_pj->rho;
+//    force += fcurr;
+    
+    
     return fj::Vector(0, 0, 0);
 }
