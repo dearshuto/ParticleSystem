@@ -24,13 +24,35 @@ namespace fj {
 class fj::ParticleSystem
 {
 public:
-    ParticleSystem() = default;
+    ParticleSystem()
+    : m_gravity(0, 0, 0)
+    , m_hasActivatedGravity(false)
+    {
+        
+    }
+    
     ~ParticleSystem() = default;
     
     void stepSimulation(const float timestep);
     
     
     void createParticleAt(const float x, const float y, const float z);
+    
+    
+    bool hasActivatedGravity()const
+    {
+        return m_hasActivatedGravity;
+    }
+    
+    void enableGravity()
+    {
+        m_hasActivatedGravity = true;
+    }
+    
+    void disableGravity()
+    {
+        m_hasActivatedGravity = false;
+    }
     
 private:
     void applyGravity();
@@ -56,6 +78,7 @@ public:
 private:
     std::vector< std::shared_ptr<fj::Particle> > m_particles;
     fj::Vector m_gravity;
+    bool m_hasActivatedGravity;
 };
 
 #endif /* particle_system_hpp */
