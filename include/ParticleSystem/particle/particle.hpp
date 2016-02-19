@@ -33,6 +33,11 @@ public:
         
     }
     
+    void applyForce(const fj::Vector& force)
+    {
+        m_appliedForce += force;
+    }
+    
 // getters
 public:
     const fj::Vector& getPosition()const
@@ -40,8 +45,14 @@ public:
         return m_position;
     }
     
+    const fj::Vector& getForce()const
+    {
+        return m_appliedForce;
+    }
+    
 private:
     fj::Vector m_position;
+    fj::Vector m_appliedForce;
 };
 
 #endif /* particle_hpp */
