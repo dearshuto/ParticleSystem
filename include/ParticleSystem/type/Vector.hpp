@@ -48,6 +48,23 @@ public:
         return std::ref(*this);
     }
     
+    bool operator==(const fj::Vector& other)const
+    {
+        if (this->x() != other.x()) {
+            return false;
+        }
+        
+        if (this->y() != other.y()) {
+            return false;
+        }
+        
+        if (this->z() != other.z()) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     fj::Vector operator+(const fj::Vector& other)const
     {
         const fj::Scalar kX = this->x() + other.x();
