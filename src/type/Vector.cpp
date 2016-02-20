@@ -7,6 +7,7 @@
 //
 
 #include <cmath>
+#include <functional>
 #include <iostream>
 
 #include <ParticleSystem/type/Scalar.h>
@@ -20,6 +21,18 @@ fj::Scalar fj::Vector::squaredNorm()const
 fj::Scalar fj::Vector::norm()const
 {
     return std::sqrt( this->squaredNorm() );
+}
+
+void fj::Vector::normalize()
+{
+    (*this) / this->norm();
+}
+
+fj::Vector fj::Vector::normalized()const
+{
+    fj::Vector ret( std::cref(*this) );
+    ret.normalize();
+    return ret;
 }
 
 fj::Vector fj::Vector::to(const fj::Vector &other)const
