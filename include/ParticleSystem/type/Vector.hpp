@@ -124,6 +124,10 @@ public:
     
     fj::Scalar norm()const;
     
+    void normalize();
+    
+    fj::Vector normalized()const;
+    
     fj::Vector to(const fj::Vector& other)const;
     
     fj::Vector from(const fj::Vector& other)const;
