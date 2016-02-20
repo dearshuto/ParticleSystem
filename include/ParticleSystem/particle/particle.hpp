@@ -38,7 +38,8 @@ public:
     
     
     Particle(const fj::Vector& position)
-    : m_effectRange(0.01)
+    : m_radius(1)
+    , m_effectRange(0.01)
     , m_squaredEffectRange( std::pow(m_effectRange, 2) )
     , m_position(position)
     {
@@ -109,6 +110,11 @@ public:
         return m_neighborParticles;
     }
     
+    fj::Scalar getRadius()const
+    {
+        return m_radius;
+    }
+    
     fj::Scalar getEffectRange()const
     {
         return m_effectRange;
@@ -130,6 +136,8 @@ private:
      * 地震の位置から一定の範囲内に存在するパーティクル
      */
     fj::Particle::NeighborParticles m_neighborParticles;
+
+    fj::Scalar m_radius;
     
     fj::Scalar m_effectRange;
     

@@ -26,7 +26,6 @@ public:
     
     FineParticle(const fj::Vector& position)
     : fj::Particle(position)
-    , m_radius( fj::Scalar(1) )
     {
         
     }
@@ -37,15 +36,9 @@ public:
     
     fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
     fj::Vector affect(const fj::Particle& particle)const override;
-    
-public:
-    fj::Scalar getRadius()const
-    {
-        return m_radius;
-    }
-    
+
 private:
-    fj::Scalar m_radius;
+    fj::Vector computeVanderWaalsForce(const fj::Particle& particle)const;
 };
 
 #endif /* fine_particle_hpp */
