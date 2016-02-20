@@ -24,6 +24,7 @@ public:
     void updateProperty() override;
     
     fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
+    fj::Vector affect(const fj::Particle& particle)const override;
 };
 
 #endif /* fine_particle_hpp */

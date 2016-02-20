@@ -6,6 +6,10 @@
 //
 //
 
+#include <cassert>
+#include <functional>
+#include <memory>
+
 #include <ParticleSystem/type/Vector.hpp>
 #include <ParticleSystem/particle/fine_particle.hpp>
 
@@ -14,7 +18,10 @@ void fj::FineParticle::updateProperty()
     
 }
 
-fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticle)
+fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
 {
-    return fj::Vector(0, 0, 0);
+    const std::shared_ptr<fj::Particle> neighborParticle = neighborParticleWeakPtr.lock();
+    assert( neighborParticleWeakPtr.expired() );
+    
+    return neighborParticle->affect( std::cref(*this) );
 }
