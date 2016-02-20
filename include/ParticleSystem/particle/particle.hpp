@@ -116,6 +116,11 @@ public:
         return m_radius;
     }
     
+    void setRadius(const fj::Scalar radius)
+    {
+        m_radius = radius;
+    }
+    
     fj::Scalar getEffectRange()const
     {
         return m_effectRange;
