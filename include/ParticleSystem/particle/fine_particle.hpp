@@ -22,6 +22,17 @@ public:
     FineParticle() = default;
     ~FineParticle() = default;
     
+    FineParticle(const fj::FineParticle& other) = delete;
+    
+    FineParticle(const fj::Vector& position)
+    : fj::Particle(position)
+    , m_radius( fj::Scalar(1) )
+    {
+        
+    }
+    
+    FineParticle& operator=(const fj::FineParticle& other) = delete;
+    
     void updateProperty() override;
     
     fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
