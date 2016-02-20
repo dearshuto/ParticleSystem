@@ -61,6 +61,7 @@ public:
     }
     
 private:
+    void simulateParticleBehavior();
     void applyGravity();
     
 //ge tters & setters

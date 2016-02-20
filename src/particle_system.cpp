@@ -15,6 +15,7 @@
 
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
+    simulateParticleBehavior();
     
     if (hasActivatedGravity()) {
         applyGravity();
@@ -58,4 +59,14 @@ void fj::ParticleSystem::makeCollision(const int index1, const int index2)
     const std::shared_ptr<fj::Particle>& particle2 = getParticles()[index2];
     
     particle1->addNeighborParticle(particle2);
+}
+
+void fj::ParticleSystem::simulateParticleBehavior()
+{
+    
+    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    {
+        particle->accumulateForce();
+    }
+    
 }
