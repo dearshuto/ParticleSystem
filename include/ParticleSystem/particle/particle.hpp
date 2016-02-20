@@ -39,6 +39,7 @@ public:
     
     Particle(const fj::Vector& position)
     : m_radius(1)
+    , m_mass(1)
     , m_effectRange(0.01)
     , m_squaredEffectRange( std::pow(m_effectRange, 2) )
     , m_position(position)
@@ -93,7 +94,7 @@ protected:
     
     virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     
-// getters
+// getters & setters
 public:
     const fj::Vector& getPosition()const
     {
@@ -125,6 +126,16 @@ public:
         return m_squaredEffectRange;
     }
     
+    fj::Scalar getMass()const
+    {
+        return m_mass;
+    }
+    
+    void setMass(const fj::Scalar mass)
+    {
+        m_mass = mass;
+    }
+    
 protected:
     fj::Particle::NeighborParticles* getNeighborParticlesPtr()
     {
@@ -138,6 +149,8 @@ private:
     fj::Particle::NeighborParticles m_neighborParticles;
 
     fj::Scalar m_radius;
+
+    fj::Scalar m_mass;
     
     fj::Scalar m_effectRange;
     

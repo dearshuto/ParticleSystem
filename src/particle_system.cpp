@@ -34,6 +34,7 @@ void fj::ParticleSystem::createFineParticle(const float x, const float y, const 
 {
     const fj::Vector kPosition(x, y, z);
     std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FineParticle>(kPosition);
+    particle->setMass(mass);
     
     getParticlesPtr()->push_back(particle);
 }
