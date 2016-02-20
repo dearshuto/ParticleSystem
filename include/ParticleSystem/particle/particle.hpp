@@ -10,6 +10,7 @@
 #define particle_hpp
 
 #include <cmath>
+#include <memory>
 #include <vector>
 #include <ParticleSystem/type/Vector.hpp>
 
