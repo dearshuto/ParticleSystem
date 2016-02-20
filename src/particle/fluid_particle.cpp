@@ -69,3 +69,8 @@ fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neig
     
     return fj::Vector(0, 0, 0);
 }
+
+fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
+{
+    return fj::Vector(0, 0, 0);
+}

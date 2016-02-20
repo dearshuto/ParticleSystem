@@ -45,6 +45,10 @@ public:
         
     }
     
+    /**
+     * 他のパーティクルに与える力を計算する
+     */
+    virtual fj::Vector affect(const fj::Particle& particle) const = 0;
     
     /**
      * 近傍粒子を追加する

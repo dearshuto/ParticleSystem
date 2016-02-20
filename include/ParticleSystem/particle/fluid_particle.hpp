@@ -34,7 +34,8 @@ public:
     
     void updateProperty()override;
     fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
-  
+    fj::Vector affect(const fj::Particle& particle)const override;
+    
     void inverseItsRho()
     {
         m_rho = fj::Scalar(1) / getRho();
