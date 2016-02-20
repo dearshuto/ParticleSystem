@@ -21,6 +21,38 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
         applyGravity();
     }
     
+    clearParticleNeighbors();
+}
+
+void fj::ParticleSystem::simulateParticleBehavior()
+{
+    
+    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    {
+        particle->accumulateForce();
+    }
+    
+}
+
+void fj::ParticleSystem::applyGravity()
+{
+    const fj::Vector kGravity = getGravity();
+    
+    for (std::shared_ptr<fj::Particle>& particle : *getParticlesPtr())
+    {
+        particle->applyForce(kGravity);
+    }
+    
+}
+
+void fj::ParticleSystem::clearParticleNeighbors()
+{
+    
+    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    {
+        particle->clearNeighborParticles();
+    }
+    
 }
 
 void fj::ParticleSystem::createParticleAt(const float x, const float y, const float z)
@@ -42,31 +74,10 @@ void fj::ParticleSystem::createFineParticle(const float x, const float y, const 
     getParticlesPtr()->push_back(particle);
 }
 
-void fj::ParticleSystem::applyGravity()
-{
-    const fj::Vector kGravity = getGravity();
-    
-    for (std::shared_ptr<fj::Particle>& particle : *getParticlesPtr())
-    {
-        particle->applyForce(kGravity);
-    }
-    
-}
-
 void fj::ParticleSystem::makeCollision(const int index1, const int index2)
 {
     const std::shared_ptr<fj::Particle>& particle1 = getParticles()[index1];
     const std::shared_ptr<fj::Particle>& particle2 = getParticles()[index2];
     
     particle1->addNeighborParticle(particle2);
-}
-
-void fj::ParticleSystem::simulateParticleBehavior()
-{
-    
-    for (const std::shared_ptr<fj::Particle> particle : getParticles())
-    {
-        particle->accumulateForce();
-    }
-    
 }
