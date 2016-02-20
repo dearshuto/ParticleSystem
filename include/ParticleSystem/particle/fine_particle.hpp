@@ -9,6 +9,7 @@
 #ifndef fine_particle_hpp
 #define fine_particle_hpp
 
+#include <ParticleSystem/type/Scalar.h>
 #include <ParticleSystem/particle/particle.hpp>
 
 namespace fj {
@@ -25,6 +26,15 @@ public:
     
     fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
     fj::Vector affect(const fj::Particle& particle)const override;
+    
+public:
+    fj::Scalar getRadius()const
+    {
+        return m_radius;
+    }
+    
+private:
+    fj::Scalar m_radius;
 };
 
 #endif /* fine_particle_hpp */
