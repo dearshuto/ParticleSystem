@@ -51,3 +51,11 @@ void fj::ParticleSystem::applyGravity()
     }
     
 }
+
+void fj::ParticleSystem::makeCollision(const int index1, const int index2)
+{
+    const std::shared_ptr<fj::Particle>& particle1 = getParticles()[index1];
+    const std::shared_ptr<fj::Particle>& particle2 = getParticles()[index2];
+    
+    particle1->addNeighborParticle(particle2);
+}

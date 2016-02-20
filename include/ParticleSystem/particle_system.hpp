@@ -39,6 +39,11 @@ public:
     void createParticleAt(const float x, const float y, const float z);
     void createFineParticle(const float x, const float y, const float z, const float radius, const float mass);
     
+    /**
+     * @param index1 衝突を検知した粒子のID
+     * @param index2 ID1と衝突した粒子のID
+     */
+    void makeCollision(const int index1, const int index2);
     
     bool hasActivatedGravity()const
     {
