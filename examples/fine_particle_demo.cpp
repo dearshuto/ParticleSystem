@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-    const fj::Scalar kRafius(1);
+    const fj::Scalar kRafius(0.1);
     const fj::Scalar kMass(1);
     
     fj::ParticleSystem particleSystem;
