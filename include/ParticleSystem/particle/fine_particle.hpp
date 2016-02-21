@@ -33,12 +33,13 @@ public:
     FineParticle& operator=(const fj::FineParticle& other) = delete;
     
     void updateProperty() override;
-    
-    fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
+
     fj::Vector affect(const fj::Particle& particle)const override;
+    fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
 
 private:
     fj::Vector computeVanderWaalsForce(const fj::Particle& particle)const;
+    fj::Vector computeForceFromObject(const fj::Scalar distance)const override;
 };
 
 #endif /* fine_particle_hpp */

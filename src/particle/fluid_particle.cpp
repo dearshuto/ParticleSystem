@@ -74,3 +74,8 @@ fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
 {
     return fj::Vector(0, 0, 0);
 }
+
+fj::Vector fj::FluidParticle::computeForceFromObject(const fj::Scalar distance)const
+{
+    return fj::Vector(0, 0, 0);
+}

@@ -51,3 +51,8 @@ fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neigh
     
     return neighborParticle->affect( std::cref(*this) );
 }
+
+fj::Vector fj::FineParticle::computeForceFromObject(const fj::Scalar distance)const
+{
+    return fj::Vector(0, 0, 0);
+}

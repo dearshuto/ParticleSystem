@@ -40,6 +40,9 @@ public:
     {
         m_rho = fj::Scalar(1) / getRho();
     }
+
+private:
+    fj::Vector computeForceFromObject(const fj::Scalar distance)const override;
     
 // getters & setters
 public:

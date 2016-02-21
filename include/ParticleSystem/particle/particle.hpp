@@ -54,6 +54,15 @@ public:
     virtual fj::Vector affect(const fj::Particle& particle) const = 0;
     
     /**
+     * 剛体から受ける力を加える
+     * @param 剛体表面からの距離
+     */
+    virtual void affectedByObject(const fj::Scalar distance)
+    {
+        applyForce( computeForceFromObject(distance) );
+    }
+    
+    /**
      * 近傍粒子を追加する
      */
     void addNeighborParticle(std::shared_ptr<fj::Particle> neighborParticle)
@@ -94,6 +103,12 @@ protected:
     void accumulateForceByNeighborParticles();
     
     virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
+    
+    /**
+     * 剛体から受ける力を計算する
+     * @param 剛体表面からの距離
+     */
+    virtual fj::Vector computeForceFromObject(const fj::Scalar distance)const = 0;
     
 // getters & setters
 public:
