@@ -42,7 +42,7 @@ public:
     }
 
 private:
-    fj::Vector computeForceFromObject(const fj::Scalar distance)const override;
+    fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const override;
     
 // getters & setters
 public:

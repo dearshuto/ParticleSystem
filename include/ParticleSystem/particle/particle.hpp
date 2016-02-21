@@ -57,9 +57,9 @@ public:
      * 剛体から受ける力を加える
      * @param 剛体表面からの距離
      */
-    virtual void affectedByObject(const fj::Scalar distance)
+    virtual void affectedByObject(const fj::Vector& collisionPoint)
     {
-        applyForce( computeForceFromObject(distance) );
+        applyForce( computeForceFromObject(collisionPoint) );
     }
     
     /**
@@ -108,7 +108,7 @@ protected:
      * 剛体から受ける力を計算する
      * @param 剛体表面からの距離
      */
-    virtual fj::Vector computeForceFromObject(const fj::Scalar distance)const = 0;
+    virtual fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const = 0;
     
 // getters & setters
 public:

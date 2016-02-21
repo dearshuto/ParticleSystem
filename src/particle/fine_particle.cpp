@@ -33,15 +33,13 @@ fj::Vector fj::FineParticle::computeVanderWaalsForce(const fj::Particle &particl
     //粉体工学叢書 第7巻 「粉体層の操作とシミュレーション」 p11
     
     const fj::Vector kRelativePosition = this->getPosition() - particle.getPosition();
-    
-    const fj::Scalar kHamakerConstant = fj::Scalar(1);
-    const fj::Scalar kConvertedParticleRadius = (this->getRadius() * particle.getRadius()) / (this->getRadius() + particle.getRadius());
-    
-    const fj::Scalar kDistance = kRelativePosition.norm();
-    const fj::Scalar kSurfaceDistance = kDistance - (this->getRadius() + particle.getRadius());
     const fj::Vector kDirection = kRelativePosition.normalized();
     
-    return kDirection * kHamakerConstant * kConvertedParticleRadius / (fj::Scalar(12) * std::pow(kSurfaceDistance, 2));
+    const fj::Scalar kConvertedParticleRadius = (this->getRadius() * particle.getRadius()) / (this->getRadius() + particle.getRadius());
+    const fj::Scalar kDistance = kRelativePosition.norm();
+    const fj::Scalar kSurfaceDistance = kDistance - (this->getRadius() + particle.getRadius());
+    
+    return VanderWaalsFomula(kConvertedParticleRadius, kSurfaceDistance, kDirection);
 }
 
 fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
@@ -52,7 +50,19 @@ fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neigh
     return neighborParticle->affect( std::cref(*this) );
 }
 
-fj::Vector fj::FineParticle::computeForceFromObject(const fj::Scalar distance)const
+fj::Vector fj::FineParticle::computeForceFromObject(const fj::Vector& collisionPoint)const
 {
-    return fj::Vector(0, 0, 0);
+    const fj::Scalar kConvertedParticleRadius( this->getRadius() );
+    const fj::Vector kRelativeDirection = collisionPoint - this->getPosition();
+    const fj::Scalar kDistance = kRelativeDirection.norm();
+    const fj::Vector kDirection = kRelativeDirection / kDistance;
+    
+    return VanderWaalsFomula(kConvertedParticleRadius, kDistance, kDirection);
+}
+
+fj::Vector fj::FineParticle::VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector& normalizedDirection)const
+{
+    const fj::Scalar kHamakerConstant = fj::Scalar(1);
+    
+    return normalizedDirection * kHamakerConstant * convertedRadius / (12 * distance);
 }

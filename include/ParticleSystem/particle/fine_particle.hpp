@@ -39,7 +39,15 @@ public:
 
 private:
     fj::Vector computeVanderWaalsForce(const fj::Particle& particle)const;
-    fj::Vector computeForceFromObject(const fj::Scalar distance)const override;
+    
+    /**
+     * @param convertedRadius 換算粒子径
+     * @oaram distance 2物体の表万間距離
+     * @param normalizedDirection 正規化してある力の方向
+     */
+    fj::Vector VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector& normalizedDirection)const;
+    
+    fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const override;
 };
 
 #endif /* fine_particle_hpp */
