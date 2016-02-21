@@ -102,6 +102,11 @@ public:
         return m_position;
     }
     
+	void setPosition(const fj::Vector& position)
+	{
+		m_position = position;
+	}
+
     const fj::Vector& getForce()const
     {
         return m_appliedForce;
