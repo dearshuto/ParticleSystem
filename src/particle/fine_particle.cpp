@@ -47,7 +47,7 @@ fj::Vector fj::FineParticle::computeVanderWaalsForce(const fj::Particle &particl
 fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
 {
     const std::shared_ptr<fj::Particle> neighborParticle = neighborParticleWeakPtr.lock();
-    assert( neighborParticleWeakPtr.expired() );
+    assert( !neighborParticleWeakPtr.expired() );
     
     return neighborParticle->affect( std::cref(*this) );
 }
