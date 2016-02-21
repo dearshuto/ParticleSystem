@@ -81,3 +81,8 @@ void fj::ParticleSystem::makeCollision(const int index1, const int index2)
     
     particle1->addNeighborParticle(particle2);
 }
+
+void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Vector &collisionPoint)
+{
+    getParticles()[index]->applyForce(collisionPoint);
+}

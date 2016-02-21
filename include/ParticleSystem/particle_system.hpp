@@ -45,6 +45,14 @@ public:
      */
     void makeCollision(const int index1, const int index2);
     
+    
+    /**
+     * 剛体から受けた力を加える
+     * @oaram 剛体の影響を受けた粒子のインデックス
+     * @param 粒子が衝突した剛体上の点
+     */
+    void applyForceFromObject(const int index, const fj::Vector& collisionPoint);
+    
     bool hasActivatedGravity()const
     {
         return m_hasActivatedGravity;
