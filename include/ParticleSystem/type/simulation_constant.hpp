@@ -10,54 +10,44 @@
 #define simulation_constant_hpp
 
 #include <cmath>
+#include <ParticleSystem/type/Scalar.h>
 
-namespace mlk {
+namespace fj {
     class SimulationConstant;
 }
 
-class mlk::SimulationConstant
+class fj::SimulationConstant
 {
 private:
     SimulationConstant() = default;
 public:
     ~SimulationConstant() = default;
     
-    constexpr static const double H = 0.01;
-    constexpr static const double G_SCALE = 3;
-    constexpr static const double SPH_LIMIT = 200.0;
-    constexpr static const double SPH_PMASS = 0.00020543;
-    constexpr static const double SPH_RADIUS = 0.004;
-    constexpr static const double SPH_SIGMA = 300;
-    constexpr static const double SPH_SIMSCALE = 0.004;
-    constexpr static const double SPH_RESTDENSITY = 600.0f;
-    constexpr static const double SPH_INTSTIFF = 3.0f;
-    constexpr static const double SIM_H = H / SPH_SIMSCALE;
-    constexpr static const double SPH_VISCOSITY = 1.0;
+    constexpr static const fj::Scalar H = 0.01;
+    constexpr static const fj::Scalar G_SCALE = 3;
+    constexpr static const fj::Scalar SPH_LIMIT = 200.0;
+    constexpr static const fj::Scalar SPH_PMASS = 0.00020543;
+    constexpr static const fj::Scalar SPH_RADIUS = 0.004;
+    constexpr static const fj::Scalar SPH_SIGMA = 300;
+    constexpr static const fj::Scalar SPH_SIMSCALE = 0.004;
+    constexpr static const fj::Scalar SPH_RESTDENSITY = 600.0f;
+    constexpr static const fj::Scalar SPH_INTSTIFF = 3.0f;
+    constexpr static const fj::Scalar SIM_H = H / SPH_SIMSCALE;
+    constexpr static const fj::Scalar SPH_VISCOSITY = 1.0;
     
     static const int CONGEAL_START = 2000000;
     static const int CONGEAL_FINISH = 8000000;
-    constexpr static const float CONGEALED_VISCOSITY = 10000000000.f;
+    constexpr static const fj::Scalar CONGEALED_VISCOSITY = 10000000000;
     static const int CLOSE_WOUND = 600000;
     
-    constexpr static const float D_VISCOSITY = 30;
+    constexpr static const fj::Scalar D_VISCOSITY = 30;
     static const int D_TIMESTEP = 100;
     
-    constexpr static float DIS_PLUS_AT = 0.4f;
+    constexpr static fj::Scalar DIS_PLUS_AT = 0.4f;
     
-    static double Poly6Kernel()
-    {
-        return -315.0 / (64.0 * M_PI * std::pow(H, 9));
-    }
-    
-    static double SpikyKernel()
-    {
-        return -45.0 / (M_PI * std::pow(H, 6));
-    }
-    
-    static double LaplacianKernel()
-    {
-        return 45.0 / (M_PI * std::pow(H, 6));
-    }
+    static const fj::Scalar Poly6Kernel;
+    static const fj::Scalar SpikyKernel;
+    static const fj::Scalar LaplacianKernel;
 };
 
 namespace mlk {
