@@ -10,7 +10,7 @@
 #define fluid_particle_hpp
 
 #include <ParticleSystem/particle/particle.hpp>
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 
 namespace fj {
     class Vector;

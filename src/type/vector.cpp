@@ -10,8 +10,8 @@
 #include <functional>
 #include <iostream>
 
-#include <ParticleSystem/type/Scalar.h>
-#include <ParticleSystem/type/Vector.hpp>
+#include <ParticleSystem/type/scalar.h>
+#include <ParticleSystem/type/vector.hpp>
 
 fj::Scalar fj::Vector::squaredNorm()const
 {

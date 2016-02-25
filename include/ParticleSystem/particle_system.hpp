@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 #include <ParticleSystem/type/Vector.hpp>
 
 namespace fj {
@@ -34,9 +34,6 @@ public:
     ~ParticleSystem() = default;
     
     void stepSimulation(const float timestep);
-    
-    
-    void createParticleAt(const float x, const float y, const float z);
     
     void createFluidParticle(const fj::Vector& position);
     

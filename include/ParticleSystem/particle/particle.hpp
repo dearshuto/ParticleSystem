@@ -48,7 +48,9 @@ public:
         
     }
     
-    
+    /**
+     * 近傍粒子の情報をもとに自身の属性を更新する
+     */
     virtual void updateProperty() = 0;
     
     /**
@@ -101,7 +103,11 @@ public:
     
 protected:
     
+    /**
+     * 属性値が更新済みの近傍粒子から受ける力をすべて足し合わせる
+     */
     void accumulateForceByNeighborParticles();
+    
     
     virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     

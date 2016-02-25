@@ -10,7 +10,7 @@
 #define simulation_constant_hpp
 
 #include <cmath>
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 
 namespace fj {
     class SimulationConstant;
