@@ -10,7 +10,7 @@
 #include <cmath>
 
 #include <ParticleSystem/type/Vector.hpp>
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 #include <ParticleSystem/type/simulation_constant.hpp>
 #include <ParticleSystem/particle/fluid_particle.hpp>
 

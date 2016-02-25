@@ -10,7 +10,7 @@
 #define Vector_hpp
 
 #include <functional>
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 
 namespace fj {
     class Vector;

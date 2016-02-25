@@ -9,7 +9,7 @@
 #ifndef fine_particle_hpp
 #define fine_particle_hpp
 
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 #include <ParticleSystem/particle/particle.hpp>
 
 namespace fj {

@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 #include <ParticleSystem/type/Vector.hpp>
 
 namespace fj {

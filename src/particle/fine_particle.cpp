@@ -10,7 +10,7 @@
 #include <functional>
 #include <memory>
 
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 #include <ParticleSystem/type/Vector.hpp>
 
 #include <ParticleSystem/particle/fine_particle.hpp>
