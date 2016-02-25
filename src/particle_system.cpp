@@ -29,6 +29,11 @@ void fj::ParticleSystem::simulateParticleBehavior()
     
     for (const std::shared_ptr<fj::Particle> particle : getParticles())
     {
+        particle->updateProperty();
+    }
+    
+    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    {
         particle->accumulateForce();
     }
     

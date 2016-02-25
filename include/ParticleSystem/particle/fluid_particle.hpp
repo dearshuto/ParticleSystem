@@ -43,13 +43,6 @@ public:
 
 private:
     fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const override;
-    
-// getters & setters
-public:
-    
-        
-private:
-
 };
 
 #endif /* fluid_particle_hpp */
