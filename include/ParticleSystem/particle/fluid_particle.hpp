@@ -38,7 +38,7 @@ public:
     
     void inverseItsRho()
     {
-        m_rho = fj::Scalar(1) / getRho();
+        setDensity( fj::Scalar(1) / getDensity() );
     }
 
 private:
@@ -47,24 +47,9 @@ private:
 // getters & setters
 public:
     
-    fj::Scalar getRho()const
-    {
-        return m_rho;
-    }
-    
-    void setRho(const fj::Scalar rho)
-    {
-        m_rho = rho;
-    }
-    
-    void setPressure(const fj::Scalar pressure)
-    {
-        m_pressure = pressure;
-    }
-    
+        
 private:
-    fj::Scalar m_pressure;
-    fj::Scalar m_rho;
+
 };
 
 #endif /* fluid_particle_hpp */

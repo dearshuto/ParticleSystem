@@ -63,6 +63,13 @@ void fj::ParticleSystem::createParticleAt(const float x, const float y, const fl
     getParticlesPtr()->push_back(particle);
 }
 
+void fj::ParticleSystem::createFluidParticle(const fj::Vector& position)
+{
+    std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FluidParticle>(position);
+    
+    getParticlesPtr()->push_back(particle);
+}
+
 void fj::ParticleSystem::createFineParticle(const float x, const float y, const float z, const float radius, const float mass)
 {
     const fj::Vector kPosition(x, y, z);
