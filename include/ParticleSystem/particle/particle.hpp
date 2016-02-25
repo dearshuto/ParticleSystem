@@ -162,7 +162,7 @@ public:
         m_mass = mass;
     }
     
-    const fj::Vector& getVector()const
+    const fj::Vector& getVelocity()const
     {
         return m_velocity;
     }
@@ -171,6 +171,26 @@ public:
         m_velocity = velocity;
     }
     
+    fj::Scalar getPressure()const
+    {
+        return m_pressure;
+    }
+    
+    void setPressure(const fj::Scalar pressure)
+    {
+        m_pressure = pressure;
+    }
+
+    fj::Scalar getDensity()const
+    {
+        return m_density;
+    }
+    
+    void setDensity(const fj::Scalar density)
+    {
+        m_density = density;
+    }
+
 protected:
     fj::Particle::NeighborParticles* getNeighborParticlesPtr()
     {
@@ -194,7 +214,11 @@ private:
     fj::Vector m_position;
     fj::Vector m_appliedForce;
     
+    fj::Scalar m_pressure;
+    
     fj::Vector m_velocity;
+    
+    fj::Scalar m_density;
 };
 
 #endif /* particle_hpp */

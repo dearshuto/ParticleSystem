@@ -47,29 +47,9 @@ private:
 // getters & setters
 public:
     
-    fj::Scalar getDensity()const
-    {
-        return m_density;
-    }
-    
-    void setDensity(const fj::Scalar density)
-    {
-        m_density = density;
-    }
-    
-    fj::Scalar getPressure()const
-    {
-        return m_pressure;
-    }
-    
-    void setPressure(const fj::Scalar pressure)
-    {
-        m_pressure = pressure;
-    }
-    
+        
 private:
-    fj::Scalar m_pressure;
-    fj::Scalar m_density;
+
 };
 
 #endif /* fluid_particle_hpp */
