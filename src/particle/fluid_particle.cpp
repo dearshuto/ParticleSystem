@@ -16,6 +16,8 @@
 
 void fj::FluidParticle::updateProperty()
 {
+    // 藤代研究室OBの上田さんのコードをもとに実装されています
+    
     constexpr fj::Scalar kSPH_PMASS = fj::SimulationConstant::SPH_PMASS;
     constexpr fj::Scalar kSPH_RESTDENSITY = fj::SimulationConstant::SPH_RESTDENSITY;
     constexpr fj::Scalar kSPH_INTSTIFF = fj::SimulationConstant::SPH_INTSTIFF;
@@ -64,6 +66,8 @@ fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neig
 
 fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
 {
+    // 藤代研究室0Bの上田さんのコードをもとにして実装されています
+    
     const fj::Scalar kH = fj::SimulationConstant::SIM_H;
     const fj::Scalar kSPH_VISCOSITY = fj::SimulationConstant::SPH_VISCOSITY;
     const fj::Scalar kSpikyKernel = fj::SimulationConstant::SpikyKernel;

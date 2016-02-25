@@ -60,14 +60,6 @@ void fj::ParticleSystem::clearParticleNeighbors()
     
 }
 
-void fj::ParticleSystem::createParticleAt(const float x, const float y, const float z)
-{
-    const fj::Vector kPosition(x, y, z);
-    std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FluidParticle>(kPosition);
-    
-    getParticlesPtr()->push_back(particle);
-}
-
 void fj::ParticleSystem::createFluidParticle(const fj::Vector& position)
 {
     std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FluidParticle>(position);
