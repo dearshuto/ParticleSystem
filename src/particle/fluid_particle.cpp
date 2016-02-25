@@ -81,7 +81,7 @@ fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
     fj::Vector fcurr = kRelativePosition * kPressureTerm + (kNeighborParticle.getVelocity() - particle.getVelocity()) * kVelocityTerm;
     fcurr *= kC * particle.getDensity() * kNeighborParticle.getDensity();
     
-    return fj::Vector(0, 0, 0);
+    return fcurr;
 }
 
 fj::Vector fj::FluidParticle::computeForceFromObject(const fj::Vector& collisionPoint)const

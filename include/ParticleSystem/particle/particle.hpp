@@ -48,6 +48,9 @@ public:
         
     }
     
+    
+    virtual void updateProperty() = 0;
+    
     /**
      * 他のパーティクルに与える力を計算する
      */
@@ -97,8 +100,6 @@ public:
     }
     
 protected:
-    
-    virtual void updateProperty() = 0;
     
     void accumulateForceByNeighborParticles();
     
