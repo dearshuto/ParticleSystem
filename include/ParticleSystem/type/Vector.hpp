@@ -103,22 +103,26 @@ public:
     
     fj::Vector operator/(const fj::Scalar num)const
     {
-        const fj::Scalar kX = this->x() / num;
-        const fj::Scalar kY = this->y() / num;
-        const fj::Scalar kZ = this->z() / num;
-        
-        return fj::Vector(kX, kY, kZ);
+        return this->operator*( fj::Scalar(1) / num );
     }
     
     fj::Vector operator*(const fj::Scalar num)const
     {
-        const fj::Scalar kX = this->x() * num;
-        const fj::Scalar kY = this->y() * num;
-        const fj::Scalar kZ = this->z() * num;
+        fj::Vector returnVector( std::cref(*this) );
         
-        return fj::Vector(kX, kY, kZ);
+        returnVector *= num;
+        
+        return returnVector;
     }
     
+    fj::Vector& operator*=(const fj::Scalar num)
+    {
+        this->x() *= num;
+        this->y() *= num;
+        this->z() *= num;
+        
+        return std::ref(*this);
+    }
     
     fj::Scalar squaredNorm()const;
     
