@@ -162,6 +162,15 @@ public:
         m_mass = mass;
     }
     
+    const fj::Vector& getVector()const
+    {
+        return m_velocity;
+    }
+    void setVelocity(const fj::Vector& velocity)
+    {
+        m_velocity = velocity;
+    }
+    
 protected:
     fj::Particle::NeighborParticles* getNeighborParticlesPtr()
     {
@@ -184,6 +193,8 @@ private:
     
     fj::Vector m_position;
     fj::Vector m_appliedForce;
+    
+    fj::Vector m_velocity;
 };
 
 #endif /* particle_hpp */
