@@ -1,5 +1,5 @@
 //
-//  Scalar.h
+//  scalar.h
 //  ParticleSystem
 //
 //  Created by Shuto on 2016/02/19.

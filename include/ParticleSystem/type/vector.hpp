@@ -10,7 +10,7 @@
 #define Vector_hpp
 
 #include <functional>
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 
 namespace fj {
     class Vector;
@@ -46,6 +46,23 @@ public:
         this->z() = other.z();
         
         return std::ref(*this);
+    }
+    
+    bool operator==(const fj::Vector& other)const
+    {
+        if (this->x() != other.x()) {
+            return false;
+        }
+        
+        if (this->y() != other.y()) {
+            return false;
+        }
+        
+        if (this->z() != other.z()) {
+            return false;
+        }
+        
+        return true;
     }
     
     fj::Vector operator+(const fj::Vector& other)const
@@ -86,30 +103,40 @@ public:
     
     fj::Vector operator/(const fj::Scalar num)const
     {
-        const fj::Scalar kX = this->x() / num;
-        const fj::Scalar kY = this->y() / num;
-        const fj::Scalar kZ = this->z() / num;
-        
-        return fj::Vector(kX, kY, kZ);
+        return this->operator*( fj::Scalar(1) / num );
     }
     
     fj::Vector operator*(const fj::Scalar num)const
     {
-        const fj::Scalar kX = this->x() * num;
-        const fj::Scalar kY = this->y() * num;
-        const fj::Scalar kZ = this->z() * num;
+        fj::Vector returnVector( std::cref(*this) );
         
-        return fj::Vector(kX, kY, kZ);
+        returnVector *= num;
+        
+        return returnVector;
     }
     
+    fj::Vector& operator*=(const fj::Scalar num)
+    {
+        this->x() *= num;
+        this->y() *= num;
+        this->z() *= num;
+        
+        return std::ref(*this);
+    }
     
     fj::Scalar squaredNorm()const;
     
     fj::Scalar norm()const;
     
+    void normalize();
+    
+    fj::Vector normalized()const;
+    
     fj::Vector to(const fj::Vector& other)const;
     
     fj::Vector from(const fj::Vector& other)const;
+    
+    void print()const;
     
 // getters & setters
 public:

@@ -1,8 +1,8 @@
 //
 //  particle_system.hpp
-//  blood-simulation
+//  ParticleSystem
 //
-//  Created by Shuto Shikama on 2016/02/13.
+//  Created by Shuto Shikama on 2016/02/19.
 //
 //
 
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/scalar.h>
 #include <ParticleSystem/type/Vector.hpp>
 
 namespace fj {
@@ -35,9 +35,23 @@ public:
     
     void stepSimulation(const float timestep);
     
+    void createFluidParticle(const fj::Vector& position);
     
-    void createParticleAt(const float x, const float y, const float z);
+    void createFineParticle(const float x, const float y, const float z, const float radius, const float mass);
     
+    /**
+     * @param index1 衝突を検知した粒子のID
+     * @param index2 ID1と衝突した粒子のID
+     */
+    void makeCollision(const int index1, const int index2);
+    
+    
+    /**
+     * 剛体から受けた力を加える
+     * @oaram 剛体の影響を受けた粒子のインデックス
+     * @param 粒子が衝突した剛体上の点
+     */
+    void applyForceFromObject(const int index, const fj::Vector& collisionPoint);
     
     bool hasActivatedGravity()const
     {
@@ -55,7 +69,9 @@ public:
     }
     
 private:
+    void simulateParticleBehavior();
     void applyGravity();
+    void clearParticleNeighbors();
     
 //ge tters & setters
 public:
