@@ -37,6 +37,9 @@ public:
     
     
     void createParticleAt(const float x, const float y, const float z);
+    
+    void createFluidParticle(const fj::Vector& position);
+    
     void createFineParticle(const float x, const float y, const float z, const float radius, const float mass);
     
     /**
