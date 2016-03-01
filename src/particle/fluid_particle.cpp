@@ -41,13 +41,15 @@ void fj::FluidParticle::updateProperty()
         sum += std::pow(kC, 3);
     }
     
-    this->setDensity(sum);
-    this->setPressure(this->getDensity());
-    this->inverseItsRho();
  
     this->setDensity(sum * kSPH_PMASS * kPoly6Kern);
     this->setPressure( (this->getDensity() - kSPH_RESTDENSITY) *  kSPH_INTSTIFF);
-    this->inverseItsRho();
+    
+    if (this->getDensity() != fj::Scalar(0))
+    {
+        this->inverseItsRho();
+    }
+    
 }
 
 fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
