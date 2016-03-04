@@ -6,6 +6,9 @@
 //
 //
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <ParticleSystem/type/simulation_constant.hpp>
 
 const fj::Scalar fj::SimulationConstant::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64) * M_PI * std::pow( fj::SimulationConstant::H, fj::Scalar(9) ));
