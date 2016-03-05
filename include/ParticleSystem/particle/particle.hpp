@@ -189,6 +189,11 @@ public:
         m_velocity += velocity;
     }
     
+	void setVelocity(const fj::Vector& velocity)
+	{
+		m_velocity = velocity;
+	}
+
     fj::Scalar getPressure()const
     {
         return m_pressure;

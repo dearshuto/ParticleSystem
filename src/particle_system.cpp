@@ -99,3 +99,18 @@ void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Scalar&
 {
     getParticles()[index]->affectedByObject(distance, normalizedDirection);
 }
+
+void fj::ParticleSystem::setParticlePositionAt(const int index, const fj::Vector& position)
+{
+	getParticles()[index]->setPosition(position);
+}
+
+void fj::ParticleSystem::setParticleVelocityAt(const int index, const fj::Vector& velocity)
+{
+	getParticles()[index]->setVelocity(velocity);
+}
+
+fj::Vector fj::ParticleSystem::popParticleForceAt(const int index)
+{
+	return getParticles()[index]->popApliedForce();
+}

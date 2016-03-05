@@ -13,8 +13,8 @@
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/type/scalar.h>
-#include <ParticleSystem/type/Vector.hpp>
+#include <ParticleSystem/particle/FJparticle.h>
+#include <ParticleSystem/type/FJtype.h>
 
 namespace fj {
     class Particle;
@@ -28,26 +28,27 @@ public:
     : m_gravity(0, 0, 0)
     , m_hasActivatedGravity(false)
     {
-        
+
     }
-    
+
     ~ParticleSystem() = default;
-    
+
     void stepSimulation(const float timestep);
-    
+
     
     void createFluidParticle(const fj::Vector& position);
   
     
     void createFineParticle(const fj::Vector& position, const float radius, const float mass);
     
+
     /**
      * @param index1 衝突を検知した粒子のID
      * @param index2 ID1と衝突した粒子のID
      */
     void makeCollision(const int index1, const int index2);
-    
-    
+
+
     /**
      * 剛体から受けた力を加える
      * @oaram 剛体の影響を受けた粒子のインデックス
@@ -55,51 +56,59 @@ public:
      */
     void applyForceFromObject(const int index, const fj::Vector& collisionPoint);
     
-    void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector& normalizedDirection);
+
+	void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector& normalizedDirection);
     
+
     bool hasActivatedGravity()const
     {
         return m_hasActivatedGravity;
     }
-    
+
     void enableGravity()
     {
         m_hasActivatedGravity = true;
     }
-    
+
     void disableGravity()
     {
         m_hasActivatedGravity = false;
     }
-    
+
 private:
     void simulateParticleBehavior();
     void applyGravity();
     void clearParticleNeighbors();
-    
+
 //ge tters & setters
 public:
     const std::vector<std::shared_ptr<fj::Particle>>& getParticles()const
     {
         return m_particles;
     }
-    
+
     const fj::Vector& getGravity()const
     {
         return m_gravity;
     }
-    
+
     void setGravity(const float x, const float y, const float z)
     {
         m_gravity = fj::Vector(x, y, z);
     }
-    
+
+	void setParticlePositionAt(const int index, const fj::Vector& position);
+
+	void setParticleVelocityAt(const int index, const fj::Vector& velocity);
+
+	fj::Vector popParticleForceAt(const int index);
+
 protected:
     std::vector<std::shared_ptr<fj::Particle>>* getParticlesPtr()
     {
         return &m_particles;
     }
-    
+
 private:
     std::vector< std::shared_ptr<fj::Particle> > m_particles;
     fj::Vector m_gravity;
