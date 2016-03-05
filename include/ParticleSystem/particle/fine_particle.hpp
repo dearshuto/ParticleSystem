@@ -47,7 +47,7 @@ private:
      */
     fj::Vector VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector& normalizedDirection)const;
     
-    fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const override;
+    fj::Vector computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const override;
 };
 
 #endif /* fine_particle_hpp */

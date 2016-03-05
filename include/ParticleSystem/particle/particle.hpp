@@ -60,11 +60,10 @@ public:
     
     /**
      * 剛体から受ける力を加える
-     * @param 剛体表面からの距離
      */
-    virtual void affectedByObject(const fj::Vector& collisionPoint)
+    void affectedByObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)
     {
-        applyForce( computeForceFromObject(collisionPoint) );
+        applyForce( computeForceFromObject(distance, normalizedDirection) );
     }
     
     /**
@@ -117,11 +116,11 @@ protected:
     
     virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     
+    
     /**
      * 剛体から受ける力を計算する
-     * @param 剛体表面からの距離
      */
-    virtual fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const = 0;
+    virtual fj::Vector computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const = 0;
     
 // getters & setters
 public:

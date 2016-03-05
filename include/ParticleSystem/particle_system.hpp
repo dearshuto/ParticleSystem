@@ -35,9 +35,11 @@ public:
     
     void stepSimulation(const float timestep);
     
-    void createFluidParticle(const fj::Vector& position);
     
-    void createFineParticle(const float x, const float y, const float z, const float radius, const float mass);
+    void createFluidParticle(const fj::Vector& position);
+  
+    
+    void createFineParticle(const fj::Vector& position, const float radius, const float mass);
     
     /**
      * @param index1 衝突を検知した粒子のID
@@ -52,6 +54,8 @@ public:
      * @param 粒子が衝突した剛体上の点
      */
     void applyForceFromObject(const int index, const fj::Vector& collisionPoint);
+    
+    void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector& normalizedDirection);
     
     bool hasActivatedGravity()const
     {
