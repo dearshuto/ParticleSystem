@@ -18,14 +18,16 @@ void fj::FluidParticle::updateProperty()
 {
     // 藤代研究室OBの上田さんのコードをもとに実装されています
     
+    constexpr fj::Scalar kH = fj::SimulationConstant::H;
     constexpr fj::Scalar kSPH_PMASS = fj::SimulationConstant::SPH_PMASS;
     constexpr fj::Scalar kSPH_RESTDENSITY = fj::SimulationConstant::SPH_RESTDENSITY;
     constexpr fj::Scalar kSPH_INTSTIFF = fj::SimulationConstant::SPH_INTSTIFF;
+    constexpr fj::Scalar kSPH_SIMSCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
     const fj::Scalar kPoly6Kern = fj::SimulationConstant::Poly6Kernel;
     
     
-    const fj::Scalar kSquaredEffectRange = getSquaredEffectRange();
+    constexpr fj::Scalar kSquaredEffectRange = kH * kH;
     fj::Scalar sum(0);
     
     for (const std::weak_ptr<fj::Particle>& neighborParticleWeakPtr : *getNeighborParticlesPtr())
@@ -35,7 +37,8 @@ void fj::FluidParticle::updateProperty()
         // 近傍粒子が突然消えていたらバグ
         assert( !neighborParticleWeakPtr.expired() );
         
-        const fj::Scalar kSquaredDistance = (this->getPosition() - neighborParticle->getPosition()).squaredNorm();
+        const fj::Vector kRelativePosition = this->getPosition() - neighborParticle->getPosition();
+        const fj::Scalar kSquaredDistance = (kRelativePosition * kSPH_SIMSCALE).squaredNorm();
         const fj::Scalar kC = kSquaredEffectRange - kSquaredDistance;
         
         sum += std::pow(kC, 3);
@@ -70,13 +73,16 @@ fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
 {
     // 藤代研究室0Bの上田さんのコードをもとにして実装されています
     
-    const fj::Scalar kH = fj::SimulationConstant::SIM_H;
-    const fj::Scalar kSPH_VISCOSITY = fj::SimulationConstant::SPH_VISCOSITY;
+    constexpr fj::Scalar kH = fj::SimulationConstant::SIM_H;
+    constexpr fj::Scalar kSPH_VISCOSITY = fj::SimulationConstant::SPH_VISCOSITY;
+    constexpr fj::Scalar kSPH_SIMSCALE = fj::SimulationConstant::SPH_SIMSCALE;
+    
     const fj::Scalar kSpikyKernel = fj::SimulationConstant::SpikyKernel;
     const fj::Scalar kLaplacianKernel = fj::SimulationConstant::LaplacianKernel;
+    
     const fj::FluidParticle& kNeighborParticle = std::cref(*this);
     
-    const fj::Vector kRelativePosition = particle.getPosition() - kNeighborParticle.getPosition();
+    const fj::Vector kRelativePosition = (particle.getPosition() - kNeighborParticle.getPosition()) * kSPH_SIMSCALE;
     const fj::Scalar kDistance = kRelativePosition.norm();
     
     const fj::Scalar kC = kH - kDistance;
