@@ -39,10 +39,10 @@ public:
     
     
     Particle(const fj::Vector& position)
-    : m_radius(1)
-    , m_mass(1)
-    , m_effectRange(0.01)
-    , m_squaredEffectRange( std::pow(m_effectRange, 2) )
+    : m_radius( fj::Scalar(1) )
+    , m_mass( fj::Scalar(1) )
+    , m_effectRange( fj::Scalar(0.01) )
+    , m_squaredEffectRange( fj::Scalar(std::pow(m_effectRange, 2)) )
     , m_position(position)
     {
         
