@@ -101,6 +101,12 @@ public:
         return temp;
     }
     
+    
+    void stepSimulation(const fj::Scalar& deltaTime)
+    {
+        this->addPosition( getVelocity() * deltaTime );
+    }
+    
 protected:
     
     /**
@@ -129,6 +135,11 @@ public:
 		m_position = position;
 	}
 
+    void addPosition(const fj::Vector& movement)
+    {
+        m_position += movement;
+    }
+    
     const fj::Vector& getForce()const
     {
         return m_appliedForce;
@@ -173,9 +184,10 @@ public:
     {
         return m_velocity;
     }
-    void setVelocity(const fj::Vector& velocity)
+    
+    void addVelocity(const fj::Vector& velocity)
     {
-        m_velocity = velocity;
+        m_velocity += velocity;
     }
     
     fj::Scalar getPressure()const
