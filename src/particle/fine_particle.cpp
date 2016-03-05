@@ -50,14 +50,11 @@ fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neigh
     return neighborParticle->affect( std::cref(*this) );
 }
 
-fj::Vector fj::FineParticle::computeForceFromObject(const fj::Vector& collisionPoint)const
+fj::Vector fj::FineParticle::computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const
 {
     const fj::Scalar kConvertedParticleRadius( this->getRadius() );
-    const fj::Vector kRelativeDirection = collisionPoint - this->getPosition();
-    const fj::Scalar kDistance = kRelativeDirection.norm();
-    const fj::Vector kDirection = kRelativeDirection / kDistance;
     
-    return VanderWaalsFomula(kConvertedParticleRadius, kDistance, kDirection);
+    return VanderWaalsFomula(kConvertedParticleRadius, distance, normalizedDirection);
 }
 
 fj::Vector fj::FineParticle::VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector& normalizedDirection)const

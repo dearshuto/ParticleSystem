@@ -96,7 +96,7 @@ fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
     return fcurr;
 }
 
-fj::Vector fj::FluidParticle::computeForceFromObject(const fj::Vector& collisionPoint)const
+fj::Vector fj::FluidParticle::computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const
 {
     return fj::Vector(0, 0, 0);
 }
