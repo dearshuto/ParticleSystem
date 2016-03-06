@@ -9,6 +9,7 @@
 #ifndef simulation_constant_hpp
 #define simulation_constant_hpp
 
+#define NOMINMAX
 #include <cmath>
 #include <ParticleSystem/type/scalar.h>
 

@@ -6,6 +6,8 @@
 //
 //
 
+#define NOMINMAX
+#include <algorithm>
 #include <iostream>
 #include <thread>
 #include <vector>

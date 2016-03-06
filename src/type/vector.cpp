@@ -6,6 +6,7 @@
 //
 //
 
+#define NOMINMAX
 #include <cmath>
 #include <functional>
 #include <iostream>

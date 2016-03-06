@@ -7,6 +7,7 @@
 //
 
 #define _USE_MATH_DEFINES
+#define NOMINMAX
 #include <cmath>
 
 #include <ParticleSystem/type/simulation_constant.hpp>

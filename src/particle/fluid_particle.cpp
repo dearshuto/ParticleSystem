@@ -6,6 +6,7 @@
 //
 //
 
+#define NOMINMAX
 #include <cassert>
 #include <cmath>
 

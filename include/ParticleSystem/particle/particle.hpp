@@ -9,6 +9,7 @@
 #ifndef particle_hpp
 #define particle_hpp
 
+#define NOMINMAX
 #include <cmath>
 #include <memory>
 #include <vector>
