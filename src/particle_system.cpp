@@ -6,6 +6,8 @@
 //
 //
 
+#include <thread>
+
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/fluid_particle.hpp>
 #include <ParticleSystem/particle/fine_particle.hpp>
@@ -34,6 +36,30 @@ void fj::ParticleSystem::simulateParticleBehavior()
     
     for (const std::shared_ptr<fj::Particle> particle : getParticles())
     {
+        particle->accumulateForce();
+    }
+    
+}
+
+void fj::ParticleSystem::updateParticlePropertyWithin_MT(const int begin, const int end)
+{
+    std::shared_ptr<fj::Particle> particle;
+    
+    for (int i = begin; i < end; i++)
+    {
+        particle = (*getParticlesPtr())[i];
+        particle->updateProperty();
+    }
+    
+}
+
+void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const int end)
+{
+    std::shared_ptr<fj::Particle> particle;
+    
+    for (int i = begin; i < end; i++)
+    {
+        particle = (*getParticlesPtr())[i];
         particle->accumulateForce();
     }
     

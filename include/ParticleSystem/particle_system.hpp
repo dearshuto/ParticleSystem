@@ -79,6 +79,9 @@ public:
 
 private:
     void simulateParticleBehavior();
+    void updateParticlePropertyWithin_MT(const int begin, const int end);
+    void accumulateParticleForceWithin_MT(const int begin, const int end);
+    
     void applyGravity();
     void clearParticleNeighbors();
 
