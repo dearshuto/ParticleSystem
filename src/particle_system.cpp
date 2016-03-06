@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <thread>
+#include <vector>
 
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/fluid_particle.hpp>
@@ -29,6 +30,14 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
 
 void fj::ParticleSystem::simulateParticleBehavior()
 {
+    updateParticleProperty();
+    accumulateParticleForce();
+}
+
+void fj::ParticleSystem::updateParticleProperty()
+{
+    std::vector<std::thread> threds;
+    
     const int kParticleNum = getParticles().size();
     const int kMaxIndex = kParticleNum - 1;// 例えば50個の要素があればインデックスは0~49
     
@@ -38,24 +47,16 @@ void fj::ParticleSystem::simulateParticleBehavior()
     
     while ( begin <= kMaxIndex )
     {
-        updateParticlePropertyWithin_MT(begin, end);
-
+        threds.emplace_back(&ParticleSystem::updateParticlePropertyWithin_MT, this, begin, end);
+        
         begin = end + 1;
         end = begin + kThreadOffset;
         end = std::min(end, kMaxIndex);
     }
     
-    
-    begin = 0;
-    end = kThreadOffset;
-    
-    while ( begin <= kMaxIndex )
+    for (auto& thread: threds)
     {
-        accumulateParticleForceWithin_MT(begin, end);
-
-        begin = end + 1;
-        end = begin + kThreadOffset;
-        end = std::min(end, kMaxIndex);
+        thread.join();
     }
     
 }
@@ -70,6 +71,33 @@ void fj::ParticleSystem::updateParticlePropertyWithin_MT(const int begin, const 
         particle->updateProperty();
     }
     
+}
+
+void fj::ParticleSystem::accumulateParticleForce()
+{
+    std::vector<std::thread> threds;
+    
+    const int kParticleNum = getParticles().size();
+    const int kMaxIndex = kParticleNum - 1;// 例えば50個の要素があればインデックスは0~49
+    
+    const int kThreadOffset = kMaxIndex / getThreadNum();
+    int begin = 0;
+    int end = kThreadOffset;
+    
+    while ( begin <= kMaxIndex )
+    {
+        threds.emplace_back(&ParticleSystem::accumulateParticleForceWithin_MT, this, begin, end);
+        
+        begin = end + 1;
+        end = begin + kThreadOffset;
+        end = std::min(end, kMaxIndex);
+    }
+    
+    for (auto& thread: threds)
+    {
+        thread.join();
+    }
+
 }
 
 void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const int end)
