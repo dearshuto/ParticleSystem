@@ -9,6 +9,7 @@
 #ifndef particle_system_hpp
 #define particle_system_hpp
 
+#include <cassert>
 #include <memory>
 #include <string>
 #include <vector>
@@ -27,6 +28,7 @@ public:
     ParticleSystem()
     : m_gravity(0, 0, 0)
     , m_hasActivatedGravity(false)
+    , m_threadNum(1)
     {
 
     }
@@ -103,6 +105,17 @@ public:
 
 	fj::Vector popParticleForceAt(const int index);
 
+    
+    uint8_t getThreadNum()const
+    {
+        return m_threadNum;
+    }
+    
+    void setThreadNum(const uint8_t threadNum)
+    {
+        m_threadNum = threadNum;
+    }
+    
 protected:
     std::vector<std::shared_ptr<fj::Particle>>* getParticlesPtr()
     {
@@ -113,6 +126,11 @@ private:
     std::vector< std::shared_ptr<fj::Particle> > m_particles;
     fj::Vector m_gravity;
     bool m_hasActivatedGravity;
+    
+    /**
+     * 粒子を更新する処理のスレッドの数. (ありえないけど)256スレッドまでサポートしておく.
+     */
+    uint8_t m_threadNum;
 };
 
 #endif /* particle_system_hpp */
