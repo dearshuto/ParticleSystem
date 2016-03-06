@@ -11,6 +11,6 @@
 
 #include "scalar.h"
 #include "simulation_constant.hpp"
-#include "vector.hpp""
+#include "vector.hpp"
 
 #endif /* FJtype_h */
