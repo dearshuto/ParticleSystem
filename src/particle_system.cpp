@@ -6,6 +6,7 @@
 //
 //
 
+#include <iostream>
 #include <thread>
 
 #include <ParticleSystem/particle/particle.hpp>
@@ -28,15 +29,33 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
 
 void fj::ParticleSystem::simulateParticleBehavior()
 {
+    const int kParticleNum = getParticles().size();
+    const int kMaxIndex = kParticleNum - 1;// 例えば50個の要素があればインデックスは0~49
     
-    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    const int kThreadOffset = kMaxIndex / getThreadNum();
+    int begin = 0;
+    int end = kThreadOffset;
+    
+    while ( begin <= kMaxIndex )
     {
-        particle->updateProperty();
+        updateParticlePropertyWithin_MT(begin, end);
+
+        begin = end + 1;
+        end = begin + kThreadOffset;
+        end = std::min(end, kMaxIndex);
     }
     
-    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    
+    begin = 0;
+    end = kThreadOffset;
+    
+    while ( begin <= kMaxIndex )
     {
-        particle->accumulateForce();
+        accumulateParticleForceWithin_MT(begin, end);
+
+        begin = end + 1;
+        end = begin + kThreadOffset;
+        end = std::min(end, kMaxIndex);
     }
     
 }
@@ -45,7 +64,7 @@ void fj::ParticleSystem::updateParticlePropertyWithin_MT(const int begin, const 
 {
     std::shared_ptr<fj::Particle> particle;
     
-    for (int i = begin; i < end; i++)
+    for (int i = begin; i <= end; i++)
     {
         particle = (*getParticlesPtr())[i];
         particle->updateProperty();
