@@ -1,0 +1,3 @@
+[submodule "external/FUJI-Math"]
+	path = external/FUJI-Math
+	url = git@git.fj.ics.keio.ac.jp:shikama/FUJI-Math.git
