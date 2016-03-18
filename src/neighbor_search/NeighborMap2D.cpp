@@ -7,3 +7,13 @@
 //
 
 #include <ParticleSystem/neighbor_search/NeighborMap2D.hpp>
+
+void fj::NeighborMap2D::registerParticle(const std::shared_ptr<fj::Particle> particle)
+{
+    
+}
+
+void fj::NeighborMap2D::removeParticle(const std::shared_ptr<fj::Particle> particle)
+{
+    
+}
