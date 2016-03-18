@@ -14,12 +14,17 @@
 
 namespace fj {
     class Particle;
-    template<constexpr int W, constexpr int H, constexpr int D = 1> class NeighborMap;
+    class Position;
+    
+    template<constexpr int W, constexpr int H, constexpr int D> class NeighborMap;
 }
 
-template<constexpr int W, constexpr int H, constexpr int D>
+template<constexpr int W, constexpr int H, constexpr int D = 1>
 class fj::NeighborMap
 {
+    typedef int HashValue;
+    typedef std::vector<fj::Particle> ParticleContainer;
+    typedef std::array< ParticleContainer, W * H * D> HashMap;
 public:
     NeighborMap() = default;
     ~NeighborMap() = default;
@@ -32,9 +37,38 @@ public:
     void update();
     void registerParticle(const std::shared_ptr<fj::Particle> particle);
     void removeParticle(const std::shared_ptr<fj::Particle> particle);
+
+private:
+    HashValue computeHashValueFromPosition(const fj::Position& position)const;
     
 private:
-    std::array<int, W * H> a;
+    HashMap* getPartisions()
+    {
+        return &m_partitions;
+    }
+    
+    int getPartitionsWidth()const
+    {
+        return m_partitionsWidth;
+    }
+    
+    int getPartitionsHeight()const
+    {
+        return m_partitionsHeight;
+    }
+    
+    int getPartitionsDepth()const
+    {
+        return m_partitionsDepth;
+    }
+    
+// member variables
+private:
+    HashMap m_partitions;
+    
+    static constexpr int m_partitionsWidth = W;
+    static constexpr int m_partitionsHeight = H;
+    static constexpr int m_partitionsDepth = D;
 };
 
 #include <ParticleSystem/neighbor_search/neighbor_map_impl.hpp>
