@@ -20,6 +20,7 @@ class fj::NeighborMap2D{
     NeighborMap2D() = default;
     ~NeighborMap2D() = default;
     
+    void update();
     void registerParticle(const std::shared_ptr<fj::Particle> particle);
     void removeParticle(const std::shared_ptr<fj::Particle> particle);
 };
