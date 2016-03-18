@@ -22,6 +22,12 @@ FILE(GLOB_RECURSE particles
 	${CMAKE_SOURCE_DIR}/src/particle/*.cpp
 )
 
+FILE(GLOB_RECURSE neighbor_searches
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/neighbor_search/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/neighbor_search/*.h
+	${CMAKE_SOURCE_DIR}/src/neighbor_search/*.cpp
+)
+
 FILE(GLOB_RECURSE types
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/type/*.hpp
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/type/*.h
@@ -35,6 +41,7 @@ FILE(GLOB_RECURSE external_math_sources
 
 SOURCE_GROUP(particle_system FILES ${particle_systems})
 SOURCE_GROUP(particle FILES ${particles})
+SOURCE_GROUP(neighbor_search FILES ${neighbor_searches})
 SOURCE_GROUP(type FILES ${types})
 
 SOURCE_GROUP(external_math FILES ${external_math_sources})
@@ -42,6 +49,7 @@ SOURCE_GROUP(external_math FILES ${external_math_sources})
 add_library(particle_system STATIC
 	${particle_systems}
 	${particles}
+	${neighbor_searches}
 	${types}
 	${external_math_sources}
 )
