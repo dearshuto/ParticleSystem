@@ -1,6 +1,5 @@
 build/*
 bin/*
-external/*
 lib/*
 
 .DS_Store
