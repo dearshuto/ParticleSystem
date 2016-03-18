@@ -15,7 +15,7 @@ void fj::Particle::accumulateForce()
 
 void fj::Particle::accumulateForceByNeighborParticles()
 {
-    fj::Vector force(0, 0, 0);
+    fj::Vector3 force(0, 0, 0);
     
     for (std::weak_ptr<fj::Particle>& neighborParticle : *getNeighborParticlesPtr())
     {

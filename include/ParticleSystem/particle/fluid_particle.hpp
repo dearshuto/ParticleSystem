@@ -9,8 +9,9 @@
 #ifndef fluid_particle_hpp
 #define fluid_particle_hpp
 
+#include <FUJIMath/type/scalar.h>
+
 #include <ParticleSystem/particle/particle.hpp>
-#include <ParticleSystem/type/scalar.h>
 
 namespace fj {
     class Vector;
@@ -26,15 +27,15 @@ public:
     FluidParticle(const fj::FluidParticle& other) = delete;
     FluidParticle& operator=(const fj::FluidParticle& other) = delete;
     
-    FluidParticle(const fj::Vector& position)
+    FluidParticle(const fj::Vector3& position)
     : Particle(position)
     {
         
     }
     
     void updateProperty()override;
-    fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
-    fj::Vector affect(const fj::Particle& particle)const override;
+    fj::Vector3 affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
+    fj::Vector3 affect(const fj::Particle& particle)const override;
     
     void inverseItsRho()
     {
@@ -42,7 +43,7 @@ public:
     }
 
 private:
-    fj::Vector computeForceFromObject(const fj::Vector& collisionPoint)const override;
+    fj::Vector3 computeForceFromObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)const override;
 };
 
 #endif /* fluid_particle_hpp */

@@ -9,8 +9,9 @@
 #ifndef simulation_constant_hpp
 #define simulation_constant_hpp
 
+#define NOMINMAX
 #include <cmath>
-#include <ParticleSystem/type/scalar.h>
+#include <FUJIMath/type/scalar.h>
 
 namespace fj {
     class SimulationConstant;

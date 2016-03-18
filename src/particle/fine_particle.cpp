@@ -10,8 +10,8 @@
 #include <functional>
 #include <memory>
 
-#include <ParticleSystem/type/scalar.h>
-#include <ParticleSystem/type/Vector.hpp>
+#include <FUJIMath/type/scalar.h>
+#include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/particle/fine_particle.hpp>
 
@@ -20,20 +20,20 @@ void fj::FineParticle::updateProperty()
     
 }
 
-fj::Vector fj::FineParticle::affect(const fj::Particle &particle)const
+fj::Vector3 fj::FineParticle::affect(const fj::Particle &particle)const
 {
-    const fj::Vector kVanderWaalsForce = computeVanderWaalsForce(particle);
+    const fj::Vector3 kVanderWaalsForce = computeVanderWaalsForce(particle);
     
     return kVanderWaalsForce;
 }
 
-fj::Vector fj::FineParticle::computeVanderWaalsForce(const fj::Particle &particle)const
+fj::Vector3 fj::FineParticle::computeVanderWaalsForce(const fj::Particle &particle)const
 {
     // 参考文献
     //粉体工学叢書 第7巻 「粉体層の操作とシミュレーション」 p11
     
-    const fj::Vector kRelativePosition = this->getPosition() - particle.getPosition();
-    const fj::Vector kDirection = kRelativePosition.normalized();
+    const fj::Vector3 kRelativePosition = this->getPosition() - particle.getPosition();
+    const fj::Vector3 kDirection = kRelativePosition.normalized();
     
     const fj::Scalar kConvertedParticleRadius = (this->getRadius() * particle.getRadius()) / (this->getRadius() + particle.getRadius());
     const fj::Scalar kDistance = kRelativePosition.norm();
@@ -42,7 +42,7 @@ fj::Vector fj::FineParticle::computeVanderWaalsForce(const fj::Particle &particl
     return VanderWaalsFomula(kConvertedParticleRadius, kSurfaceDistance, kDirection);
 }
 
-fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
+fj::Vector3 fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
 {
     const std::shared_ptr<fj::Particle> neighborParticle = neighborParticleWeakPtr.lock();
     assert( !neighborParticleWeakPtr.expired() );
@@ -50,17 +50,14 @@ fj::Vector fj::FineParticle::affectedBy(const std::weak_ptr<fj::Particle> &neigh
     return neighborParticle->affect( std::cref(*this) );
 }
 
-fj::Vector fj::FineParticle::computeForceFromObject(const fj::Vector& collisionPoint)const
+fj::Vector3 fj::FineParticle::computeForceFromObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)const
 {
     const fj::Scalar kConvertedParticleRadius( this->getRadius() );
-    const fj::Vector kRelativeDirection = collisionPoint - this->getPosition();
-    const fj::Scalar kDistance = kRelativeDirection.norm();
-    const fj::Vector kDirection = kRelativeDirection / kDistance;
     
-    return VanderWaalsFomula(kConvertedParticleRadius, kDistance, kDirection);
+    return VanderWaalsFomula(kConvertedParticleRadius, distance, normalizedDirection);
 }
 
-fj::Vector fj::FineParticle::VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector& normalizedDirection)const
+fj::Vector3 fj::FineParticle::VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector3& normalizedDirection)const
 {
     const fj::Scalar kHamakerConstant = fj::Scalar(1);
     

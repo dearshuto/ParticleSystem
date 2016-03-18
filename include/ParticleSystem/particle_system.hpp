@@ -9,12 +9,13 @@
 #ifndef particle_system_hpp
 #define particle_system_hpp
 
+#include <cassert>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/type/scalar.h>
-#include <ParticleSystem/type/Vector.hpp>
+#include <ParticleSystem/particle/FJparticle.h>
+#include <ParticleSystem/type/FJtype.h>
 
 namespace fj {
     class Particle;
@@ -27,67 +28,97 @@ public:
     ParticleSystem()
     : m_gravity(0, 0, 0)
     , m_hasActivatedGravity(false)
+    , m_threadNum(1)
     {
-        
+
     }
-    
+
     ~ParticleSystem() = default;
-    
+
     void stepSimulation(const float timestep);
+
     
-    void createFluidParticle(const fj::Vector& position);
+    void createFluidParticle(const fj::Vector3& position);
+  
     
-    void createFineParticle(const float x, const float y, const float z, const float radius, const float mass);
+    void createFineParticle(const fj::Vector3& position, const float radius, const float mass);
     
+
     /**
      * @param index1 衝突を検知した粒子のID
      * @param index2 ID1と衝突した粒子のID
      */
     void makeCollision(const int index1, const int index2);
-    
-    
+
+
     /**
      * 剛体から受けた力を加える
      * @oaram 剛体の影響を受けた粒子のインデックス
      * @param 粒子が衝突した剛体上の点
      */
-    void applyForceFromObject(const int index, const fj::Vector& collisionPoint);
+    void applyForceFromObject(const int index, const fj::Vector3& collisionPoint);
     
+
+	void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
+    
+
     bool hasActivatedGravity()const
     {
         return m_hasActivatedGravity;
     }
-    
+
     void enableGravity()
     {
         m_hasActivatedGravity = true;
     }
-    
+
     void disableGravity()
     {
         m_hasActivatedGravity = false;
     }
-    
+
 private:
     void simulateParticleBehavior();
+    void updateParticleProperty();
+    void updateParticlePropertyWithin_MT(const int begin, const int end);
+    void accumulateParticleForce();
+    void accumulateParticleForceWithin_MT(const int begin, const int end);
+    
     void applyGravity();
     void clearParticleNeighbors();
-    
+
 //ge tters & setters
 public:
     const std::vector<std::shared_ptr<fj::Particle>>& getParticles()const
     {
         return m_particles;
     }
-    
-    const fj::Vector& getGravity()const
+
+    const fj::Vector3& getGravity()const
     {
         return m_gravity;
     }
-    
+
     void setGravity(const float x, const float y, const float z)
     {
-        m_gravity = fj::Vector(x, y, z);
+        m_gravity = fj::Vector3(x, y, z);
+    }
+
+	void setParticlePositionAt(const int index, const fj::Vector3& position);
+
+	void setParticleVelocityAt(const int index, const fj::Vector3& velocity);
+
+	fj::Vector3 popParticleForceAt(const int index);
+
+    
+    uint8_t getThreadNum()const
+    {
+        return m_threadNum;
+    }
+    
+    void setThreadNum(const uint8_t threadNum)
+    {
+        m_threadNum = threadNum;
     }
     
 protected:
@@ -95,11 +126,16 @@ protected:
     {
         return &m_particles;
     }
-    
+
 private:
     std::vector< std::shared_ptr<fj::Particle> > m_particles;
-    fj::Vector m_gravity;
+    fj::Vector3 m_gravity;
     bool m_hasActivatedGravity;
+    
+    /**
+     * 粒子を更新する処理のスレッドの数. (ありえないけど)256スレッドまでサポートしておく.
+     */
+    uint8_t m_threadNum;
 };
 
 #endif /* particle_system_hpp */
