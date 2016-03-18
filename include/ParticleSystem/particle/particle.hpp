@@ -13,7 +13,7 @@
 #include <cmath>
 #include <memory>
 #include <vector>
-#include <ParticleSystem/type/Vector.hpp>
+#include <FUJIMath/type/vector3.hpp>
 
 namespace fj {
     class Particle;
@@ -27,7 +27,7 @@ class fj::Particle
     typedef std::vector<std::weak_ptr<fj::Particle>> NeighborParticles;
 public:
     Particle()
-    : Particle(fj::Vector(0, 0, 0))
+    : Particle(fj::Vector3(0, 0, 0))
     {
         
     }
@@ -39,7 +39,7 @@ public:
     Particle& operator=(const fj::Particle& other) = delete;
     
     
-    Particle(const fj::Vector& position)
+    Particle(const fj::Vector3& position)
     : m_radius( fj::Scalar(1) )
     , m_mass( fj::Scalar(1) )
     , m_effectRange( fj::Scalar(0.01) )
@@ -57,12 +57,12 @@ public:
     /**
      * 他のパーティクルに与える力を計算する
      */
-    virtual fj::Vector affect(const fj::Particle& particle) const = 0;
+    virtual fj::Vector3 affect(const fj::Particle& particle) const = 0;
     
     /**
      * 剛体から受ける力を加える
      */
-    void affectedByObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)
+    void affectedByObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)
     {
         applyForce( computeForceFromObject(distance, normalizedDirection) );
     }
@@ -89,15 +89,15 @@ public:
      */
     void accumulateForce();
     
-    void applyForce(const fj::Vector& force)
+    void applyForce(const fj::Vector3& force)
     {
         m_appliedForce += force;
     }
     
-    fj::Vector popApliedForce()
+    fj::Vector3 popApliedForce()
     {
-        const fj::Vector temp = getForce();
-        m_appliedForce = fj::Vector(0, 0, 0);
+        const fj::Vector3 temp = getForce();
+        m_appliedForce = fj::Vector3(0, 0, 0);
         return temp;
     }
     
@@ -115,32 +115,32 @@ protected:
     void accumulateForceByNeighborParticles();
     
     
-    virtual fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
+    virtual fj::Vector3 affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) = 0;
     
     
     /**
      * 剛体から受ける力を計算する
      */
-    virtual fj::Vector computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const = 0;
+    virtual fj::Vector3 computeForceFromObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)const = 0;
     
 // getters & setters
 public:
-    const fj::Vector& getPosition()const
+    const fj::Vector3& getPosition()const
     {
         return m_position;
     }
     
-	void setPosition(const fj::Vector& position)
+	void setPosition(const fj::Vector3& position)
 	{
 		m_position = position;
 	}
 
-    void addPosition(const fj::Vector& movement)
+    void addPosition(const fj::Vector3& movement)
     {
         m_position += movement;
     }
     
-    const fj::Vector& getForce()const
+    const fj::Vector3& getForce()const
     {
         return m_appliedForce;
     }
@@ -180,17 +180,17 @@ public:
         m_mass = mass;
     }
     
-    const fj::Vector& getVelocity()const
+    const fj::Vector3& getVelocity()const
     {
         return m_velocity;
     }
     
-    void addVelocity(const fj::Vector& velocity)
+    void addVelocity(const fj::Vector3& velocity)
     {
         m_velocity += velocity;
     }
     
-	void setVelocity(const fj::Vector& velocity)
+	void setVelocity(const fj::Vector3& velocity)
 	{
 		m_velocity = velocity;
 	}
@@ -235,12 +235,12 @@ private:
     
     fj::Scalar m_squaredEffectRange;
     
-    fj::Vector m_position;
-    fj::Vector m_appliedForce;
+    fj::Vector3 m_position;
+    fj::Vector3 m_appliedForce;
     
     fj::Scalar m_pressure;
     
-    fj::Vector m_velocity;
+    fj::Vector3 m_velocity;
     
     fj::Scalar m_density;
 };

@@ -38,10 +38,10 @@ public:
     void stepSimulation(const float timestep);
 
     
-    void createFluidParticle(const fj::Vector& position);
+    void createFluidParticle(const fj::Vector3& position);
   
     
-    void createFineParticle(const fj::Vector& position, const float radius, const float mass);
+    void createFineParticle(const fj::Vector3& position, const float radius, const float mass);
     
 
     /**
@@ -56,10 +56,10 @@ public:
      * @oaram 剛体の影響を受けた粒子のインデックス
      * @param 粒子が衝突した剛体上の点
      */
-    void applyForceFromObject(const int index, const fj::Vector& collisionPoint);
+    void applyForceFromObject(const int index, const fj::Vector3& collisionPoint);
     
 
-	void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector& normalizedDirection);
+	void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
     
 
     bool hasActivatedGravity()const
@@ -94,21 +94,21 @@ public:
         return m_particles;
     }
 
-    const fj::Vector& getGravity()const
+    const fj::Vector3& getGravity()const
     {
         return m_gravity;
     }
 
     void setGravity(const float x, const float y, const float z)
     {
-        m_gravity = fj::Vector(x, y, z);
+        m_gravity = fj::Vector3(x, y, z);
     }
 
-	void setParticlePositionAt(const int index, const fj::Vector& position);
+	void setParticlePositionAt(const int index, const fj::Vector3& position);
 
-	void setParticleVelocityAt(const int index, const fj::Vector& velocity);
+	void setParticleVelocityAt(const int index, const fj::Vector3& velocity);
 
-	fj::Vector popParticleForceAt(const int index);
+	fj::Vector3 popParticleForceAt(const int index);
 
     
     uint8_t getThreadNum()const
@@ -129,7 +129,7 @@ protected:
 
 private:
     std::vector< std::shared_ptr<fj::Particle> > m_particles;
-    fj::Vector m_gravity;
+    fj::Vector3 m_gravity;
     bool m_hasActivatedGravity;
     
     /**

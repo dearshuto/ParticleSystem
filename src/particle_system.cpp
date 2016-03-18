@@ -12,10 +12,11 @@
 #include <thread>
 #include <vector>
 
+#include <FUJIMath/type/vector3.hpp>
+
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/fluid_particle.hpp>
 #include <ParticleSystem/particle/fine_particle.hpp>
-#include <ParticleSystem/type/Vector.hpp>
 
 #include <ParticleSystem/particle_system.hpp>
 
@@ -116,7 +117,7 @@ void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const
 
 void fj::ParticleSystem::applyGravity()
 {
-    const fj::Vector kGravity = getGravity();
+    const fj::Vector3 kGravity = getGravity();
     
     for (std::shared_ptr<fj::Particle>& particle : *getParticlesPtr())
     {
@@ -135,14 +136,14 @@ void fj::ParticleSystem::clearParticleNeighbors()
     
 }
 
-void fj::ParticleSystem::createFluidParticle(const fj::Vector& position)
+void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position)
 {
     std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FluidParticle>(position);
     
     getParticlesPtr()->push_back(particle);
 }
 
-void fj::ParticleSystem::createFineParticle(const fj::Vector& position, const float radius, const float mass)
+void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const float radius, const float mass)
 {
     std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FineParticle>(position);
     
@@ -161,31 +162,31 @@ void fj::ParticleSystem::makeCollision(const int index1, const int index2)
     particle1->addNeighborParticle(particle2);
 }
 
-void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Vector &collisionPoint)
+void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Vector3 &collisionPoint)
 {
     const auto& particle = getParticles()[index];
     const fj::Scalar kDistance = collisionPoint.norm();
-    const fj::Vector kNormalizedDirection = (collisionPoint - particle->getPosition()).normalized();
+    const fj::Vector3 kNormalizedDirection = (collisionPoint - particle->getPosition()).normalized();
  
     this->applyForceFromObject(index, kDistance, kNormalizedDirection);
  }
 
-void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector& normalizedDirection)
+void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector3& normalizedDirection)
 {
     getParticles()[index]->affectedByObject(distance, normalizedDirection);
 }
 
-void fj::ParticleSystem::setParticlePositionAt(const int index, const fj::Vector& position)
+void fj::ParticleSystem::setParticlePositionAt(const int index, const fj::Vector3& position)
 {
 	getParticles()[index]->setPosition(position);
 }
 
-void fj::ParticleSystem::setParticleVelocityAt(const int index, const fj::Vector& velocity)
+void fj::ParticleSystem::setParticleVelocityAt(const int index, const fj::Vector3& velocity)
 {
 	getParticles()[index]->setVelocity(velocity);
 }
 
-fj::Vector fj::ParticleSystem::popParticleForceAt(const int index)
+fj::Vector3 fj::ParticleSystem::popParticleForceAt(const int index)
 {
 	return getParticles()[index]->popApliedForce();
 }

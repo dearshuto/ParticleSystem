@@ -10,7 +10,6 @@
 
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
-#include <ParticleSystem/type/scalar.h>
 
 int main(int argc, char** argv)
 {
@@ -19,7 +18,7 @@ int main(int argc, char** argv)
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             for (int k = 0; k < 5; k++) {
-                particleSystem.createFluidParticle(fj::Vector(i, j, k));
+                particleSystem.createFluidParticle(fj::Vector3(i, j, k));
             }
         }
     }

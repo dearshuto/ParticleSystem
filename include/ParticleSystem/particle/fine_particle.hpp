@@ -9,7 +9,7 @@
 #ifndef fine_particle_hpp
 #define fine_particle_hpp
 
-#include <ParticleSystem/type/scalar.h>
+#include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/particle/particle.hpp>
 
 namespace fj {
@@ -24,7 +24,7 @@ public:
     
     FineParticle(const fj::FineParticle& other) = delete;
     
-    FineParticle(const fj::Vector& position)
+    FineParticle(const fj::Vector3& position)
     : fj::Particle(position)
     {
         
@@ -34,20 +34,20 @@ public:
     
     void updateProperty() override;
 
-    fj::Vector affect(const fj::Particle& particle)const override;
-    fj::Vector affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
+    fj::Vector3 affect(const fj::Particle& particle)const override;
+    fj::Vector3 affectedBy(const std::weak_ptr<fj::Particle>& neighborParticle) override;
 
 private:
-    fj::Vector computeVanderWaalsForce(const fj::Particle& particle)const;
+    fj::Vector3 computeVanderWaalsForce(const fj::Particle& particle)const;
     
     /**
      * @param convertedRadius 換算粒子径
      * @oaram distance 2物体の表万間距離
      * @param normalizedDirection 正規化してある力の方向
      */
-    fj::Vector VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector& normalizedDirection)const;
+    fj::Vector3 VanderWaalsFomula(const fj::Scalar convertedRadius, const fj::Scalar distance, const fj::Vector3& normalizedDirection)const;
     
-    fj::Vector computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const override;
+    fj::Vector3 computeForceFromObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)const override;
 };
 
 #endif /* fine_particle_hpp */

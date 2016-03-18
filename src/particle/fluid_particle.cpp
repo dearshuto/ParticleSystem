@@ -10,8 +10,9 @@
 #include <cassert>
 #include <cmath>
 
-#include <ParticleSystem/type/Vector.hpp>
-#include <ParticleSystem/type/scalar.h>
+#include <FUJIMath/type/vector3.hpp>
+#include <FUJIMath/type/scalar.h>
+
 #include <ParticleSystem/type/simulation_constant.hpp>
 #include <ParticleSystem/particle/fluid_particle.hpp>
 
@@ -38,7 +39,7 @@ void fj::FluidParticle::updateProperty()
         // 近傍粒子が突然消えていたらバグ
         assert( !neighborParticleWeakPtr.expired() );
         
-        const fj::Vector kRelativePosition = this->getPosition() - neighborParticle->getPosition();
+        const fj::Vector3 kRelativePosition = this->getPosition() - neighborParticle->getPosition();
         const fj::Scalar kSquaredDistance = (kRelativePosition * kSPH_SIMSCALE).squaredNorm();
         const fj::Scalar kC = kSquaredEffectRange - kSquaredDistance;
         
@@ -56,7 +57,7 @@ void fj::FluidParticle::updateProperty()
     
 }
 
-fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
+fj::Vector3 fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neighborParticleWeakPtr)
 {
     const std::shared_ptr<fj::Particle> neighborParticle = neighborParticleWeakPtr.lock();
     
@@ -64,13 +65,13 @@ fj::Vector fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &neig
     assert( !neighborParticleWeakPtr.expired() );
     
     if ( this->getPosition() == neighborParticle->getPosition()) {
-        return fj::Vector(0, 0, 0);
+        return fj::Vector3(0, 0, 0);
     }
  
     return neighborParticle->affect( std::cref(*this) );
 }
 
-fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
+fj::Vector3 fj::FluidParticle::affect(const fj::Particle &particle)const
 {
     // 藤代研究室0Bの上田さんのコードをもとにして実装されています
     
@@ -83,7 +84,7 @@ fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
     
     const fj::FluidParticle& kNeighborParticle = std::cref(*this);
     
-    const fj::Vector kRelativePosition = (particle.getPosition() - kNeighborParticle.getPosition()) * kSPH_SIMSCALE;
+    const fj::Vector3 kRelativePosition = (particle.getPosition() - kNeighborParticle.getPosition()) * kSPH_SIMSCALE;
     const fj::Scalar kDistance = kRelativePosition.norm();
     
     const fj::Scalar kC = kH - kDistance;
@@ -91,13 +92,13 @@ fj::Vector fj::FluidParticle::affect(const fj::Particle &particle)const
     const fj::Scalar kPressureTerm = -0.5 * kC * kSpikyKernel * (particle.getPressure() + kNeighborParticle.getPressure()) / kDistance;
     const fj::Scalar kVelocityTerm = kLaplacianKernel * kSPH_VISCOSITY;
     
-    fj::Vector fcurr = kRelativePosition * kPressureTerm + (kNeighborParticle.getVelocity() - particle.getVelocity()) * kVelocityTerm;
+    fj::Vector3 fcurr = kRelativePosition * kPressureTerm + (kNeighborParticle.getVelocity() - particle.getVelocity()) * kVelocityTerm;
     fcurr *= kC * particle.getDensity() * kNeighborParticle.getDensity();
     
     return fcurr;
 }
 
-fj::Vector fj::FluidParticle::computeForceFromObject(const fj::Scalar& distance, const fj::Vector& normalizedDirection)const
+fj::Vector3 fj::FluidParticle::computeForceFromObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)const
 {
-    return fj::Vector(0, 0, 0);
+    return fj::Vector3(0, 0, 0);
 }
