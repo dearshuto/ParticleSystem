@@ -55,7 +55,12 @@ public:
      */
     void registerParticle(const std::shared_ptr<fj::Particle> particle);
 
+    const ParticleContainer& getNeighborParticles(const fj::Particle& particle)const;
+    
 private:
+    
+    void updateContainerAt(const HashValue hash);
+    
     HashValue computeHashValueFromPosition(const fj::Position& position)const;
 
     
@@ -69,6 +74,11 @@ private:
     HashMap* getPartisions()
     {
         return &m_partitions;
+    }
+    
+    const HashMap& getHashMap()const
+    {
+        return m_partitions;
     }
     
     unsigned int getPartitionsWidth()const

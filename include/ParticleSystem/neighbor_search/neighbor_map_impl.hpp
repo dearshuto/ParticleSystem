@@ -10,11 +10,40 @@
 #include <FUJIMath/extend/position.hpp>
 
 #include <ParticleSystem/neighbor_search/neighbor_map.hpp>
+#include <ParticleSystem/particle/particle.hpp>
+
+template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D>
+const typename fj::NeighborMap<W, H, D>::ParticleContainer&
+fj::NeighborMap<W, H, D>::getNeighborParticles(const fj::Particle &particle)const
+{
+    const fj::Position& kPosition = particle.getPosition();
+    const HashValue kHash = computeHashValueFromPosition(kPosition);
+    
+    return getHashMap()[kHash];
+}
 
 template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D>
 void fj::NeighborMap<W, H, D>::update()
 {
+    const HashMap& kHashMap = getPartisions();
     
+    for (int i = 0; i < kHashMap.size(); i++)
+    {
+        updateContainerAt(i);
+    }
+    
+}
+
+template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D>
+void fj::NeighborMap<W, H, D>::updateContainerAt(const HashValue hash)
+{
+    ParticleContainer container = getPartisions()[hash];
+    
+    for (const auto& particle : container)
+    {
+        
+    }
+
 }
 
 template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D>
