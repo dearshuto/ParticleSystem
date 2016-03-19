@@ -66,9 +66,9 @@ private:
 private:
     HashMap m_partitions;
     
-    static constexpr int m_partitionsWidth = W;
-    static constexpr int m_partitionsHeight = H;
-    static constexpr int m_partitionsDepth = D;
+    const int m_partitionsWidth = W;
+    const int m_partitionsHeight = H;
+    const int m_partitionsDepth = D;
 };
 
 #include <ParticleSystem/neighbor_search/neighbor_map_impl.hpp>
