@@ -16,14 +16,14 @@ namespace fj {
     class Particle;
     class Position;
     
-    template<constexpr int W, constexpr int H, constexpr int D> class NeighborMap;
+    template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D> class NeighborMap;
 }
 
 /**
  * 空間分割法を利用した近傍探索マップ
  * テンプレートのデフォルト値を採用することで奥行きの分割数の指定を自由にし, 3次元化を可能にしてある.
  */
-template<constexpr int W, constexpr int H, constexpr int D = 1>
+template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D = 1>
 class fj::NeighborMap
 {
     typedef unsigned int HashValue;
@@ -39,10 +39,11 @@ class fj::NeighborMap
      */
     typedef std::array< ParticleContainer, W * H * D> HashMap;
 public:
-    NeighborMap() = default;
+    NeighborMap() = delete;
     ~NeighborMap() = default;
     
-    NeighborMap(const int width, const int height)
+    NeighborMap(const unsigned int blockSize)
+    : m_blockSize(blockSize)
     {
         
     }
@@ -60,17 +61,17 @@ private:
         return &m_partitions;
     }
     
-    int getPartitionsWidth()const
+    unsigned int getPartitionsWidth()const
     {
         return m_partitionsWidth;
     }
     
-    int getPartitionsHeight()const
+    unsigned int getPartitionsHeight()const
     {
         return m_partitionsHeight;
     }
     
-    int getPartitionsDepth()const
+    unsigned int getPartitionsDepth()const
     {
         return m_partitionsDepth;
     }
@@ -79,9 +80,10 @@ private:
 private:
     HashMap m_partitions;
     
-    const int m_partitionsWidth = W;
-    const int m_partitionsHeight = H;
-    const int m_partitionsDepth = D;
+    const unsigned int m_partitionsWidth = W;
+    const unsigned int m_partitionsHeight = H;
+    const unsigned int m_partitionsDepth = D;
+    const unsigned int m_blockSize;
 };
 
 #include <ParticleSystem/neighbor_search/neighbor_map_impl.hpp>
