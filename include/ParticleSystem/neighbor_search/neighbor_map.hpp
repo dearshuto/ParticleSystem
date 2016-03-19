@@ -19,11 +19,24 @@ namespace fj {
     template<constexpr int W, constexpr int H, constexpr int D> class NeighborMap;
 }
 
+/**
+ * 空間分割法を利用した近傍探索マップ
+ * テンプレートのデフォルト値を採用することで奥行きの分割数の指定を自由にし, 3次元化を可能にしてある.
+ */
 template<constexpr int W, constexpr int H, constexpr int D = 1>
 class fj::NeighborMap
 {
-    typedef int HashValue;
+    typedef unsigned int HashValue;
+    
+    /**
+     * 粒子の再登録は毎フレーム行わないが, 逐次アクセスは毎フレーム行う. 
+     * よって可変長で連続したメモリにデータを確保していて高速アクセスが可能なstd::vectorを利用する.
+     */
     typedef std::vector<fj::Particle> ParticleContainer;
+
+    /**
+     * シミュレーションの途中で分割数は変化しないので, 固定長であるがもっとも高速なstd::arrayを利用する.
+     */
     typedef std::array< ParticleContainer, W * H * D> HashMap;
 public:
     NeighborMap() = default;
