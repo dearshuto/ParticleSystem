@@ -32,7 +32,7 @@ class fj::NeighborMap
      * 粒子の再登録は毎フレーム行わないが, 逐次アクセスは毎フレーム行う. 
      * よって可変長で連続したメモリにデータを確保していて高速アクセスが可能なstd::vectorを利用する.
      */
-    typedef std::vector<fj::Particle> ParticleContainer;
+    typedef std::vector< std::shared_ptr<fj::Particle> > ParticleContainer;
 
     /**
      * シミュレーションの途中で分割数は変化しないので, 固定長であるがもっとも高速なstd::arrayを利用する.
@@ -49,13 +49,23 @@ public:
     }
     
     void update();
+    
+    /**
+     * 粒子を新規に登録する.
+     */
     void registerParticle(const std::shared_ptr<fj::Particle> particle);
-    void removeParticle(const std::shared_ptr<fj::Particle> particle);
 
 private:
     HashValue computeHashValueFromPosition(const fj::Position& position)const;
+
     
 private:
+    
+    ParticleContainer* getContainerPtr(const HashValue hash)
+    {
+        return &(getPartisions()[hash]);
+    }
+    
     HashMap* getPartisions()
     {
         return &m_partitions;

@@ -21,12 +21,9 @@ template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned 
 void fj::NeighborMap<W, H, D>::registerParticle(const std::shared_ptr<fj::Particle> particle)
 {
     const HashValue kHash = computeHashValueFromPosition(particle->getPosition());
-}
-
-template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D>
-void fj::NeighborMap<W, H, D>::removeParticle(const std::shared_ptr<fj::Particle> particle)
-{
+    ParticleContainer* container = getContainerPtr(kHash);
     
+    container->push_back(particle);
 }
 
 template<constexpr unsigned int W, constexpr unsigned int H, constexpr unsigned int D>
