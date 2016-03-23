@@ -19,7 +19,7 @@ namespace fj {
 class fj::ParticleMap
 {
 public:
-    ParticleMap() = delete;
+    ParticleMap() = default;
     virtual ~ParticleMap() = default;
     
     virtual void registerParticle(std::shared_ptr<fj::Particle> particle) = 0;
