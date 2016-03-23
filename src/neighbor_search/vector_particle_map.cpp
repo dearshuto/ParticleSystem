@@ -6,4 +6,19 @@
 //
 //
 
-#include "vector_particle_map.hpp"
+#include <functional>
+#include <memory>
+
+#include <ParticleSystem/neighbor_search/vector_particle_map.hpp>
+
+void fj::VectorParticleMap::registerParticle(std::shared_ptr<fj::Particle> particle)
+{
+    getParticlesPtr()->push_back(particle);
+}
+
+const fj::Particle& fj::VectorParticleMap::getParticleAt(const unsigned int id)const
+{
+    const std::shared_ptr<fj::Particle>& kParticle = getParticles()[id];
+    
+    return std::cref(*kParticle);
+}
