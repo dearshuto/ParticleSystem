@@ -26,12 +26,7 @@ class fj::Particle
      */
     typedef std::vector<std::weak_ptr<fj::Particle>> NeighborParticles;
 public:
-    Particle()
-    : Particle(fj::Vector3(0, 0, 0))
-    {
-        
-    }
-    
+    Particle() = delete;
     virtual~Particle() = default;
     
     
@@ -39,8 +34,9 @@ public:
     Particle& operator=(const fj::Particle& other) = delete;
     
     
-    Particle(const fj::Vector3& position)
-    : m_radius( fj::Scalar(1) )
+    Particle(const int ID, const fj::Vector3& position)
+    : m_ID(ID)
+    , m_radius( fj::Scalar(1) )
     , m_mass( fj::Scalar(1) )
     , m_effectRange( fj::Scalar(0.01) )
     , m_squaredEffectRange( fj::Scalar(std::pow(m_effectRange, 2)) )
@@ -125,6 +121,12 @@ protected:
     
 // getters & setters
 public:
+    
+    unsigned int getID()const
+    {
+        return m_ID;
+    }
+    
     const fj::Vector3& getPosition()const
     {
         return m_position;
@@ -222,6 +224,13 @@ protected:
     }
     
 private:
+    
+    /**
+     * 各パーティクルを識別するのに利用する数字
+     * かならず一意であるように決定し, ハッシュマップなどに利用する
+     */
+    const unsigned int m_ID;
+    
     /**
      * 地震の位置から一定の範囲内に存在するパーティクル
      */
