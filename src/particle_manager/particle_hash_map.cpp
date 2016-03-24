@@ -17,11 +17,11 @@ void fj::ParticleHashMap::registerParticle(std::shared_ptr<fj::Particle> particl
     m_hashMap[kID] = particle;
 }
 
-int fj::ParticleHashMap::getUnusedID()
+const fj::ParticleID fj::ParticleHashMap::getUnusedID()
 {
     // IDは毎回違う数字を用意できればなんでもいい
     // そこでこの関数がよばれた回数をIDにしておく
     static unsigned int count = 0;
     
-    return count++;
+    return fj::ParticleID(count);
 }

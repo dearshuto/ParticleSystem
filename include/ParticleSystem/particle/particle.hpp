@@ -36,7 +36,7 @@ public:
     Particle& operator=(const fj::Particle& other) = delete;
     
     
-    Particle(const int ID, const fj::Vector3& position)
+    Particle(const fj::ParticleID& ID, const fj::Vector3& position)
     : m_ID(ID)
     , m_radius( fj::Scalar(1) )
     , m_mass( fj::Scalar(1) )

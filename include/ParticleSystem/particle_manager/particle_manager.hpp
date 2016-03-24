@@ -60,6 +60,11 @@ public:
         return m_particles.size();
     }
     
+    const fj::ParticleID getUnusedID()
+    {
+        return m_particleHashMap.getUnusedID();
+    }
+    
 private:
     ParticleArray m_particles;
     fj::ParticleHashMap m_particleHashMap;

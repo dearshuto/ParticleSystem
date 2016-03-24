@@ -10,7 +10,10 @@
 #define fine_particle_hpp
 
 #include <FUJIMath/type/scalar.h>
-#include <ParticleSystem/particle/particle.hpp>
+
+#include "particle.hpp"
+#include "particle_id.h"
+
 
 namespace fj {
     class FineParticle;
@@ -24,8 +27,8 @@ public:
     
     FineParticle(const fj::FineParticle& other) = delete;
     
-    FineParticle(const fj::Vector3& position)
-    : fj::Particle(position)
+    FineParticle(const fj::ParticleID& ID, const fj::Vector3& position)
+    : fj::Particle(ID, position)
     {
         
     }

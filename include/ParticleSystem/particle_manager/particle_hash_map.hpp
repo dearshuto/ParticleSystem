@@ -10,7 +10,9 @@
 #define particle_hash_map_hpp
 
 #include <unordered_map>
+#include <memory>
 
+#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 
 namespace fj {
@@ -34,7 +36,7 @@ public:
     /**
      * 未使用のIDを返す
      */
-    int getUnusedID();
+    const fj::ParticleID getUnusedID();
     
     size_t size()const
     {

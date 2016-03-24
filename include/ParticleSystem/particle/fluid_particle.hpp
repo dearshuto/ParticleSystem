@@ -11,7 +11,8 @@
 
 #include <FUJIMath/type/scalar.h>
 
-#include <ParticleSystem/particle/particle.hpp>
+#include "particle.hpp"
+#include "particle_id.h"
 
 namespace fj {
     class Vector;
@@ -21,14 +22,14 @@ namespace fj {
 class fj::FluidParticle : public fj::Particle
 {
 public:
-    FluidParticle() = default;
+    FluidParticle() = delete;
     virtual ~FluidParticle() = default;
     
     FluidParticle(const fj::FluidParticle& other) = delete;
     FluidParticle& operator=(const fj::FluidParticle& other) = delete;
     
-    FluidParticle(const fj::Vector3& position)
-    : Particle(position)
+    FluidParticle(const fj::ParticleID& ID, const fj::Vector3& position)
+    : Particle(ID, position)
     {
         
     }
