@@ -25,7 +25,7 @@ public:
     
     ParticleID(const ParticleID& other) = delete;
     
-    ParticleID(const unsigned int num)
+    explicit ParticleID(const unsigned int num)
     : m_ID(num)
     {
         
