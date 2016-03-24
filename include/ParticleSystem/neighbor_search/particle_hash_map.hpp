@@ -34,6 +34,10 @@ public:
      */
     int getUnusedID();
     
+    size_t size()const
+    {
+        return m_hashMap.size();
+    }
     
 private:
     std::unordered_map<unsigned int, std::shared_ptr<fj::Particle>> m_hashMap;
