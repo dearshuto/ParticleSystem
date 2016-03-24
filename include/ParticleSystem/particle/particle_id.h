@@ -23,7 +23,11 @@ public:
     ParticleID() = delete;
     ~ParticleID() = default;
     
-    ParticleID(const ParticleID& other) = delete;
+    explicit ParticleID(const ParticleID& other)
+    : m_ID(other.getData())
+    {
+        
+    }
     
     explicit ParticleID(const unsigned int num)
     : m_ID(num)
