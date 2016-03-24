@@ -15,6 +15,8 @@
 #include <vector>
 #include <FUJIMath/type/vector3.hpp>
 
+#include "particle_id.h"
+
 namespace fj {
     class Particle;
 }
@@ -122,7 +124,7 @@ protected:
 // getters & setters
 public:
     
-    unsigned int getID()const
+    const fj::ParticleID& getID()const
     {
         return m_ID;
     }
@@ -229,7 +231,7 @@ private:
      * 各パーティクルを識別するのに利用する数字
      * かならず一意であるように決定し, ハッシュマップなどに利用する
      */
-    const unsigned int m_ID;
+    const fj::ParticleID m_ID;
     
     /**
      * 地震の位置から一定の範囲内に存在するパーティクル
