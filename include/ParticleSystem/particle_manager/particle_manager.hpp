@@ -9,6 +9,7 @@
 #ifndef particle_manager_hpp
 #define particle_manager_hpp
 
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -27,11 +28,17 @@ public:
     ParticleManager() = default;
     ~ParticleManager() = default;
     
-    void registerParticle(const std::unique_ptr<fj::Particle> particle);
+    void registerParticle(std::unique_ptr<fj::Particle> particle);
     
-    std::shared_ptr<fj::Particle>& getParticleAt(const int i);
+    std::shared_ptr<fj::Particle>& getParticleAt(const int i)
+    {
+        return std::ref(m_particles[i]);
+    }
     
-    std::shared_ptr<fj::Particle>& search(const fj::ParticleID& ID);
+    std::shared_ptr<fj::Particle>& search(const fj::ParticleID& ID)
+    {
+        return std::ref(m_particleHashMap.get(ID));
+    }
     
     ParticleArray::iterator begin()
     {
