@@ -28,10 +28,10 @@ FILE(GLOB_RECURSE particle_managers
 	${CMAKE_SOURCE_DIR}/src/particle_manager/*.cpp
 )
 
-FILE(GLOB_RECURSE neighbor_searches
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/neighbor_search/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/neighbor_search/*.h
-	${CMAKE_SOURCE_DIR}/src/neighbor_search/*.cpp
+FILE(GLOB_RECURSE collision_dispatchers
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/collision_dispatcher/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/collision_dispatcher/*.h
+	${CMAKE_SOURCE_DIR}/src/collision_dispatcher/*.cpp
 )
 
 FILE(GLOB_RECURSE types
@@ -48,7 +48,7 @@ FILE(GLOB_RECURSE external_math_sources
 SOURCE_GROUP(particle_system FILES ${particle_systems})
 SOURCE_GROUP(particle FILES ${particles})
 SOURCE_GROUP(particle_manager FILES ${particle_managers})
-SOURCE_GROUP(neighbor_search FILES ${neighbor_searches})
+SOURCE_GROUP(collision_dispatcher FILES ${collision_dispatchers})
 SOURCE_GROUP(type FILES ${types})
 
 SOURCE_GROUP(external_math FILES ${external_math_sources})
@@ -57,7 +57,7 @@ add_library(particle_system STATIC
 	${particle_systems}
 	${particles}
 	${particle_managers}
-	${neighbor_searches}
+	${collision_dispatchers}
 	${types}
 	${external_math_sources}
 )
