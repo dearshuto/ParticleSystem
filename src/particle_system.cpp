@@ -41,7 +41,7 @@ void fj::ParticleSystem::updateParticleProperty()
 {
     std::vector<std::thread> threds;
     
-    const int kParticleNum = getParticles().size();
+    const int kParticleNum = getParticleManager().getRegisteredParticleNum();
     const int kMaxIndex = kParticleNum - 1;// 例えば50個の要素があればインデックスは0~49
     
     const int kThreadOffset = kMaxIndex / getThreadNum();
@@ -66,11 +66,10 @@ void fj::ParticleSystem::updateParticleProperty()
 
 void fj::ParticleSystem::updateParticlePropertyWithin_MT(const int begin, const int end)
 {
-    std::shared_ptr<fj::Particle> particle;
     
     for (int i = begin; i <= end; i++)
     {
-        particle = (*getParticlesPtr())[i];
+        std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->getParticleAt(i);
         particle->updateProperty();
     }
     
@@ -80,7 +79,7 @@ void fj::ParticleSystem::accumulateParticleForce()
 {
     std::vector<std::thread> threds;
     
-    const int kParticleNum = getParticles().size();
+    const int kParticleNum = getParticleManager().getRegisteredParticleNum();
     const int kMaxIndex = kParticleNum - 1;// 例えば50個の要素があればインデックスは0~49
     
     const int kThreadOffset = kMaxIndex / getThreadNum();
@@ -105,11 +104,10 @@ void fj::ParticleSystem::accumulateParticleForce()
 
 void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const int end)
 {
-    std::shared_ptr<fj::Particle> particle;
     
     for (int i = begin; i < end; i++)
     {
-        particle = (*getParticlesPtr())[i];
+        std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->getParticleAt(i);
         particle->accumulateForce();
     }
     
@@ -119,7 +117,7 @@ void fj::ParticleSystem::applyGravity()
 {
     const fj::Vector3 kGravity = getGravity();
     
-    for (std::shared_ptr<fj::Particle>& particle : *getParticlesPtr())
+    for (auto& particle : *getParticleManagerPtr())
     {
         particle->applyForce(kGravity);
     }
@@ -129,7 +127,7 @@ void fj::ParticleSystem::applyGravity()
 void fj::ParticleSystem::clearParticleNeighbors()
 {
     
-    for (const std::shared_ptr<fj::Particle> particle : getParticles())
+    for (const std::shared_ptr<fj::Particle> particle : *getParticleManagerPtr())
     {
         particle->clearNeighborParticles();
     }
@@ -140,7 +138,7 @@ void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position)
 {
     std::shared_ptr<fj::Particle> particle = std::make_shared<fj::FluidParticle>(position);
     
-    getParticlesPtr()->push_back(particle);
+    getParticleMapPtr()->registerParticle(particle);
 }
 
 void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const float radius, const float mass)
@@ -150,43 +148,47 @@ void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const f
     particle->setRadius(radius);
     particle->setMass(mass);
     
-    getParticlesPtr()->push_back(particle);
+    getParticleMapPtr()->registerParticle(particle);
 }
 
 
-void fj::ParticleSystem::makeCollision(const int index1, const int index2)
+void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2)
 {
-    const std::shared_ptr<fj::Particle>& particle1 = getParticles()[index1];
-    const std::shared_ptr<fj::Particle>& particle2 = getParticles()[index2];
+    const std::shared_ptr<fj::Particle>& particle1 = getParticleManagerPtr()->search(ID1);
+    const std::shared_ptr<fj::Particle>& particle2 = getParticleManagerPtr()->search(ID2);
     
     particle1->addNeighborParticle(particle2);
 }
 
-void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Vector3 &collisionPoint)
+void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)
 {
-    const auto& particle = getParticles()[index];
+    const auto& particle = getParticleManagerPtr()->search(ID);
     const fj::Scalar kDistance = collisionPoint.norm();
     const fj::Vector3 kNormalizedDirection = (collisionPoint - particle->getPosition()).normalized();
  
-    this->applyForceFromObject(index, kDistance, kNormalizedDirection);
+    this->applyForceFromObject(ID, kDistance, kNormalizedDirection);
  }
 
-void fj::ParticleSystem::applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector3& normalizedDirection)
+void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection)
 {
-    getParticles()[index]->affectedByObject(distance, normalizedDirection);
+    const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
+    particle->affectedByObject(distance, normalizedDirection);
 }
 
-void fj::ParticleSystem::setParticlePositionAt(const int index, const fj::Vector3& position)
+void fj::ParticleSystem::setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position)
 {
-	getParticles()[index]->setPosition(position);
+    const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
+    particle->setPosition(position);
 }
 
-void fj::ParticleSystem::setParticleVelocityAt(const int index, const fj::Vector3& velocity)
+void fj::ParticleSystem::setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity)
 {
-	getParticles()[index]->setVelocity(velocity);
+    const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
+    particle->setVelocity(velocity);
 }
 
-fj::Vector3 fj::ParticleSystem::popParticleForceAt(const int index)
+fj::Vector3 fj::ParticleSystem::popParticleForceAt(const fj::ParticleID& ID)
 {
-	return getParticles()[index]->popApliedForce();
+    const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
+	return particle->popApliedForce();
 }

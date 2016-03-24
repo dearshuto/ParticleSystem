@@ -17,6 +17,10 @@
 #include <ParticleSystem/particle/FJparticle.h>
 #include <ParticleSystem/type/FJtype.h>
 
+#include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/neighbor_search/particle_map.hpp>
+#include <ParticleSystem/particle_manager/particle_manager.hpp>
+
 namespace fj {
     class Particle;
     class ParticleSystem;
@@ -35,6 +39,12 @@ public:
 
     ~ParticleSystem() = default;
 
+    ParticleSystem(std::unique_ptr<fj::ParticleMap> particleMap)
+    : ParticleSystem()
+    {
+        m_particleMap =  std::move(particleMap);
+    }
+    
     void stepSimulation(const float timestep);
 
     
@@ -48,7 +58,7 @@ public:
      * @param index1 衝突を検知した粒子のID
      * @param index2 ID1と衝突した粒子のID
      */
-    void makeCollision(const int index1, const int index2);
+    void makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2);
 
 
     /**
@@ -56,10 +66,10 @@ public:
      * @oaram 剛体の影響を受けた粒子のインデックス
      * @param 粒子が衝突した剛体上の点
      */
-    void applyForceFromObject(const int index, const fj::Vector3& collisionPoint);
+    void applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3& collisionPoint);
     
 
-	void applyForceFromObject(const int index, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
+    void applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
     
 
     bool hasActivatedGravity()const
@@ -87,11 +97,17 @@ private:
     void applyGravity();
     void clearParticleNeighbors();
 
-//ge tters & setters
+//getters & setters
 public:
-    const std::vector<std::shared_ptr<fj::Particle>>& getParticles()const
+
+    const fj::ParticleManager& getParticleManager()const
     {
-        return m_particles;
+        return m_particleManager;
+    }
+    
+    const fj::ParticleMap& getParticleMap()const
+    {
+        return *m_particleMap;
     }
 
     const fj::Vector3& getGravity()const
@@ -104,11 +120,11 @@ public:
         m_gravity = fj::Vector3(x, y, z);
     }
 
-	void setParticlePositionAt(const int index, const fj::Vector3& position);
+    void setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position);
 
-	void setParticleVelocityAt(const int index, const fj::Vector3& velocity);
+    void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
 
-	fj::Vector3 popParticleForceAt(const int index);
+    fj::Vector3 popParticleForceAt(const fj::ParticleID& ID);
 
     
     uint8_t getThreadNum()const
@@ -122,14 +138,33 @@ public:
     }
     
 protected:
-    std::vector<std::shared_ptr<fj::Particle>>* getParticlesPtr()
+    
+    fj::ParticleMap*const getParticleMapPtr()
     {
-        return &m_particles;
+        return m_particleMap.get();
     }
 
+    fj::ParticleManager* getParticleManagerPtr()
+    {
+        return &m_particleManager;
+    }
+    
 private:
-    std::vector< std::shared_ptr<fj::Particle> > m_particles;
+    
+    /**
+     * 走査とID検索とを可能な状態で粒子を管理する
+     */
+    fj::ParticleManager m_particleManager;
+    
+    /**
+     * 独自実装の近傍探索アルゴリズム
+     * 近傍粒子探索を外部にいたくするときはnullのまま
+     */
+    std::unique_ptr<fj::ParticleMap> m_particleMap;
+    
+    
     fj::Vector3 m_gravity;
+
     bool m_hasActivatedGravity;
     
     /**

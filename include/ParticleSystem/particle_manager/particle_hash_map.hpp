@@ -11,6 +11,8 @@
 
 #include <unordered_map>
 
+#include <ParticleSystem/particle/particle_id.h>
+
 namespace fj {
     class Particle;
     class ParticleHashMap;
@@ -24,7 +26,7 @@ public:
     
     void registerParticle(std::shared_ptr<fj::Particle> particle);
     
-    std::shared_ptr<fj::Particle>& get(const int ID)
+    std::shared_ptr<fj::Particle>& get(const fj::ParticleID& ID)
     {
         return m_hashMap[ID];
     }
@@ -40,7 +42,7 @@ public:
     }
     
 private:
-    std::unordered_map<unsigned int, std::shared_ptr<fj::Particle>> m_hashMap;
+    std::unordered_map<fj::ParticleID, std::shared_ptr<fj::Particle>> m_hashMap;
 };
 
 #endif /* particle_hash_map_hpp */

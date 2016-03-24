@@ -8,12 +8,12 @@
 
 #include <ParticleSystem/particle/particle.hpp>
 
-#include <ParticleSystem/neighbor_search/particle_hash_map.hpp>
+#include <ParticleSystem/particle_manager/particle_hash_map.hpp>
 
 void fj::ParticleHashMap::registerParticle(std::shared_ptr<fj::Particle> particle)
 {
-    const unsigned int kID = particle->getID();
-    
+    const fj::ParticleID& kID = particle->getID();
+
     m_hashMap[kID] = particle;
 }
 
