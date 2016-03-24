@@ -9,6 +9,8 @@
 #ifndef Header_h
 #define Header_h
 
+#include <unordered_map>
+
 namespace fj {
     class ParticleID;
 }
@@ -23,7 +25,7 @@ public:
     ParticleID() = delete;
     ~ParticleID() = default;
     
-    explicit ParticleID(const ParticleID& other)
+    ParticleID(const ParticleID& other)
     : m_ID(other.getData())
     {
         
@@ -37,12 +39,17 @@ public:
     
     ParticleID& operator=(const ParticleID& other) = delete;
     
-    bool operator==(const ParticleID& other)
+    bool operator==(const ParticleID& other)const
     {
         if (this->getData() == other.getData()) {
             return true;
         }
         return false;
+    }
+    
+    bool operator!=(const ParticleID& other)const
+    {
+        return !this->operator==(other);
     }
     
     unsigned int getData()const
@@ -53,6 +60,18 @@ public:
 private:
     const unsigned int m_ID;
 };
+
+
+namespace std {
+    template<>
+    class hash<fj::ParticleID>
+    {
+    public:
+        size_t operator()(const fj::ParticleID& x) const{
+            return hash<int>()(x.getData()) ^ hash<int>()(x.getData());
+        }
+    };
+}
 
 
 #endif /* Header_h */
