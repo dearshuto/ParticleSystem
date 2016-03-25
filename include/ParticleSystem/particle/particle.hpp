@@ -23,6 +23,7 @@ namespace fj {
 
 class fj::Particle
 {
+public:
     /**
      * 循環参照を起こさないように弱い参照で保持された近傍粒子
      */
