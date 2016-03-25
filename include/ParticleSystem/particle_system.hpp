@@ -18,8 +18,8 @@
 #include <ParticleSystem/type/FJtype.h>
 
 #include <ParticleSystem/particle/particle_id.h>
-#include <ParticleSystem/neighbor_search/particle_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
+#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 
 namespace fj {
     class Particle;
@@ -39,10 +39,10 @@ public:
 
     ~ParticleSystem() = default;
 
-    ParticleSystem(std::unique_ptr<fj::ParticleMap> particleMap)
+    ParticleSystem(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
     : ParticleSystem()
     {
-        m_particleMap =  std::move(particleMap);
+        m_collisionDispatcher =  std::move(collisionDispatcher);
     }
     
     void stepSimulation(const float timestep);
@@ -105,9 +105,9 @@ public:
         return m_particleManager;
     }
     
-    const fj::ParticleMap& getParticleMap()const
+    const fj::ParticleCollisionDispatcher& getCollisionDispatcher()const
     {
-        return *m_particleMap;
+        return *m_collisionDispatcher;
     }
 
     const fj::Vector3& getGravity()const
@@ -139,9 +139,9 @@ public:
     
 protected:
     
-    fj::ParticleMap*const getParticleMapPtr()
+    std::unique_ptr<fj::ParticleCollisionDispatcher>& getCollisionDispatcherPtr()
     {
-        return m_particleMap.get();
+        return m_collisionDispatcher;
     }
 
     fj::ParticleManager* getParticleManagerPtr()
@@ -160,7 +160,7 @@ private:
      * 独自実装の近傍探索アルゴリズム
      * 近傍粒子探索を外部にいたくするときはnullのまま
      */
-    std::unique_ptr<fj::ParticleMap> m_particleMap;
+    std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
     
     
     fj::Vector3 m_gravity;
