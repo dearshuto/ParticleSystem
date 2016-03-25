@@ -44,6 +44,12 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
 void fj::ParticleSystem::updateParticleNeighbor()
 {
     
+    for (auto& particle : *getParticleManagerPtr())
+    {
+        auto neighbors = getCollisionDispatcherPtr()->getNeighborParticlesAt(std::ref(*particle));
+        particle->moveNeighborParticles( std::move(neighbors) );
+    }
+    
 }
 
 void fj::ParticleSystem::simulateParticleBehavior()
