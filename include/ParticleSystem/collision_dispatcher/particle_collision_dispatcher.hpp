@@ -12,6 +12,9 @@
 #include <memory>
 #include <vector>
 
+#include <FUJIMath/type/scalar.h>
+#include <ParticleSystem/particle/particle.hpp>
+
 namespace fj {
     class Particle;
     class ParticleManager;
@@ -30,10 +33,11 @@ public:
     ParticleCollisionDispatcher() = delete;
     ~ParticleCollisionDispatcher() = default;
     
-    ParticleCollisionDispatcher(const unsigned int width, const unsigned int height, const unsigned int depth)
+    ParticleCollisionDispatcher(const unsigned int width, const unsigned int height, const unsigned int depth, const fj::Scalar& blockSize)
     : m_width(width)
     , m_height(height)
     , m_depth(depth)
+    , m_blockSize(blockSize)
     {
         m_cells.resize(width * height * depth);
     }
@@ -42,7 +46,7 @@ public:
     
     void updated();
     
-    std::vector<const std::shared_ptr<fj::Particle>> getNeighborParticlesAt(const fj::Particle& particle)const;
+    fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle)const;
     
 private:
     
@@ -66,12 +70,22 @@ private:
     {
         return m_depth;
     }
+
+    const fj::Scalar& getBlockSize()const
+    {
+        return m_blockSize;
+    }
     
 private:
     const unsigned int m_width;
     const unsigned int m_height;
     const unsigned int m_depth;
-
+    
+    /**
+     * 空間分割したときの分割ひとつぶん
+     */
+    const fj::Scalar m_blockSize;
+    
     std::vector<Particles> m_cells;
 };
 
