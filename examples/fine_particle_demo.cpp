@@ -7,13 +7,16 @@
 //
 
 #include <iostream>
+#include <memory>
 
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
+#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 
 int main(int argc, char** argv)
 {
-    fj::ParticleSystem particleSystem;
+    std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10));
+    fj::ParticleSystem particleSystem( std::move(collisionDispatcher) );
     
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
@@ -23,30 +26,11 @@ int main(int argc, char** argv)
         }
     }
     
-    particleSystem.makeCollision(0, 1);
-    particleSystem.makeCollision(1, 0);
-    
-    particleSystem.makeCollision(0, 2);
-    particleSystem.makeCollision(2, 0);
-    
-    particleSystem.makeCollision(0, 3);
-    particleSystem.makeCollision(3, 0);
-    
-    particleSystem.makeCollision(0, 4);
-    particleSystem.makeCollision(4, 0);
-    
-    particleSystem.makeCollision(0, 5);
-    particleSystem.makeCollision(5, 0);
-    
-    particleSystem.makeCollision(0, 6);
-    particleSystem.makeCollision(6, 0);
-    
-    particleSystem.makeCollision(0, 7);
-    particleSystem.makeCollision(7, 0);
-    
+    particleSystem.stepSimulation( fj::Scalar(1) / fj::Scalar(60) );
+    particleSystem.stepSimulation( fj::Scalar(1) / fj::Scalar(60) );
     particleSystem.stepSimulation( fj::Scalar(1) / fj::Scalar(60) );
     
-    for (const auto& particle: particleSystem.getParticles())
+    for (const auto& particle: particleSystem.getParticleManager())
     {
         particle->popApliedForce().print();
     }

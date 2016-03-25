@@ -45,6 +45,8 @@ public:
         m_collisionDispatcher =  std::move(collisionDispatcher);
     }
     
+    void initSimulationStatus();
+    
     void stepSimulation(const float timestep);
 
     
@@ -88,6 +90,7 @@ public:
     }
 
 private:
+    void updateParticleNeighbor();
     void simulateParticleBehavior();
     void updateParticleProperty();
     void updateParticlePropertyWithin_MT(const int begin, const int end);

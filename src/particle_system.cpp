@@ -20,8 +20,18 @@
 
 #include <ParticleSystem/particle_system.hpp>
 
+void fj::ParticleSystem::initSimulationStatus()
+{
+    getCollisionDispatcherPtr()->initialize( getParticleManager()) ;
+}
+
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
+    if (getCollisionDispatcherPtr())
+    {
+        updateParticleNeighbor();
+    }
+    
     simulateParticleBehavior();
     
     if (hasActivatedGravity()) {
@@ -29,6 +39,11 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
     }
     
     clearParticleNeighbors();
+}
+
+void fj::ParticleSystem::updateParticleNeighbor()
+{
+    
 }
 
 void fj::ParticleSystem::simulateParticleBehavior()
