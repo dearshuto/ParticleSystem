@@ -6,6 +6,7 @@
 //
 //
 
+#include <cmath>
 #include <functional>
 
 #include <FUJIMath/type/scalar.h>
@@ -63,9 +64,18 @@ void fj::ParticleCollisionDispatcher::updatedAt(const HashValue &currentHash)
 
 }
 
-std::vector<const std::shared_ptr<fj::Particle>> fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle)const
+fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle)const
 {
-    std::vector<const std::shared_ptr<fj::Particle>> neighborParticles;
+    const HashValue kHash = computeHash( particle );
+    const Particles& kParticles = m_cells[kHash];
+    
+    fj::Particle::NeighborParticles neighborParticles;
+    
+    for (const auto& particle : kParticles)
+    {
+        neighborParticles.push_back(particle);
+    }
+    
     
     return neighborParticles;
 }
@@ -73,9 +83,14 @@ std::vector<const std::shared_ptr<fj::Particle>> fj::ParticleCollisionDispatcher
 fj::ParticleCollisionDispatcher::HashValue fj::ParticleCollisionDispatcher::computeHash(const fj::Particle& particle)const
 {
     const fj::Vector3& kPosition = particle.getPosition();
-    const fj::Scalar& kX = kPosition.x();
-    const fj::Scalar& kY = kPosition.y();
-    const fj::Scalar& kZ = kPosition.z();
+    const fj::Scalar& kX = clamp( kPosition.x() );
+    const fj::Scalar& kY = clamp( kPosition.y() );
+    const fj::Scalar& kZ = clamp( kPosition.z() );
     
     return kX + getWidth() * kY + getWidth() * getHeight() * kZ;
+}
+
+unsigned int fj::ParticleCollisionDispatcher::clamp(const fj::Scalar &num)const
+{
+    return std::floor<unsigned int>(num) / getBlockSize();
 }

@@ -54,6 +54,10 @@ private:
     
     HashValue computeHash(const fj::Particle& particle)const;
     
+    /**
+     * スカラー値をハッシュ値計算に利用可能な範囲に丸める
+     */
+    unsigned int clamp(const fj::Scalar& num)const;
     
 private:
     const unsigned int getWidth()const
