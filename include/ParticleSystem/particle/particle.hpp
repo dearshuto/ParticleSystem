@@ -76,6 +76,14 @@ public:
     }
     
     /**
+     * コンテナ化してある近郷粒子を追加する
+     */
+    void moveNeighborParticles(NeighborParticles&& neighbors)
+    {
+        m_neighborParticles = std::move(neighbors);
+    }
+    
+    /**
      * 保持していた近傍粒子を解放する
      */
     void clearNeighborParticles()
