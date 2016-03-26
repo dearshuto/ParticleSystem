@@ -24,16 +24,17 @@ private:
 public:
     ~SimulationConstant() = default;
     
-    constexpr static const fj::Scalar H = 0.01;
-    constexpr static const fj::Scalar G_SCALE = 3;
+    constexpr static const fj::Scalar SPH_SIMSCALE = 0.004;
+    constexpr static const fj::Scalar H = 300;//0.01;
+    constexpr static const fj::Scalar SPH_SCALED_H = H / SPH_SIMSCALE;
+    constexpr static const fj::Scalar SCALED_H2 = SPH_SCALED_H * SPH_SCALED_H;
+    constexpr static const fj::Scalar G_SCALE = 1;
     constexpr static const fj::Scalar SPH_LIMIT = 200.0;
     constexpr static const fj::Scalar SPH_PMASS = 0.00020543;
     constexpr static const fj::Scalar SPH_RADIUS = 0.004;
     constexpr static const fj::Scalar SPH_SIGMA = 300;
-    constexpr static const fj::Scalar SPH_SIMSCALE = 0.004;
     constexpr static const fj::Scalar SPH_RESTDENSITY = 600.0f;
     constexpr static const fj::Scalar SPH_INTSTIFF = 3.0f;
-    constexpr static const fj::Scalar SIM_H = H / SPH_SIMSCALE;
     constexpr static const fj::Scalar SPH_VISCOSITY = 1.0;
     
     static const int CONGEAL_START = 2000000;
