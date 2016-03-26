@@ -28,7 +28,7 @@ public:
     ParticleManager() = default;
     ~ParticleManager() = default;
     
-    void registerParticle(std::unique_ptr<fj::Particle> particle);
+    void registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable);
     
     std::shared_ptr<fj::Particle>& getParticleAt(const int i)
     {
@@ -62,6 +62,16 @@ public:
     
 public:
     
+    const ParticleArray& getFlowParticles()const
+    {
+        return m_flowParticles;
+    }
+    
+    const ParticleArray& getBoundaryParticles()const
+    {
+        return m_boundaryParticles;
+    }
+    
     size_t getRegisteredParticleNum()const
     {
         return m_particles.size();
@@ -74,6 +84,8 @@ public:
     
 private:
     ParticleArray m_particles;
+    ParticleArray m_flowParticles;
+    ParticleArray m_boundaryParticles;
     fj::ParticleHashMap m_particleHashMap;
 };
 

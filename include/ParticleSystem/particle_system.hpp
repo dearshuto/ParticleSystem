@@ -50,7 +50,7 @@ public:
     void stepSimulation(const float timestep);
 
     
-    void createFluidParticle(const fj::Vector3& position);
+    void createFluidParticle(const fj::Vector3& position, const bool movable = true);
   
     
     void createFineParticle(const fj::Vector3& position, const float radius, const float mass);

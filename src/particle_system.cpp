@@ -155,12 +155,12 @@ void fj::ParticleSystem::clearParticleNeighbors()
     
 }
 
-void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position)
+void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position, const bool movable)
 {
     const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
     std::unique_ptr<fj::Particle> fluidParticle(new fj::FluidParticle(kID, position));
     
-    getParticleManagerPtr()->registerParticle( std::move(fluidParticle) );
+    getParticleManagerPtr()->registerParticle( std::move(fluidParticle), movable );
 }
 
 void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const float radius, const float mass)
@@ -171,7 +171,7 @@ void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const f
     fineParticle->setRadius(radius);
     fineParticle->setMass(mass);
     
-    getParticleManagerPtr()->registerParticle( std::move(fineParticle) );
+    getParticleManagerPtr()->registerParticle( std::move(fineParticle), false );
 }
 
 
