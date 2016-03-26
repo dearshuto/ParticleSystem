@@ -126,7 +126,7 @@ void fj::ParticleSystem::accumulateParticleForce()
 void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const int end)
 {
     
-    for (int i = begin; i < end; i++)
+    for (int i = begin; i <= end; i++)
     {
         std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->getParticleAt(i);
         particle->accumulateForce();
