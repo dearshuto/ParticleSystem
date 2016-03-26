@@ -39,7 +39,7 @@ void fj::FluidParticle::updateProperty()
         assert( !neighborParticleWeakPtr.expired() );
         
         const fj::Vector3 kRelativePosition = (this->getPosition() - neighborParticle->getPosition()) * kSPH_SIMSCALE;
-        const fj::Scalar kSquaredDistance = (kRelativePosition * kSPH_SIMSCALE).squaredNorm();
+        const fj::Scalar kSquaredDistance = kRelativePosition.squaredNorm();
         const fj::Scalar kC = kSquaredEffectRange - kSquaredDistance;
         
         sum += std::pow(kC, 3);
