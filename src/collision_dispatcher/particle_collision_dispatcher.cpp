@@ -67,25 +67,35 @@ void fj::ParticleCollisionDispatcher::updatedAt(const HashValue &currentHash)
 
 fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle)const
 {
-    constexpr fj::Scalar kH2 = fj::SimulationConstant::SCALED_H2;
     const HashValue kHash = computeHash( particle );
     const fj::Vector3& kPosition = particle.getPosition();
-    const Particles& kParticles = m_cells[kHash];
-    
     fj::Particle::NeighborParticles neighborParticles;
     
-    for (const auto& neighbor : kParticles)
+    setNeighbors(kPosition, std::cref(m_cells[kHash]), &neighborParticles);
+
+    if (kHash != 0)
+        setNeighbors(kPosition, std::cref(m_cells[kHash - 1]), &neighborParticles);
+
+    if ( (kHash + 1) != m_cells.size())
+        setNeighbors(kPosition, std::cref(m_cells[kHash + 1]), &neighborParticles);
+    
+    return neighborParticles;
+}
+
+void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Vector3 &particlePosition, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles)const
+{
+    constexpr fj::Scalar kH2 = fj::SimulationConstant::SCALED_H2;
+    
+    for (const auto& neighbor : cell)
     {
-        fj::Scalar kDistance = (neighbor->getPosition() - kPosition).squaredNorm();
+        fj::Scalar kDistance = (neighbor->getPosition() - particlePosition).squaredNorm();
         
         if (kDistance < kH2)
         {
-            neighborParticles.push_back(neighbor);
+            neighborParticles->push_back(neighbor);
         }
     }
     
-    
-    return neighborParticles;
 }
 
 fj::ParticleCollisionDispatcher::HashValue fj::ParticleCollisionDispatcher::computeHash(const fj::Particle& particle)const

@@ -50,6 +50,8 @@ public:
     
 private:
     
+    void setNeighbors(const fj::Vector3& particlePosition, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles)const;
+    
     void updatedAt(const HashValue& currentHash);
     
     HashValue computeHash(const fj::Particle& particle)const;
