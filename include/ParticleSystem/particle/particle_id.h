@@ -68,7 +68,8 @@ namespace std {
     {
     public:
         size_t operator()(const fj::ParticleID& x) const{
-            return hash<int>()(x.getData()) ^ hash<int>()(x.getData());
+            // IDをそのままハッシュ値として利用する
+            return hash<int>()(x.getData());
         }
     };
 }
