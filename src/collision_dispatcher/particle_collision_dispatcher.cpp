@@ -12,6 +12,7 @@
 #include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
+#include <ParticleSystem/type/simulation_constant.hpp>
 
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 
@@ -66,14 +67,21 @@ void fj::ParticleCollisionDispatcher::updatedAt(const HashValue &currentHash)
 
 fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle)const
 {
+    constexpr fj::Scalar kH2 = fj::SimulationConstant::SCALED_H2;
     const HashValue kHash = computeHash( particle );
+    const fj::Vector3& kPosition = particle.getPosition();
     const Particles& kParticles = m_cells[kHash];
     
     fj::Particle::NeighborParticles neighborParticles;
     
-    for (const auto& particle : kParticles)
+    for (const auto& neighbor : kParticles)
     {
-        neighborParticles.push_back(particle);
+        fj::Scalar kDistance = (neighbor->getPosition() - kPosition).squaredNorm();
+        
+        if (kDistance < kH2)
+        {
+            neighborParticles.push_back(neighbor);
+        }
     }
     
     

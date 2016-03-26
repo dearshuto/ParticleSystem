@@ -20,7 +20,7 @@ void fj::FluidParticle::updateProperty()
 {
     // 藤代研究室OBの上田さんのコードをもとに実装されています
     
-    constexpr fj::Scalar kH = fj::SimulationConstant::H;
+    constexpr fj::Scalar kSquaredEffectRange = SimulationConstant::SCALED_H2;
     constexpr fj::Scalar kSPH_PMASS = fj::SimulationConstant::SPH_PMASS;
     constexpr fj::Scalar kSPH_RESTDENSITY = fj::SimulationConstant::SPH_RESTDENSITY;
     constexpr fj::Scalar kSPH_INTSTIFF = fj::SimulationConstant::SPH_INTSTIFF;
@@ -29,7 +29,6 @@ void fj::FluidParticle::updateProperty()
     const fj::Scalar kPoly6Kern = fj::SimulationConstant::Poly6Kernel;
     
     
-    constexpr fj::Scalar kSquaredEffectRange = kH * kH;
     fj::Scalar sum(0);
     
     for (const std::weak_ptr<fj::Particle>& neighborParticleWeakPtr : *getNeighborParticlesPtr())
@@ -39,7 +38,7 @@ void fj::FluidParticle::updateProperty()
         // 近傍粒子が突然消えていたらバグ
         assert( !neighborParticleWeakPtr.expired() );
         
-        const fj::Vector3 kRelativePosition = this->getPosition() - neighborParticle->getPosition();
+        const fj::Vector3 kRelativePosition = (this->getPosition() - neighborParticle->getPosition()) * kSPH_SIMSCALE;
         const fj::Scalar kSquaredDistance = (kRelativePosition * kSPH_SIMSCALE).squaredNorm();
         const fj::Scalar kC = kSquaredEffectRange - kSquaredDistance;
         
@@ -75,7 +74,7 @@ fj::Vector3 fj::FluidParticle::affect(const fj::Particle &particle)const
 {
     // 藤代研究室0Bの上田さんのコードをもとにして実装されています
     
-    constexpr fj::Scalar kH = fj::SimulationConstant::SIM_H;
+    constexpr fj::Scalar kH = fj::SimulationConstant::SPH_SCALED_H;
     constexpr fj::Scalar kSPH_VISCOSITY = fj::SimulationConstant::SPH_VISCOSITY;
     constexpr fj::Scalar kSPH_SIMSCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
