@@ -71,31 +71,51 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
     const fj::Vector3& kPosition = particle.getPosition();
     fj::Particle::NeighborParticles neighborParticles;
     
-    setNeighbors(kPosition, std::cref(m_cells[kHash]), &neighborParticles);
+    for (int x = -1; x < 2; x++){
+        for (int y = -1; y < 2; y++){
+            for (int z = -1; z < 2; z++)
+            {
+                
+                const Particles*const kCell = getSideCell(kHash, x, y, z);
+                if (kCell) {
+                    setNeighbors(kPosition, std::cref(*kCell), &neighborParticles);
+                }
+                
+            }
+        }
+    }
 
-    if (kHash != 0)
-        setNeighbors(kPosition, std::cref(m_cells[kHash - 1]), &neighborParticles);
-
-    if ( (kHash + 1) != m_cells.size())
-        setNeighbors(kPosition, std::cref(m_cells[kHash + 1]), &neighborParticles);
-    
     return neighborParticles;
 }
 
 void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Vector3 &particlePosition, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles)const
 {
     constexpr fj::Scalar kH2 = fj::SimulationConstant::SCALED_H2;
+    constexpr fj::Scalar kSIM_SCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
     for (const auto& neighbor : cell)
     {
-        fj::Scalar kDistance = (neighbor->getPosition() - particlePosition).squaredNorm();
-        
+        fj::Scalar kDistance = (neighbor->getPosition() - particlePosition).squaredNorm() * kSIM_SCALE;
+            
         if (kDistance < kH2)
         {
             neighborParticles->push_back(neighbor);
         }
     }
     
+}
+
+const fj::ParticleCollisionDispatcher::Particles*const fj::ParticleCollisionDispatcher::getSideCell(const HashValue &hash, const int x, const int y, const int z)const
+{
+    const int kShiftedHash = hash + x + getWidth() * y + getWidth() * getHeight() * z;
+    
+    if ( (0 <= kShiftedHash) && (kShiftedHash < m_cells.size()))
+    {
+        const HashValue kHash = static_cast<HashValue>(kShiftedHash);
+        return &m_cells[kHash];
+    }
+    
+    return nullptr;
 }
 
 fj::ParticleCollisionDispatcher::HashValue fj::ParticleCollisionDispatcher::computeHash(const fj::Particle& particle)const
