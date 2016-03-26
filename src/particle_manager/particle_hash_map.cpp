@@ -23,5 +23,5 @@ const fj::ParticleID fj::ParticleHashMap::getUnusedID()
     // そこでこの関数がよばれた回数をIDにしておく
     static unsigned int count = 0;
     
-    return fj::ParticleID(count);
+    return fj::ParticleID(count++);
 }
