@@ -29,7 +29,7 @@ public:
     constexpr static const fj::Scalar PARTICLE_RADIUS = 0.005;//[m]
     constexpr static const fj::Scalar PARTICLE_VOLUME = (4 / 3) * M_PI * PARTICLE_RADIUS * PARTICLE_RADIUS * PARTICLE_RADIUS;//[m^3]
     constexpr static const fj::Scalar PARTICLE_MASS = RESTDENSITY * PARTICLE_VOLUME;//[kg]
-    constexpr static const fj::Scalar H = 0.1;//0.01;//m
+    constexpr static const fj::Scalar H = 0.01;//m
     constexpr static const fj::Scalar SQUARED_H = H * H;
 
     constexpr static const fj::Scalar SPH_SIMSCALE = 1;//0.004;
@@ -43,7 +43,7 @@ public:
     constexpr static const fj::Scalar SPH_SIGMA = 300;
     constexpr static const fj::Scalar SPH_RESTDENSITY = 600.0f;
     constexpr static const fj::Scalar SPH_INTSTIFF = 3.0f;
-    constexpr static const fj::Scalar SPH_VISCOSITY = 100.0;
+    constexpr static const fj::Scalar SPH_VISCOSITY = 0.8;
 
     static const int CONGEAL_START = 2000000;
     static const int CONGEAL_FINISH = 8000000;

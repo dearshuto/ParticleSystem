@@ -45,6 +45,7 @@ void fj::FluidParticle::updateProperty()
         sum += std::pow(kC, 3);
     }
     
+    sum += std::pow(kSquaredEffectRange, 3);;
  
     this->setDensity(sum * kSPH_PMASS * kPoly6Kern);
     this->setPressure( (this->getDensity() - kSPH_RESTDENSITY) *  kSPH_INTSTIFF);
@@ -59,11 +60,11 @@ fj::Vector3 fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &nei
     // 近傍粒子が突然消えていたらバグ
     assert( !neighborParticleWeakPtr.expired() );
     
-    if ( this->getPosition() == neighborParticle->getPosition()) {
-        return fj::Vector3(0, 0, 0);
-    }
+//    if ( this->getPosition() == neighborParticle->getPosition()) {
+//        return fj::Vector3(0, 0, 0);
+//    }
  
-    return neighborParticle->affect( std::cref(*this) );
+    return neighborParticle->affect( std::cref(*this) ) * this->getInverseDensity();
 }
 
 fj::Vector3 fj::FluidParticle::affect(const fj::Particle &particle)const
@@ -72,27 +73,23 @@ fj::Vector3 fj::FluidParticle::affect(const fj::Particle &particle)const
     constexpr fj::Scalar kPARTICLE_MASS = fj::SimulationConstant::PARTICLE_MASS;
     constexpr fj::Scalar kH = fj::SimulationConstant::H;
     constexpr fj::Scalar kSPH_VISCOSITY = fj::SimulationConstant::SPH_VISCOSITY;
-    constexpr fj::Scalar kSPH_SIMSCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
     const fj::Scalar kSpikyKernel = fj::SimulationConstant::SpikyKernel;
     const fj::Scalar kLaplacianKernel = fj::SimulationConstant::LaplacianKernel;
     
     const fj::FluidParticle& kNeighborParticle = std::cref(*this);
     
-    const fj::Vector3 kRelativePosition = (particle.getPosition() - kNeighborParticle.getPosition()) * kSPH_SIMSCALE;
+    const fj::Vector3 kRelativePosition = (particle.getPosition() - kNeighborParticle.getPosition());
     const fj::Scalar kDistance = kRelativePosition.norm();
     const fj::Vector3 kNormalizedRelativePosition = kRelativePosition / kDistance;
-    
     const fj::Scalar kC = kH - kDistance;
     
-    const fj::Vector3 kPressureKernel = fj::Scalar(kSpikyKernel * std::pow<fj::Scalar>(kC, 2)) * kNormalizedRelativePosition;
-    const fj::Scalar kVelocityKernel = kLaplacianKernel * kC;
     
-    const fj::Vector3 kPressureTerm = -fj::Scalar(0.5) * (particle.getPressure() + kNeighborParticle.getPressure()) * kPressureKernel;
-    const fj::Vector3 kVelocityTerm = fj::Scalar(kC * kVelocityKernel * kSPH_VISCOSITY) * (kNeighborParticle.getVelocity() - particle.getVelocity());
-    fj::Vector3 fcurr = kPressureTerm + kVelocityTerm;
-//    fcurr *= kC * particle.getDensity() * kNeighborParticle.getDensity();
-    fcurr *=  kC * kPARTICLE_MASS * this->getInverseDensity() * kNeighborParticle.getInverseDensity();
+    const fj::Vector3 kVelocityKernelTerm = kSPH_VISCOSITY * (kNeighborParticle.getVelocity() - particle.getVelocity()) * kLaplacianKernel;
+    const fj::Vector3 kPressureKernelterm = -fj::Scalar(0.5 * (particle.getPressure() + kNeighborParticle.getPressure()) * kSpikyKernel * kC) * kNormalizedRelativePosition;
+    
+    const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm;
+    const fj::Vector3 fcurr = kPARTICLE_MASS * kNeighborParticle.getInverseDensity() * kC * kKernelTerm;
     
     return fcurr;
 }

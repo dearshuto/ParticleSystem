@@ -44,6 +44,8 @@ public:
     , m_effectRange( fj::Scalar(0.01) )
     , m_squaredEffectRange( fj::Scalar(std::pow(m_effectRange, 2)) )
     , m_position(position)
+    , m_pressure( fj::Scalar(0) )
+    , m_velocity( fj::Vector3(0, 0, 0) )
     {
         
     }
@@ -228,6 +230,11 @@ public:
         m_density = density;
     }
 
+    const fj::Vector3& getAccel()const
+    {
+        return m_accel;
+    }
+    
 protected:
     fj::Particle::NeighborParticles* getNeighborParticlesPtr()
     {
@@ -263,6 +270,8 @@ private:
     fj::Vector3 m_velocity;
     
     fj::Scalar m_density;
+    
+    fj::Vector3 m_accel;
 };
 
 #endif /* particle_hpp */
