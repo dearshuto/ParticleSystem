@@ -29,6 +29,7 @@ namespace fj {
 class fj::NeighborMap
 {
     class NeighborInformation;
+public:
     typedef std::vector<NeighborInformation> NeighborInformations;
 public:
     NeighborMap() = default;
