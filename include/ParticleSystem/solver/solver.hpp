@@ -23,17 +23,18 @@ namespace fj {
 class fj::Solver
 {
 public:
+    Solver() = default;
     virtual~Solver() = default;
     
-    virtual void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    virtual void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) = 0;
     
-    const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
+    fj::Vector3 getAccellAt(const fj::ParticleID& ID)const
     {
         return m_accelMap.at(ID);
     }
     
 protected:
-    void setAt(const fj::ParticleID& ID, const fj::Vector3& accel)
+    void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
     {
         m_accelMap[ID] = accel;
     }

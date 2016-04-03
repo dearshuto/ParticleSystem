@@ -26,3 +26,12 @@ void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, cons
     m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
     m_neighbors[kID2].emplace_back(kID1, kNormalizedDirection12, kSquaredDistance, kDistance);
 }
+
+void fj::NeighborMap::clear()
+{
+    for (auto& neighbor : m_neighbors)
+    {
+        neighbor.second.clear();
+    }
+    
+}

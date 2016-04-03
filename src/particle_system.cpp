@@ -178,7 +178,7 @@ void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const f
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
-    getNeighborMap()->addNeighborInformation(ID1, ID2, distance);
+//    getNeighborMap()->addNeighborInformation(ID1, ID2, distance);
 }
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)

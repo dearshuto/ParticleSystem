@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-    constexpr fj::Scalar kTimestep = fj::Scalar(1) / fj::Scalar(60);
+    constexpr fj::Scalar kTimestep = fj::Scalar(1) / fj::Scalar(250);
     constexpr fj::Scalar kParticleRadius = fj::SimulationConstant::PARTICLE_RADIUS;
     const fj::Scalar kBLockSize = kParticleRadius * 5;
     

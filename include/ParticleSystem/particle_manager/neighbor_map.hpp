@@ -42,6 +42,8 @@ public:
      */
     void addNeighborInformation(const fj::Particle& ID1, const fj::Particle& ID2);
     
+    void clear();
+    
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
         return std::cref(m_neighbors.at(ID));
