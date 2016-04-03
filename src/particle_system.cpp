@@ -176,12 +176,9 @@ void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const f
 }
 
 
-void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2)
+void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
-    const std::shared_ptr<fj::Particle>& particle1 = getParticleManagerPtr()->search(ID1);
-    const std::shared_ptr<fj::Particle>& particle2 = getParticleManagerPtr()->search(ID2);
-    
-    particle1->addNeighborParticle(particle2);
+    getNeighborMap()->addNeighborInformation(ID1, ID2, distance);
 }
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)

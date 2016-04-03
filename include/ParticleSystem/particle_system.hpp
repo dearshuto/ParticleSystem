@@ -19,6 +19,7 @@
 
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
+#include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 
 namespace fj {
@@ -60,7 +61,7 @@ public:
      * @param index1 衝突を検知した粒子のID
      * @param index2 ID1と衝突した粒子のID
      */
-    void makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2);
+    void makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance);
 
 
     /**
@@ -152,12 +153,22 @@ protected:
         return &m_particleManager;
     }
     
+    fj::NeighborMap*const getNeighborMap()
+    {
+        return &m_neighborMap;
+    }
+    
 private:
     
     /**
      * 走査とID検索とを可能な状態で粒子を管理する
      */
     fj::ParticleManager m_particleManager;
+    
+    /**
+     * 近傍情報の管理
+     */
+    fj::NeighborMap m_neighborMap;
     
     /**
      * 独自実装の近傍探索アルゴリズム
