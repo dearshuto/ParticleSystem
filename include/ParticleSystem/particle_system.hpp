@@ -17,10 +17,11 @@
 #include <ParticleSystem/particle/FJparticle.h>
 #include <ParticleSystem/type/FJtype.h>
 
+#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
+#include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Particle;
@@ -158,12 +159,22 @@ protected:
         return &m_neighborMap;
     }
     
+    std::unique_ptr<fj::Solver>& getSolverPtr()
+    {
+        return m_solver;
+    }
+    
 private:
     
     /**
      * 走査とID検索とを可能な状態で粒子を管理する
      */
     fj::ParticleManager m_particleManager;
+
+    /**
+     * 粒子砲アルゴリズム
+     */
+    std::unique_ptr<fj::Solver> m_solver;
     
     /**
      * 近傍情報の管理
