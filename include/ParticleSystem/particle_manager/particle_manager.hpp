@@ -40,6 +40,11 @@ public:
         return std::ref(m_particleHashMap.get(ID));
     }
     
+    const fj::Particle& search(const fj::ParticleID& ID)const
+    {
+        return m_particleHashMap.get(ID);
+    }
+    
     ParticleArray::iterator begin()
     {
         return std::begin(m_particles);

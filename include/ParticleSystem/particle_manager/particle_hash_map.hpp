@@ -33,6 +33,11 @@ public:
         return m_hashMap[ID];
     }
     
+    const fj::Particle& get(const fj::ParticleID& ID)const
+    {
+        return std::cref(*(m_hashMap.at(ID)));
+    }
+    
     /**
      * 未使用のIDを返す
      */
