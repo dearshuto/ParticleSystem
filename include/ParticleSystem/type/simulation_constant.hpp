@@ -32,16 +32,7 @@ public:
     constexpr static const fj::Scalar H = 0.01;//m
     constexpr static const fj::Scalar SQUARED_H = H * H;
 
-    constexpr static const fj::Scalar SPH_SIMSCALE = 1;//0.004;
-
-    constexpr static const fj::Scalar SPH_SCALED_H = H / SPH_SIMSCALE;
-    constexpr static const fj::Scalar SCALED_H2 = SPH_SCALED_H * SPH_SCALED_H;
-    constexpr static const fj::Scalar G_SCALE = 1;
-    constexpr static const fj::Scalar SPH_LIMIT = 200.0;
-    constexpr static const fj::Scalar SPH_PMASS = 0.00020543;
-    constexpr static const fj::Scalar SPH_RADIUS = 0.004;
     constexpr static const fj::Scalar SPH_SIGMA = 300;
-    constexpr static const fj::Scalar SPH_RESTDENSITY = 600.0f;
     constexpr static const fj::Scalar SPH_INTSTIFF = 3.0f;
     constexpr static const fj::Scalar SPH_VISCOSITY = 0.8;
 
@@ -60,7 +51,7 @@ public:
     static const fj::Scalar LaplacianKernel;
 };
 
-namespace mlk {
+namespace fj {
     enum class SimulationFlag
     {
         col_n = 1

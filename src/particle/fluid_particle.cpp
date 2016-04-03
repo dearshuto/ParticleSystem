@@ -22,9 +22,8 @@ void fj::FluidParticle::updateProperty()
     
     constexpr fj::Scalar kSquaredEffectRange = SimulationConstant::SQUARED_H;
     constexpr fj::Scalar kSPH_PMASS = fj::SimulationConstant::PARTICLE_MASS;
-    constexpr fj::Scalar kSPH_RESTDENSITY = fj::SimulationConstant::SPH_RESTDENSITY;
+    constexpr fj::Scalar kSPH_RESTDENSITY = fj::SimulationConstant::RESTDENSITY;
     constexpr fj::Scalar kSPH_INTSTIFF = fj::SimulationConstant::SPH_INTSTIFF;
-    constexpr fj::Scalar kSPH_SIMSCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
     const fj::Scalar kPoly6Kern = fj::SimulationConstant::Poly6Kernel;
     
@@ -38,7 +37,7 @@ void fj::FluidParticle::updateProperty()
         // 近傍粒子が突然消えていたらバグ
         assert( !neighborParticleWeakPtr.expired() );
         
-        const fj::Vector3 kRelativePosition = (this->getPosition() - neighborParticle->getPosition()) * kSPH_SIMSCALE;
+        const fj::Vector3 kRelativePosition = this->getPosition() - neighborParticle->getPosition();
         const fj::Scalar kSquaredDistance = kRelativePosition.squaredNorm();
         const fj::Scalar kC = kSquaredEffectRange - kSquaredDistance;
         
@@ -60,10 +59,6 @@ fj::Vector3 fj::FluidParticle::affectedBy(const std::weak_ptr<fj::Particle> &nei
     // 近傍粒子が突然消えていたらバグ
     assert( !neighborParticleWeakPtr.expired() );
     
-//    if ( this->getPosition() == neighborParticle->getPosition()) {
-//        return fj::Vector3(0, 0, 0);
-//    }
- 
     return neighborParticle->affect( std::cref(*this) ) * this->getInverseDensity();
 }
 
