@@ -50,7 +50,7 @@ public:
     
 private:
     
-    void setNeighbors(const fj::Vector3& particlePosition, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles)const;
+    void setNeighbors(const fj::Particle& particle, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles)const;
     
     /**
      * あるハッシュ値をもつセルからxyz方向に移動したセルを返す

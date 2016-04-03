@@ -43,6 +43,7 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
 
 void fj::ParticleSystem::updateParticleNeighbor()
 {
+    getCollisionDispatcherPtr()->updated();
     
     for (auto& particle : *getParticleManagerPtr())
     {

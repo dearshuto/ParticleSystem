@@ -6,6 +6,7 @@
 //
 //
 
+#include <algorithm>
 #include <cmath>
 #include <functional>
 
@@ -68,7 +69,6 @@ void fj::ParticleCollisionDispatcher::updatedAt(const HashValue &currentHash)
 fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle)const
 {
     const HashValue kHash = computeHash( particle );
-    const fj::Vector3& kPosition = particle.getPosition();
     fj::Particle::NeighborParticles neighborParticles;
     
     for (int x = -1; x < 2; x++){
@@ -78,7 +78,7 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
                 
                 const Particles*const kCell = getSideCell(kHash, x, y, z);
                 if (kCell) {
-                    setNeighbors(kPosition, std::cref(*kCell), &neighborParticles);
+                    setNeighbors(particle, std::cref(*kCell), &neighborParticles);
                 }
                 
             }
@@ -88,15 +88,14 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
     return neighborParticles;
 }
 
-void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Vector3 &particlePosition, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles)const
+void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Particle &particle, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles)const
 {
     constexpr fj::Scalar kH2 = fj::SimulationConstant::SQUARED_H;
-    constexpr fj::Scalar kSIM_SCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
     for (const auto& neighbor : cell)
     {
         
-        fj::Scalar kDistance = (neighbor->getPosition() - particlePosition).squaredNorm() * kSIM_SCALE;
+        fj::Scalar kDistance = (neighbor->getPosition() - particle.getPosition()).squaredNorm();
         
         if (kDistance == 0) {
             continue;
@@ -135,5 +134,7 @@ fj::ParticleCollisionDispatcher::HashValue fj::ParticleCollisionDispatcher::comp
 
 unsigned int fj::ParticleCollisionDispatcher::clamp(const fj::Scalar &num)const
 {
-    return std::floor<unsigned int>(num / getBlockSize());
+    const fj::Scalar kClamped = std::max<fj::Scalar>(num, fj::Scalar(0));
+    
+    return std::floor<unsigned int>(kClamped / getBlockSize());
 }

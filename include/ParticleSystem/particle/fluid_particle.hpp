@@ -43,8 +43,21 @@ public:
         setDensity( fj::Scalar(1) / getDensity() );
     }
 
+    void updateInverseDensity()
+    {
+        m_inverseDensity = fj::Scalar(1) / getDensity();
+    }
+    
+    fj::Scalar getInverseDensity()const
+    {
+        return m_inverseDensity;
+    }
+    
 private:
     fj::Vector3 computeForceFromObject(const fj::Scalar& distance, const fj::Vector3& normalizedDirection)const override;
+    
+private:
+    fj::Scalar m_inverseDensity;
 };
 
 #endif /* fluid_particle_hpp */
