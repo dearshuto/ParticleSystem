@@ -15,6 +15,8 @@
 #include <ParticleSystem/particle/particle_id.h>
 
 namespace fj {
+    class ParticleManager;
+    class NeighborMap;
     class Solver;
 }
 
@@ -22,6 +24,8 @@ class fj::Solver
 {
 public:
     virtual~Solver() = default;
+    
+    virtual void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     
     const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
     {
