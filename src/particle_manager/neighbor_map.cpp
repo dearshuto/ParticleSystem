@@ -6,13 +6,23 @@
 //
 //
 
+#include <cmath>
+
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 
-void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &ID1, const fj::ParticleID &ID2, const fj::Scalar &distance)
+void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2)
 {
     // メモリを消費するが、アクセスを簡単にするために対象のデータ構造にする
     
-    m_neighbors[ID1].emplace_back(ID2, distance);
-    m_neighbors[ID2].emplace_back(ID1, distance);
+    const fj::ParticleID& kID1 = particle1.getID();
+    const fj::ParticleID& kID2 = particle2.getID();
+    const fj::Vector3 kDirection21 = particle1.getPosition() - particle2.getPosition();
+    const fj::Scalar kSquaredDistance = kDirection21.squaredNorm();
+    const fj::Scalar kDistance = std::sqrt( kSquaredDistance );
+    const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
+    const fj::Vector3 kNormalizedDirection12 = -kDirection21 / kDistance;
+    
+    m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
+    m_neighbors[kID2].emplace_back(kID1, kNormalizedDirection12, kSquaredDistance, kDistance);
 }

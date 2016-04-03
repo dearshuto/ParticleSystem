@@ -15,6 +15,8 @@
 #include <vector>
 
 #include <FUJIMath/type/scalar.h>
+#include <FUJIMath/type/vector3.hpp>
+#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 
 namespace fj {
@@ -38,7 +40,7 @@ public:
     /**
      * 影響範囲に入った粒子の組合せと距離情報を追加する. 引数となるふたつのIDは順不同.
      */
-    void addNeighborInformation(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance);
+    void addNeighborInformation(const fj::Particle& ID1, const fj::Particle& ID2);
     
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
@@ -55,8 +57,10 @@ public:
     NeighborInformation() = delete;
     ~NeighborInformation() = default;
     
-    NeighborInformation(const fj::ParticleID& ID, const fj::Scalar& distance)
+    NeighborInformation(const fj::ParticleID& ID, const fj::Vector3& direction, const fj::Scalar& kSquaredDistance, const fj::Scalar& distance)
     : m_ID(ID)
+    , m_direction(direction)
+    , m_squaredDistance(kSquaredDistance)
     , m_distance(distance)
     {
         
@@ -67,14 +71,32 @@ public:
         return m_ID;
     }
     
+    const fj::Vector3& getDirection()const
+    {
+        return m_direction;
+    }
+    
+    const fj::Scalar& getSquaredDistance()const
+    {
+        return m_squaredDistance;
+    }
+    
     const fj::Scalar& getDistance()const
     {
         return m_distance;
     }
     
 private:
-    const fj::ParticleID& m_ID;
-    const fj::Scalar& m_distance;
+    const fj::ParticleID m_ID;
+    
+    /**
+     * このインスタンスが保持するIDをもつ粒子から向ってくる方向
+     */
+    const fj::Vector3 m_direction;
+    
+    const fj::Scalar m_squaredDistance;
+    
+    const fj::Scalar m_distance;
 };
 
 #endif /* neighbor_map_hpp */
