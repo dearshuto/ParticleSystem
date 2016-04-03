@@ -38,7 +38,7 @@ public:
     
     
     Particle(const fj::ParticleID& ID, const fj::Vector3& position)
-    : m_ID(ID)
+    : m_ID(ID.getData())
     , m_radius( fj::Scalar(1) )
     , m_mass( fj::Scalar(1) )
     , m_effectRange( fj::Scalar(0.01) )

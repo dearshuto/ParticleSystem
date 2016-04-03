@@ -9,6 +9,7 @@
 #ifndef Header_h
 #define Header_h
 
+#include <functional>
 #include <unordered_map>
 
 namespace fj {
@@ -38,6 +39,7 @@ public:
     }
     
     ParticleID& operator=(const ParticleID& other) = delete;
+
     
     bool operator==(const ParticleID& other)const
     {
@@ -58,7 +60,7 @@ public:
     }
     
 private:
-    const unsigned int m_ID;
+    unsigned int m_ID;
 };
 
 
