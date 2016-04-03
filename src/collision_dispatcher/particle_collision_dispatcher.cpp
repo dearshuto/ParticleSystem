@@ -90,13 +90,18 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
 
 void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Vector3 &particlePosition, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles)const
 {
-    constexpr fj::Scalar kH2 = fj::SimulationConstant::SCALED_H2;
+    constexpr fj::Scalar kH2 = fj::SimulationConstant::SQUARED_H;
     constexpr fj::Scalar kSIM_SCALE = fj::SimulationConstant::SPH_SIMSCALE;
     
     for (const auto& neighbor : cell)
     {
+        
         fj::Scalar kDistance = (neighbor->getPosition() - particlePosition).squaredNorm() * kSIM_SCALE;
-            
+        
+        if (kDistance == 0) {
+            continue;
+        }
+        
         if (kDistance < kH2)
         {
             neighborParticles->push_back(neighbor);
@@ -130,5 +135,5 @@ fj::ParticleCollisionDispatcher::HashValue fj::ParticleCollisionDispatcher::comp
 
 unsigned int fj::ParticleCollisionDispatcher::clamp(const fj::Scalar &num)const
 {
-    return std::floor<unsigned int>(num) / getBlockSize();
+    return std::floor<unsigned int>(num / getBlockSize());
 }
