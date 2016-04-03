@@ -13,6 +13,6 @@ void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &ID1, const fj
 {
     // メモリを消費するが、アクセスを簡単にするために対象のデータ構造にする
     
-    m_neighbors.emplace(std::make_pair(ID1, NeighborInformation(ID2, distance)));
-    m_neighbors.emplace(std::make_pair(ID2, NeighborInformation(ID1, distance)));
+    m_neighbors[ID1].emplace_back(ID2, distance);
+    m_neighbors[ID2].emplace_back(ID1, distance);
 }

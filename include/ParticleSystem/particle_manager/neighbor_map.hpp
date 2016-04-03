@@ -12,6 +12,7 @@
 #include <functional>
 #include <tuple>
 #include <unordered_map>
+#include <vector>
 
 #include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/particle/particle_id.h>
@@ -28,6 +29,7 @@ namespace fj {
 class fj::NeighborMap
 {
     class NeighborInformation;
+    typedef std::vector<NeighborInformation> NeighborInformations;
 public:
     NeighborMap() = default;
     ~NeighborMap() = default;
@@ -37,13 +39,13 @@ public:
      */
     void addNeighborInformation(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance);
     
-    const NeighborInformation& getAt(const fj::ParticleID& ID)const
+    const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
         return std::cref(m_neighbors.at(ID));
     }
     
 private:
-    std::unordered_map<fj::ParticleID, NeighborInformation> m_neighbors;
+    std::unordered_map<fj::ParticleID, NeighborInformations> m_neighbors;
 };
 
 class fj::NeighborMap::NeighborInformation
@@ -57,6 +59,16 @@ public:
     , m_distance(distance)
     {
         
+    }
+    
+    const fj::ParticleID& getParticleID()const
+    {
+        return m_ID;
+    }
+    
+    const fj::Scalar& getDistance()const
+    {
+        return m_distance;
     }
     
 private:
