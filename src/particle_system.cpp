@@ -48,6 +48,12 @@ void fj::ParticleSystem::updateParticleNeighbor()
     for (auto& particle : *getParticleManagerPtr())
     {
         auto neighbors = getCollisionDispatcherPtr()->getNeighborParticlesAt(std::ref(*particle));
+        
+        for (const auto& a : neighbors)
+        {
+            getNeighborMap()->addNeighborInformation(*particle, *(a.lock()));
+        }
+        
         particle->moveNeighborParticles( std::move(neighbors) );
     }
     
@@ -55,8 +61,9 @@ void fj::ParticleSystem::updateParticleNeighbor()
 
 void fj::ParticleSystem::simulateParticleBehavior()
 {
-    updateParticleProperty();
-    accumulateParticleForce();
+    getSolverPtr()->compute(getParticleManager(), *getNeighborMap());
+//    updateParticleProperty();
+//    accumulateParticleForce();
 }
 
 void fj::ParticleSystem::updateParticleProperty()
@@ -148,7 +155,7 @@ void fj::ParticleSystem::applyGravity()
 
 void fj::ParticleSystem::clearParticleNeighbors()
 {
-    
+    m_neighborMap.clear();
     for (const std::shared_ptr<fj::Particle> particle : *getParticleManagerPtr())
     {
         particle->clearNeighborParticles();
@@ -178,7 +185,10 @@ void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const f
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
-//    getNeighborMap()->addNeighborInformation(ID1, ID2, distance);
+    const fj::Particle& particle1 = getParticleManager().search(ID1);
+    const fj::Particle& particle2 = getParticleManager().search(ID2);
+    
+    getNeighborMap()->addNeighborInformation(particle1, particle2);
 }
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)

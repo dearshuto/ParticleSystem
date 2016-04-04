@@ -21,10 +21,8 @@ void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, cons
     const fj::Scalar kSquaredDistance = kDirection21.squaredNorm();
     const fj::Scalar kDistance = std::sqrt( kSquaredDistance );
     const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
-    const fj::Vector3 kNormalizedDirection12 = -kDirection21 / kDistance;
     
     m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
-    m_neighbors[kID2].emplace_back(kID1, kNormalizedDirection12, kSquaredDistance, kDistance);
 }
 
 void fj::NeighborMap::clear()

@@ -41,9 +41,10 @@ public:
 
     ~ParticleSystem() = default;
 
-    ParticleSystem(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
     : ParticleSystem()
     {
+        m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
     }
     
@@ -75,7 +76,11 @@ public:
 
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
     
-
+    const fj::Vector3 getAppliedAccel(const fj::ParticleID& ID)const
+    {
+        return m_solver->getAccellAt(ID);
+    }
+    
     bool hasActivatedGravity()const
     {
         return m_hasActivatedGravity;

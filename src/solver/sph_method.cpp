@@ -39,7 +39,7 @@ std::unique_ptr<fj::SPHMethod::SPHProperty> fj::SPHMethod::computePropertyAt(con
     const auto& kNeighbors = neighborMap.getAt(kID);
     
     // 自分自身の重みで初期化しておく
-    fj::Scalar sum = 0;//std::pow(H, 3);
+    fj::Scalar sum = std::pow(SQUARED_H, 3);
     
     for (const auto& kNeighborParticle : kNeighbors)
     {
@@ -66,13 +66,11 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
         
         for (const auto& neighbor : neighborMap.getAt(kID))
         {
-            const fj::Particle& kNeighborParticle = particleManager.search(kID);
+            const fj::Particle& kNeighborParticle = particleManager.search(neighbor.getParticleID());
             const fj::SPHMethod::SPHProperty& kNeighborProperty = std::cref( *m_propertyMap.at(kNeighborParticle.getID()) );
             
             const fj::Vector3 kDirection = neighbor.getDirection();
             const fj::Scalar kDistance = neighbor.getDistance();
-            
-            if (kDistance == 0) continue;
             
             const fj::Scalar kC = H - kDistance;
             const fj::Vector3 kVelocityKernelTerm = VISCOSITY * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
@@ -81,7 +79,7 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
             
             F += PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * kKernelTerm;
         }
-    
+
         setAccelAt(kID, F * kParticleProperty.getInverseDensity());
         F = fj::Vector3(0, 0, 0);
     }

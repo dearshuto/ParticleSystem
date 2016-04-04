@@ -44,8 +44,8 @@ private:
     constexpr static const fj::Scalar PARTICLE_MASS = RESTDENSITY * PARTICLE_VOLUME;//[kg]
     constexpr static const fj::Scalar H = 0.01;//m
     constexpr static const fj::Scalar SQUARED_H = H * H;
-    constexpr static const fj::Scalar INSTIFF = 3;
-    constexpr static const fj::Scalar VISCOSITY = 1.0;
+    constexpr static const fj::Scalar INSTIFF = 3.f;
+    constexpr static const fj::Scalar VISCOSITY = 1.8;
     
     static const fj::Scalar Poly6Kernel;
     static const fj::Scalar SpikyKernel;
