@@ -10,6 +10,8 @@
 #define simulation_constant_hpp
 
 #define NOMINMAX
+#define _USE_MATH_DEFINES
+#include <math.h> // for using M_PI
 #include <cmath>
 #include <FUJIMath/type/scalar.h>
 

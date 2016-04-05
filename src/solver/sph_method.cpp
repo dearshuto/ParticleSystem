@@ -6,6 +6,10 @@
 //
 //
 
+#define _USE_MATH_DEFINES
+#include <math.h> //for using M_PI
+#include <cmath>
+
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
