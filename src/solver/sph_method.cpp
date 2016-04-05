@@ -77,7 +77,7 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
             const fj::Scalar kDistance = neighbor.getDistance();
             
             const fj::Scalar kC = H - kDistance;
-            const fj::Vector3 kVelocityKernelTerm = getViscosity() * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
+            const fj::Vector3 kVelocityKernelTerm = getViscosity(kID) * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
             const fj::Vector3 kPressureKernelterm = -fj::Scalar(0.5 * (kParticleProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * kC) * kDirection;
             const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm;
             
