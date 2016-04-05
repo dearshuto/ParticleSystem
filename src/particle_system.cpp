@@ -15,8 +15,6 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/particle/particle.hpp>
-#include <ParticleSystem/particle/fluid_particle.hpp>
-#include <ParticleSystem/particle/fine_particle.hpp>
 
 #include <ParticleSystem/particle_system.hpp>
 
@@ -50,7 +48,6 @@ void fj::ParticleSystem::updateParticleNeighbor()
             getNeighborMapPtr()->addNeighborInformation(*particle, *(a.lock()));
         }
         
-        particle->moveNeighborParticles( std::move(neighbors) );
     }
     
 }
@@ -95,7 +92,7 @@ void fj::ParticleSystem::updateParticlePropertyWithin_MT(const int begin, const 
     for (int i = begin; i <= end; i++)
     {
         std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->getParticleAt(i);
-        particle->updateProperty();
+//        particle->updateProperty();
     }
     
 }
@@ -133,7 +130,7 @@ void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const
     for (int i = begin; i <= end; i++)
     {
         std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->getParticleAt(i);
-        particle->accumulateForce();
+//        particle->accumulateForce();
     }
     
 }
@@ -141,32 +138,15 @@ void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const
 void fj::ParticleSystem::clearParticleNeighbors()
 {
     m_neighborMap.clear();
-    for (const std::shared_ptr<fj::Particle> particle : *getParticleManagerPtr())
-    {
-        particle->clearNeighborParticles();
-    }
-    
 }
 
 void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position, const bool movable)
 {
     const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
-    std::unique_ptr<fj::Particle> fluidParticle(new fj::FluidParticle(kID, position));
+    std::unique_ptr<fj::Particle> fluidParticle(new fj::Particle(kID, position));
     
     getParticleManagerPtr()->registerParticle( std::move(fluidParticle), movable );
 }
-
-void fj::ParticleSystem::createFineParticle(const fj::Vector3& position, const float radius, const float mass)
-{
-    const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
-    std::unique_ptr<fj::FineParticle> fineParticle(new fj::FineParticle(kID, position));
-    
-    fineParticle->setRadius(radius);
-    fineParticle->setMass(mass);
-    
-    getParticleManagerPtr()->registerParticle( std::move(fineParticle), false );
-}
-
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
@@ -188,7 +168,7 @@ void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection)
 {
     const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
-    particle->affectedByObject(distance, normalizedDirection);
+//    particle->affectedByObject(distance, normalizedDirection);
 }
 
 void fj::ParticleSystem::setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position)

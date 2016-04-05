@@ -14,7 +14,6 @@
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/particle/FJparticle.h>
 #include <ParticleSystem/type/FJtype.h>
 
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
@@ -47,9 +46,6 @@ public:
 
     
     void createFluidParticle(const fj::Vector3& position, const bool movable = true);
-  
-    
-    void createFineParticle(const fj::Vector3& position, const float radius, const float mass);
     
 
     /**
