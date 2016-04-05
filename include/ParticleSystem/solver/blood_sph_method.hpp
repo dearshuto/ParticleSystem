@@ -13,10 +13,12 @@
 #include "sph_method.hpp"
 
 namespace fj {
+    class ParticleManager;
+    class ParticleMap;
     class BloodSPHMethod;
 }
 
-class fj::BloodSPHMethod : public SPHMethod
+class fj::BloodSPHMethod : public fj::SPHMethod
 {
     typedef fj::SPHMethod Super;
 public:
@@ -25,11 +27,14 @@ public:
     
     void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
     
-    const fj::Scalar getViscosity(const fj::ParticleID& ID)const override
+    fj::Scalar getViscosity(const fj::ParticleID& ID)const override
     {
-        return m_viscosityMap.at(ID);
+        return 1;//m_viscosityMap.at(ID);
     }
 
+private:
+    void updateViscosityMap(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
 private:
     std::unordered_map<fj::ParticleID, fj::Scalar> m_viscosityMap;
 };

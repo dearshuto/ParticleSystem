@@ -37,7 +37,7 @@ protected:
     
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     
-    virtual const fj::Scalar getViscosity(const fj::ParticleID& ID)const // 可変粘性をサポートするためにvirtualで実装しておく
+    virtual fj::Scalar getViscosity(const fj::ParticleID& ID)const // 可変粘性をサポートするためにvirtualで実装しておく
     {
         return VISCOSITY;
     }
