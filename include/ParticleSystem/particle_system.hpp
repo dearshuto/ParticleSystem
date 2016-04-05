@@ -9,21 +9,17 @@
 #ifndef particle_system_hpp
 #define particle_system_hpp
 
-#include <cassert>
-#include <memory>
 #include <string>
 #include <vector>
 
-#include <ParticleSystem/type/FJtype.h>
-
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
-#include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Particle;
+    class ParticleID;
     class ParticleSystem;
 }
 
@@ -31,7 +27,7 @@ class fj::ParticleSystem
 {
 public:
     ParticleSystem() = default;
-    ~ParticleSystem() = default;
+    virtual~ParticleSystem() = default;
 
     ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
     {
@@ -39,7 +35,9 @@ public:
         m_collisionDispatcher =  std::move(collisionDispatcher);
     }
     
+    
     void initSimulationStatus();
+    
     
     void stepSimulation(const float timestep);
 

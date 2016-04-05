@@ -15,6 +15,7 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/particle/particle.hpp>
+#include <ParticleSystem/particle/particle_id.h>
 
 #include <ParticleSystem/particle_system.hpp>
 
