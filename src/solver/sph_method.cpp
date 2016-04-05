@@ -19,7 +19,7 @@ const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64)
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 const fj::Scalar fj::SPHMethod::LaplacianKernel = fj::Scalar(45) / (fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 
-void fj::SPHMethod::compute(const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
+void fj::SPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
 {
     updateProperty(particleManager, neighborMap);
     updateAccel(particleManager, neighborMap);

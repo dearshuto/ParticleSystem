@@ -22,6 +22,7 @@ namespace fj {
 
 class fj::BloodParticleSystem : public fj::ParticleSystem
 {
+    typedef fj::ParticleSystem Super;
 public:
     BloodParticleSystem() = delete;
     ~BloodParticleSystem() = default;
@@ -31,6 +32,7 @@ public:
     {
         
     }
+    
 };
 
 #endif /* blood_particle_system_hpp */

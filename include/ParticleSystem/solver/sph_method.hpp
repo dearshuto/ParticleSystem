@@ -29,7 +29,7 @@ public:
     SPHMethod() = default;
     virtual~SPHMethod() = default;
     
-    virtual void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
+    void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
     
 protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);

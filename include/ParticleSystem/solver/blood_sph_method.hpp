@@ -25,15 +25,18 @@ public:
     BloodSPHMethod() = default;
     ~BloodSPHMethod() = default;
     
-    void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
+    /**
+     * 時間変化する情報のシミュレーション
+     */
+    void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
+
     
     fj::Scalar getViscosity(const fj::ParticleID& ID)const override
     {
-        return 1;//m_viscosityMap.at(ID);
+        return m_viscosityMap.at(ID);
     }
-
-private:
-    void updateViscosityMap(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
+    void updateViscosityMap(const fj::Scalar& timestep, const fj::ParticleManager& particleManager);
     
 private:
     std::unordered_map<fj::ParticleID, fj::Scalar> m_viscosityMap;

@@ -31,7 +31,7 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
         updateParticleNeighbor();
     }
     
-    simulateParticleBehavior();
+    simulateParticleBehavior(timestep);
     
     clearParticleNeighbors();
 }
@@ -53,9 +53,9 @@ void fj::ParticleSystem::updateParticleNeighbor()
     
 }
 
-void fj::ParticleSystem::simulateParticleBehavior()
+void fj::ParticleSystem::simulateParticleBehavior(const fj::Scalar& timestep)
 {
-    getSolverPtr()->compute(getParticleManager(), getNeighborMap());
+    getSolverPtr()->compute(timestep, getParticleManager(), getNeighborMap());
 }
 
 void fj::ParticleSystem::clearParticleNeighbors()

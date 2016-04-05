@@ -86,10 +86,11 @@ public:
     
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
 
+protected:
+    virtual void simulateParticleBehavior(const fj::Scalar& timestep);
     
 private:
     void updateParticleNeighbor();
-    void simulateParticleBehavior();
     
     void applyGravity();
     void clearParticleNeighbors();
