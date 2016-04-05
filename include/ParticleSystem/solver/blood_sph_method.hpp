@@ -1,5 +1,5 @@
 //
-//  BloodSPHMethod.hpp
+//  blood_sph_method.hpp
 //  ParticleSystem
 //
 //  Created by Shuto on 2016/04/05.

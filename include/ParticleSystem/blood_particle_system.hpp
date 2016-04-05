@@ -11,7 +11,7 @@
 
 #include <memory>
 
-#include <ParticleSystem/solver/BloodSPHMethod.hpp>
+#include <ParticleSystem/solver/blood_sph_method.hpp>
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include "particle_system.hpp"
 
