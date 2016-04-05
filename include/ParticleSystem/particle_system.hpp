@@ -35,10 +35,7 @@ public:
     ~ParticleSystem() = default;
 
     ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
-    : m_gravity(0, 0, 0)
-    , m_hasActivatedGravity(false)
-    , m_threadNum(1)
-
+    : m_threadNum(1)
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
@@ -72,26 +69,17 @@ public:
 
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
     
+    
     const fj::Vector3 getAppliedAccel(const fj::ParticleID& ID)const
     {
         return m_solver->getAccellAt(ID);
     }
     
-    bool hasActivatedGravity()const
-    {
-        return m_hasActivatedGravity;
-    }
+    void setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position);
+    
+    void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
 
-    void enableGravity()
-    {
-        m_hasActivatedGravity = true;
-    }
-
-    void disableGravity()
-    {
-        m_hasActivatedGravity = false;
-    }
-
+    
 private:
     void updateParticleNeighbor();
     void simulateParticleBehavior();
@@ -115,23 +103,11 @@ public:
     {
         return *m_collisionDispatcher;
     }
-
-    const fj::Vector3& getGravity()const
+    
+    const fj::NeighborMap& getNeighborMap()const
     {
-        return m_gravity;
+        return m_neighborMap;
     }
-
-    void setGravity(const float x, const float y, const float z)
-    {
-        m_gravity = fj::Vector3(x, y, z);
-    }
-
-    void setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position);
-
-    void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
-
-    fj::Vector3 popParticleForceAt(const fj::ParticleID& ID);
-
     
     uint8_t getThreadNum()const
     {
@@ -155,7 +131,7 @@ protected:
         return &m_particleManager;
     }
     
-    fj::NeighborMap*const getNeighborMap()
+    fj::NeighborMap*const getNeighborMapPtr()
     {
         return &m_neighborMap;
     }
@@ -188,10 +164,6 @@ private:
      */
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
     
-    
-    fj::Vector3 m_gravity;
-
-    bool m_hasActivatedGravity;
     
     /**
      * 粒子を更新する処理のスレッドの数. (ありえないけど)256スレッドまでサポートしておく.

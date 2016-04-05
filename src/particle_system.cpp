@@ -34,10 +34,6 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
     
     simulateParticleBehavior();
     
-    if (hasActivatedGravity()) {
-        applyGravity();
-    }
-    
     clearParticleNeighbors();
 }
 
@@ -51,7 +47,7 @@ void fj::ParticleSystem::updateParticleNeighbor()
         
         for (const auto& a : neighbors)
         {
-            getNeighborMap()->addNeighborInformation(*particle, *(a.lock()));
+            getNeighborMapPtr()->addNeighborInformation(*particle, *(a.lock()));
         }
         
         particle->moveNeighborParticles( std::move(neighbors) );
@@ -61,7 +57,7 @@ void fj::ParticleSystem::updateParticleNeighbor()
 
 void fj::ParticleSystem::simulateParticleBehavior()
 {
-    getSolverPtr()->compute(getParticleManager(), *getNeighborMap());
+    getSolverPtr()->compute(getParticleManager(), getNeighborMap());
 //    updateParticleProperty();
 //    accumulateParticleForce();
 }
@@ -142,17 +138,6 @@ void fj::ParticleSystem::accumulateParticleForceWithin_MT(const int begin, const
     
 }
 
-void fj::ParticleSystem::applyGravity()
-{
-    const fj::Vector3 kGravity = getGravity();
-    
-    for (auto& particle : *getParticleManagerPtr())
-    {
-        particle->applyForce(kGravity);
-    }
-    
-}
-
 void fj::ParticleSystem::clearParticleNeighbors()
 {
     m_neighborMap.clear();
@@ -188,7 +173,7 @@ void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::Part
     const fj::Particle& particle1 = getParticleManager().search(ID1);
     const fj::Particle& particle2 = getParticleManager().search(ID2);
     
-    getNeighborMap()->addNeighborInformation(particle1, particle2);
+    getNeighborMapPtr()->addNeighborInformation(particle1, particle2);
 }
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)
@@ -216,10 +201,4 @@ void fj::ParticleSystem::setParticleVelocityAt(const fj::ParticleID& ID, const f
 {
     const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
     particle->setVelocity(velocity);
-}
-
-fj::Vector3 fj::ParticleSystem::popParticleForceAt(const fj::ParticleID& ID)
-{
-    const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
-	return particle->popApliedForce();
 }
