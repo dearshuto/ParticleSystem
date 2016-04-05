@@ -31,11 +31,16 @@ public:
     
     void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
     
-private:
+protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     std::unique_ptr<SPHProperty> computePropertyAt(const fj::Particle& particle, const fj::NeighborMap& neighborMap);
     
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
+    virtual const fj::Scalar getViscosity()const // 可変粘性をサポートするためにvirtualで実装しておく
+    {
+        return VISCOSITY;
+    }
     
 private:
     std::unordered_map<fj::ParticleID, std::unique_ptr<SPHProperty>> m_propertyMap;
@@ -47,7 +52,7 @@ private:
     constexpr static const fj::Scalar H = 0.01;//m
     constexpr static const fj::Scalar SQUARED_H = H * H;
     constexpr static const fj::Scalar INSTIFF = 3.f;
-    constexpr static const fj::Scalar VISCOSITY = 1.8;
+    constexpr static const fj::Scalar VISCOSITY = 10.8;
     
     static const fj::Scalar Poly6Kernel;
     static const fj::Scalar SpikyKernel;
