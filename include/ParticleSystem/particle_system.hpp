@@ -34,7 +34,6 @@ public:
     ~ParticleSystem() = default;
 
     ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
-    : m_threadNum(1)
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
@@ -79,10 +78,6 @@ public:
 private:
     void updateParticleNeighbor();
     void simulateParticleBehavior();
-    void updateParticleProperty();
-    void updateParticlePropertyWithin_MT(const int begin, const int end);
-    void accumulateParticleForce();
-    void accumulateParticleForceWithin_MT(const int begin, const int end);
     
     void applyGravity();
     void clearParticleNeighbors();
@@ -103,16 +98,6 @@ public:
     const fj::NeighborMap& getNeighborMap()const
     {
         return m_neighborMap;
-    }
-    
-    uint8_t getThreadNum()const
-    {
-        return m_threadNum;
-    }
-    
-    void setThreadNum(const uint8_t threadNum)
-    {
-        m_threadNum = threadNum;
     }
     
 protected:
@@ -159,12 +144,6 @@ private:
      * 近傍粒子探索を外部にいたくするときはnullのまま
      */
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
-    
-    
-    /**
-     * 粒子を更新する処理のスレッドの数. (ありえないけど)256スレッドまでサポートしておく.
-     */
-    uint8_t m_threadNum;
 };
 
 #endif /* particle_system_hpp */
