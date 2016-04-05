@@ -31,18 +31,14 @@ namespace fj {
 class fj::ParticleSystem
 {
 public:
-    ParticleSystem()
-    : m_gravity(0, 0, 0)
-    , m_hasActivatedGravity(false)
-    , m_threadNum(1)
-    {
-
-    }
-
+    ParticleSystem() = default;
     ~ParticleSystem() = default;
 
     ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
-    : ParticleSystem()
+    : m_gravity(0, 0, 0)
+    , m_hasActivatedGravity(false)
+    , m_threadNum(1)
+
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
