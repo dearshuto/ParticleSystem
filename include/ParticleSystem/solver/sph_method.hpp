@@ -27,7 +27,7 @@ class fj::SPHMethod : public fj::Solver
     class SPHProperty;
 public:
     SPHMethod() = default;
-    ~SPHMethod() = default;
+    virtual~SPHMethod() = default;
     
     void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
     
