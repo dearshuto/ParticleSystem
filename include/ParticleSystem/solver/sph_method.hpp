@@ -9,6 +9,8 @@
 #ifndef sph_method_hpp
 #define sph_method_hpp
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <memory>
 #include <unordered_map>
 
