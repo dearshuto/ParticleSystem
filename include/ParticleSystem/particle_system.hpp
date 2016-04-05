@@ -35,23 +35,35 @@ public:
         m_collisionDispatcher =  std::move(collisionDispatcher);
     }
     
-    
+    /**
+     * シミュレーションにむけて登録された粒子を内部的に初期化する. シミュレーションの前に一度だけ呼ばなければならない.
+     */
     void initSimulationStatus();
     
-    
+    /**
+     * シミュレーションを進める
+     */
     void stepSimulation(const float timestep);
 
     
-    void createFluidParticle(const fj::Vector3& position, const bool movable = true);
+    void createParticle(const fj::Vector3& position, const bool movable = true);
     
 
     /**
+     * 粒子間の衝突を作る
      * @param index1 衝突を検知した粒子のID
      * @param index2 ID1と衝突した粒子のID
+     * @param distance 粒子間距離
      */
     void makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance);
 
-
+    /**
+     * 粒子間の衝突を作る. 内部で距離計算をするので, 距離を指定しない関数に比べると速度が劣る
+     * @param index1 衝突を検知した粒子のID
+     * @param index2 ID1と衝突した粒子のID
+     */
+    void makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2);
+    
     /**
      * 剛体から受けた力を加える
      * @oaram 剛体の影響を受けた粒子のインデックス
@@ -62,7 +74,9 @@ public:
 
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
     
-    
+    /**
+     * 粒子の加速度を取得する
+     */
     const fj::Vector3 getAppliedAccel(const fj::ParticleID& ID)const
     {
         return m_solver->getAccellAt(ID);

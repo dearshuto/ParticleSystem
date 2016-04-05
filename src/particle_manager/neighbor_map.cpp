@@ -25,6 +25,21 @@ void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, cons
     m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
 }
 
+void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2, const fj::Scalar& distance)
+{
+    // メモリを消費するが、アクセスを簡単にするために対象のデータ構造にする
+    
+    const fj::ParticleID& kID1 = particle1.getID();
+    const fj::ParticleID& kID2 = particle2.getID();
+    const fj::Vector3 kDirection21 = particle1.getPosition() - particle2.getPosition();
+    
+    const fj::Scalar kDistance = distance;
+    const fj::Scalar kSquaredDistance = std::pow(kDistance, 2);
+    const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
+    
+    m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
+}
+
 void fj::NeighborMap::clear()
 {
     for (auto& neighbor : m_neighbors)

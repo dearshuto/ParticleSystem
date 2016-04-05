@@ -44,7 +44,13 @@ public:
      */
     void addNeighborInformation(const fj::Particle& particle, const fj::Particle& neighborParticle);
     
-    
+    /**
+     * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!
+     * @param ID 注目粒子
+     * @param neighborID 注目粒子の近傍に入ってきた粒子
+     */
+    void addNeighborInformation(const fj::Particle& particle, const fj::Particle& neighborParticle, const fj::Scalar& distance);
+
     
     void clear();
     

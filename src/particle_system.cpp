@@ -44,9 +44,9 @@ void fj::ParticleSystem::updateParticleNeighbor()
     {
         auto neighbors = getCollisionDispatcherPtr()->getNeighborParticlesAt(std::ref(*particle));
         
-        for (const auto& a : neighbors)
+        for (const auto& neighbor : neighbors)
         {
-            getNeighborMapPtr()->addNeighborInformation(*particle, *(a.lock()));
+            makeCollision(particle->getID(), (neighbor.lock())->getID());
         }
         
     }
@@ -63,7 +63,7 @@ void fj::ParticleSystem::clearParticleNeighbors()
     m_neighborMap.clear();
 }
 
-void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position, const bool movable)
+void fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
 {
     const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
     std::unique_ptr<fj::Particle> fluidParticle(new fj::Particle(kID, position));
@@ -72,6 +72,14 @@ void fj::ParticleSystem::createFluidParticle(const fj::Vector3& position, const 
 }
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
+{
+    const fj::Particle& particle1 = getParticleManager().search(ID1);
+    const fj::Particle& particle2 = getParticleManager().search(ID2);
+    
+    getNeighborMapPtr()->addNeighborInformation(particle1, particle2);
+}
+
+void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::ParticleID &ID2)
 {
     const fj::Particle& particle1 = getParticleManager().search(ID1);
     const fj::Particle& particle2 = getParticleManager().search(ID2);

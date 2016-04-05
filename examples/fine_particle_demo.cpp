@@ -9,6 +9,7 @@
 #include <iostream>
 #include <memory>
 
+#include <ParticleSystem/type/simulation_constant.hpp>
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/solver/sph_method.hpp>
@@ -27,7 +28,7 @@ int main(int argc, char** argv)
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
             for (int k = 0; k < 1; k++) {
-                particleSystem.createFluidParticle(fj::Vector3(fj::Scalar(i) * kParticleRadius, fj::Scalar(j) * kParticleRadius, 0));
+                particleSystem.createParticle(fj::Vector3(fj::Scalar(i) * kParticleRadius, fj::Scalar(j) * kParticleRadius, 0));
             }
         }
     }
@@ -46,15 +47,15 @@ int main(int argc, char** argv)
             
 //            if ( (i % 10) == 0)
             {
-                std::cout << particle->getID().getData() << ": ";
-                std::cout << "accel";
-                kAccel.print();
-                std::cout << "pressure: " << particle->getPressure() << std::endl;
-                
-                std::cout << "velocity";
-                particle->getVelocity().print();
-                std::cout << "position";
-                particle->getPosition().print();
+//                std::cout << particle->getID().getData() << ": ";
+//                std::cout << "accel";
+//                kAccel.print();
+//                std::cout << "pressure: " << particle->getPressure() << std::endl;
+//                
+//                std::cout << "velocity";
+//                particle->getVelocity().print();
+//                std::cout << "position";
+//                particle->getPosition().print();
             }
         }
 
