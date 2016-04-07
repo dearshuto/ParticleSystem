@@ -19,7 +19,7 @@ const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64)
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 const fj::Scalar fj::SPHMethod::LaplacianKernel = fj::Scalar(45) / (fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 
-void fj::SPHMethod::compute(const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
+void fj::SPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
 {
     updateProperty(particleManager, neighborMap);
     updateAccel(particleManager, neighborMap);
@@ -77,7 +77,7 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
             const fj::Scalar kDistance = neighbor.getDistance();
             
             const fj::Scalar kC = H - kDistance;
-            const fj::Vector3 kVelocityKernelTerm = VISCOSITY * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
+            const fj::Vector3 kVelocityKernelTerm = getViscosity(kID) * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
             const fj::Vector3 kPressureKernelterm = -fj::Scalar(0.5 * (kParticleProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * kC) * kDirection;
             const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm;
             
