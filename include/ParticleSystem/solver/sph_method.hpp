@@ -10,6 +10,7 @@
 #define sph_method_hpp
 
 #define _USE_MATH_DEFINES
+#include <math.h>
 #include <cmath>
 #include <memory>
 #include <unordered_map>
