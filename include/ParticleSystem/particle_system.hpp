@@ -46,7 +46,7 @@ public:
     void stepSimulation(const float timestep);
 
     
-    void createParticle(const fj::Vector3& position, const bool movable = true);
+    fj::ParticleID createParticle(const fj::Vector3& position, const bool movable = true);
     
 
     /**

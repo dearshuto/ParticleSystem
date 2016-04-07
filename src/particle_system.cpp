@@ -63,12 +63,14 @@ void fj::ParticleSystem::clearParticleNeighbors()
     m_neighborMap.clear();
 }
 
-void fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
+fj::ParticleID fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
 {
     const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
     std::unique_ptr<fj::Particle> fluidParticle(new fj::Particle(kID, position));
     
     getParticleManagerPtr()->registerParticle( std::move(fluidParticle), movable );
+    
+    return kID;
 }
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
