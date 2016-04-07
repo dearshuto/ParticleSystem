@@ -29,11 +29,15 @@ public:
     ParticleSystem() = default;
     virtual~ParticleSystem() = default;
 
+    ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
+    
     ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
     }
+    
+    fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
     
     /**
      * シミュレーションにむけて登録された粒子を内部的に初期化する. シミュレーションの前に一度だけ呼ばなければならない.
@@ -41,13 +45,16 @@ public:
     void initSimulationStatus();
     
     /**
-     * シミュレーションを進める
+     * シミュレーションをタイムステップ分進める
      */
     void stepSimulation(const float timestep);
 
-    
+    /**
+     * 指定された位置に粒子を生成する
+     * @param position 粒子の位置
+     * @param movable 移動可能の判断
+     */
     fj::ParticleID createParticle(const fj::Vector3& position, const bool movable = true);
-    
 
     /**
      * 粒子間の衝突を作る
@@ -65,13 +72,16 @@ public:
     void makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2);
     
     /**
-     * 剛体から受けた力を加える
+     * 剛体から受けた力を加える. 現在は未実装
      * @oaram 剛体の影響を受けた粒子のインデックス
      * @param 粒子が衝突した剛体上の点
      */
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3& collisionPoint);
     
 
+    /**
+     *現在は未実装
+     */
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Scalar& distance, const fj::Vector3& normalizedDirection);
     
     /**
@@ -86,12 +96,11 @@ public:
     
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
 
+protected:
+    virtual void simulateParticleBehavior(const fj::Scalar& timestep);
     
 private:
     void updateParticleNeighbor();
-    void simulateParticleBehavior();
-    
-    void applyGravity();
     void clearParticleNeighbors();
 
 //getters & setters
@@ -142,7 +151,7 @@ private:
     fj::ParticleManager m_particleManager;
 
     /**
-     * 粒子砲アルゴリズム
+     * 粒子法アルゴリズム
      */
     std::unique_ptr<fj::Solver> m_solver;
     
@@ -153,7 +162,7 @@ private:
     
     /**
      * 独自実装の近傍探索アルゴリズム
-     * 近傍粒子探索を外部にいたくするときはnullのまま
+     * 近傍粒子探索を外部にいたくするときは必要ない
      */
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
 };

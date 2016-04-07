@@ -27,9 +27,9 @@ class fj::SPHMethod : public fj::Solver
     class SPHProperty;
 public:
     SPHMethod() = default;
-    ~SPHMethod() = default;
+    virtual~SPHMethod() = default;
     
-    void compute(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
+    void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
     
 protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
@@ -37,10 +37,11 @@ protected:
     
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     
-    virtual const fj::Scalar getViscosity()const // 可変粘性をサポートするためにvirtualで実装しておく
+    virtual fj::Scalar getViscosity(const fj::ParticleID& ID)const // 可変粘性をサポートするためにvirtualで実装しておく
     {
         return VISCOSITY;
     }
+    
     
 private:
     std::unordered_map<fj::ParticleID, std::unique_ptr<SPHProperty>> m_propertyMap;
