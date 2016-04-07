@@ -22,6 +22,7 @@
 namespace fj {
     class Particle;
     class ParticleID;
+    class ParticleManager;
     class NeighborMap;
 }
 
