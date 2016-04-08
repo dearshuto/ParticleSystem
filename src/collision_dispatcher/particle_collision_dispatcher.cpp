@@ -17,18 +17,6 @@
 
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 
-void fj::ParticleCollisionDispatcher::initialize(const fj::ParticleManager &particleManager)
-{
-    
-    for (const auto& particle : particleManager)
-    {
-        const HashValue_t& kHash = computeHash( std::cref(*particle) );
-        
-        m_cells[kHash].push_back(particle);
-    }
-    
-}
-
 void fj::ParticleCollisionDispatcher::registerParticle(const std::shared_ptr<fj::Particle>& particle)
 {
     const HashValue_t kHash = computeHash( std::cref(*particle) );

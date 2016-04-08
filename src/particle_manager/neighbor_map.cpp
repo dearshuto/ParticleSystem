@@ -11,6 +11,12 @@
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 
+void fj::NeighborMap::registerParticle(const fj::Particle &particle)
+{
+    const fj::ParticleID& kID = particle.getID();
+    m_neighbors[kID].clear();
+}
+
 void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2)
 {
     // メモリを消費するが、アクセスを簡単にするために対象のデータ構造にする

@@ -19,11 +19,6 @@
 
 #include <ParticleSystem/particle_system.hpp>
 
-void fj::ParticleSystem::initSimulationStatus()
-{
-    getCollisionDispatcherPtr()->initialize( getParticleManager()) ;
-}
-
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
     if (getCollisionDispatcherPtr())
@@ -66,9 +61,10 @@ void fj::ParticleSystem::clearParticleNeighbors()
 fj::ParticleID fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
 {
     const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
-    std::unique_ptr<fj::Particle> fluidParticle(new fj::Particle(kID, position));
-    
-    getParticleManagerPtr()->registerParticle( std::move(fluidParticle), movable );
+    std::unique_ptr<fj::Particle> particle(new fj::Particle(kID, position));
+
+    getNeighborMapPtr()->registerParticle( std::cref(*particle) );
+    getParticleManagerPtr()->registerParticle( std::move(particle), movable );
     
     return kID;
 }

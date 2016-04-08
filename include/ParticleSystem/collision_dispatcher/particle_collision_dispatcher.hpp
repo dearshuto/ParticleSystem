@@ -41,9 +41,7 @@ public:
     {
         m_cells.resize(width * height * depth);
     }
-    
-    void initialize(const fj::ParticleManager& particleManager);
-    
+        
     void registerParticle(const std::shared_ptr<fj::Particle>& particle);
     
     void updated();

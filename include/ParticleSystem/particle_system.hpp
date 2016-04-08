@@ -38,12 +38,7 @@ public:
     }
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
-    
-    /**
-     * シミュレーションにむけて登録された粒子を内部的に初期化する. シミュレーションの前に一度だけ呼ばなければならない.
-     */
-    void initSimulationStatus();
-    
+        
     /**
      * シミュレーションをタイムステップ分進める
      */
