@@ -39,72 +39,50 @@ void fj::SPHMethod::updateProperty(const fj::ParticleManager& particleManager, c
 
 std::unique_ptr<fj::SPHMethod::SPHProperty> fj::SPHMethod::computePropertyAt(const fj::Particle &particle, const fj::NeighborMap &neighborMap)
 {
-    
     // 自分自身の重みで初期化しておく
     fj::Scalar sum = std::pow(SQUARED_H, 3);
     
-    try
-    {
-        
-            const fj::ParticleID& kID = particle.getID();
-            const auto& kNeighbors = neighborMap.getAt(kID);//シミュレーション中に近傍粒子が存在するときが一度もなければ例外が投げられる
+    const fj::ParticleID& kID = particle.getID();
+    const auto& kNeighbors = neighborMap.getAt(kID);
     
-            for (const auto& kNeighborParticle : kNeighbors)
-            {
-                const fj::Vector3 kRelativePosition = kNeighborParticle.getDirection();
-                const fj::Scalar kSquaredDistance = kNeighborParticle.getSquaredDistance();
-                const fj::Scalar kC = SQUARED_H - kSquaredDistance;
-        
-                sum += std::pow(kC, 3);
-            }
-        }
-    catch (const std::out_of_range& e)
+    for (const auto& kNeighborParticle : kNeighbors)
     {
-        // 例外が起きたということは, particleの近傍粒子が存在しなかったということ
-        // 近傍からの影響がないということなので何もしない
-    }
+        const fj::Vector3 kRelativePosition = kNeighborParticle.getDirection();
+        const fj::Scalar kSquaredDistance = kNeighborParticle.getSquaredDistance();
+        const fj::Scalar kC = SQUARED_H - kSquaredDistance;
         
-    const fj::Scalar kDensity = sum * PARTICLE_MASS * Poly6Kernel;
-    return std::unique_ptr<SPHProperty>(new SPHProperty(kDensity));
+        sum += std::pow(kC, 3);
+    }
+
+    return std::unique_ptr<SPHProperty>(new SPHProperty( sum * PARTICLE_MASS * Poly6Kernel ));
 }
 
 void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)
 {
-    // 藤代研究室0Bの上田さんのコードをもとにして実装されています
     fj::Vector3 F(0, 0, 0);
     
     for (const auto& particle : particleManager)
     {
-        const fj::ParticleID& kID = particle->getID();//シミュレーション中に近傍粒子が存在するときが一度もなければ例外が投げられる
+        const fj::ParticleID& kID = particle->getID();
+        const SPHMethod::SPHProperty& kParticleProperty = std::cref(*m_propertyMap.at(kID));
         
-        try
+        for (const auto& neighbor : neighborMap.getAt(kID))
         {
-            const SPHMethod::SPHProperty& kParticleProperty = std::cref(*m_propertyMap.at(kID));
+            const fj::Particle& kNeighborParticle = particleManager.search(neighbor.getParticleID());
+            const fj::SPHMethod::SPHProperty& kNeighborProperty = std::cref( *m_propertyMap.at(kNeighborParticle.getID()) );
+            
+            const fj::Vector3 kDirection = neighbor.getDirection();
+            const fj::Scalar kDistance = neighbor.getDistance();
+            
+            const fj::Scalar kC = H - kDistance;
+            const fj::Vector3 kVelocityKernelTerm = getViscosity(kID) * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
+            const fj::Vector3 kPressureKernelterm = -fj::Scalar(0.5 * (kParticleProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * kC) * kDirection;
+            const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm;
+            
+            F += PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * kKernelTerm;
+        }
         
-            for (const auto& neighbor : neighborMap.getAt(kID))
-            {
-                const fj::Particle& kNeighborParticle = particleManager.search(neighbor.getParticleID());
-                const fj::SPHMethod::SPHProperty& kNeighborProperty = std::cref( *m_propertyMap.at(kNeighborParticle.getID()) );
-            
-                const fj::Vector3 kDirection = neighbor.getDirection();
-                const fj::Scalar kDistance = neighbor.getDistance();
-            
-                const fj::Scalar kC = H - kDistance;
-                const fj::Vector3 kVelocityKernelTerm = getViscosity(kID) * (kNeighborParticle.getVelocity() - particle->getVelocity()) * LaplacianKernel;
-                const fj::Vector3 kPressureKernelterm = -fj::Scalar(0.5 * (kParticleProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * kC) * kDirection;
-                const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm;
-            
-                F += PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * kKernelTerm;
-            }
-
-            setAccelAt(kID, F * kParticleProperty.getInverseDensity());
-        }
-        catch(const std::out_of_range& e)
-        {
-            // 例外が発生してるということは近傍粒子が存在しないということ
-            // 力を受けていないのでゼロベクトルをセットする
-            setAccelAt(kID, fj::Vector3(0, 0, 0) );
-        }
+        setAccelAt(kID, F * kParticleProperty.getInverseDensity());
         
         F = fj::Vector3(0, 0, 0);
     }
