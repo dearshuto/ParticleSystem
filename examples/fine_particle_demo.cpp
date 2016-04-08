@@ -33,7 +33,7 @@ int main(int argc, char** argv)
         }
     }
     
-    particleSystem.initSimulationStatus();
+
     
     for (int i = 0; i < 3; i++) {
         std::cout << std::endl;

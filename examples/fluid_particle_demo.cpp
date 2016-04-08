@@ -10,32 +10,46 @@
 
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
-#include <ParticleSystem/type/Scalar.h>
+#include <ParticleSystem/type/simulation_constant.hpp>
+#include <ParticleSystem/solver/sph_method.hpp>
 
 int main(int argc, char** argv)
 {
-    const fj::Scalar kRafius(0.1);
-    const fj::Scalar kMass(1);
+    constexpr fj::Scalar kTimestep = fj::Scalar(1) / fj::Scalar(250);
+    constexpr fj::Scalar kParticleRadius = fj::SimulationConstant::PARTICLE_RADIUS;
+    const fj::Scalar kBLockSize = kParticleRadius * 5;
     
-    fj::ParticleSystem particleSystem;
+    std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
+    std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
+    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher) );
     
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
-            for (int k = 0; k < 10; k++) {
-                particleSystem.createFineParticle(i, j, k, kRafius, kMass);
+            for (int k = 0; k < 5; k++) {
+                particleSystem.createParticle(fj::Vector3(fj::Scalar(i) * kParticleRadius, fj::Scalar(j) * kParticleRadius, 0));
             }
         }
     }
     
-    particleSystem.makeCollision(0, 1);
-    particleSystem.makeCollision(0, 2);
-    particleSystem.makeCollision(0, 3);
-    
-    particleSystem.stepSimulation( fj::Scalar(1) / fj::Scalar(60) );
-    
-    for (const auto& particle: particleSystem.getParticles())
-    {
-        particle->popApliedForce().print();
+    for (int i = 0; i < 3; i++) {
+        std::cout << std::endl;
+        std::cout << "step: " << (i + 1) << std::endl;
+        particleSystem.stepSimulation( kTimestep );
+        for (const auto& particle: particleSystem.getParticleManager())
+        {
+            const fj::Vector3 kAccel =  particleSystem.getAppliedAccel(particle->getID());
+            particle->addVelocity(kAccel * kTimestep);
+            particle->addPosition(particle->getVelocity() * kTimestep);
+            
+            std::cout << particle->getID().getData() << std::endl;
+            std::cout << "accel";
+            kAccel.print();
+            std::cout << "velocity";
+            particle->getVelocity().print();
+            std::cout << "position";
+            particle->getPosition().print();
+        }
+        
     }
     
     return EXIT_SUCCESS;
