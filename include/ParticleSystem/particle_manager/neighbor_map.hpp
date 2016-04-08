@@ -58,7 +58,9 @@ public:
      */
     void addNeighborInformation(const fj::Particle& particle, const fj::Particle& neighborParticle, const fj::Scalar& distance);
 
-    
+    /**
+     * マップ内の情報を初期化する. 登録されている登録されている粒子自体が消去されるわけではない.
+     */
     void clear();
     
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
