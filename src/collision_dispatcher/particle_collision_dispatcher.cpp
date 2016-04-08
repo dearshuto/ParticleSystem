@@ -28,7 +28,13 @@ void fj::ParticleCollisionDispatcher::initialize(const fj::ParticleManager &part
     }
     
 }
-    
+
+void fj::ParticleCollisionDispatcher::registerParticle(const std::shared_ptr<fj::Particle>& particle)
+{
+    const HashValue kHash = computeHash( std::cref(*particle) );
+    m_cells[kHash].push_back(particle);
+}
+
 void fj::ParticleCollisionDispatcher::updated()
 {
     const size_t kCellSize = m_cells.size();

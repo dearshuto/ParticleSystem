@@ -44,6 +44,8 @@ public:
     
     void initialize(const fj::ParticleManager& particleManager);
     
+    void registerParticle(const std::shared_ptr<fj::Particle>& particle);
+    
     void updated();
     
     fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle)const;
