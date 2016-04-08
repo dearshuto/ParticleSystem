@@ -60,11 +60,17 @@ void fj::ParticleSystem::clearParticleNeighbors()
 
 fj::ParticleID fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
 {
+    // 生成した粒子の管理はできるだけfj::ParticleManagerに任せたいので, fj::ParticleManager::registerParticleを最初に呼ぶ.
     const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
     std::unique_ptr<fj::Particle> particle(new fj::Particle(kID, position));
-
-    getNeighborMapPtr()->registerParticle( std::cref(*particle) );
-    getParticleManagerPtr()->registerParticle( std::move(particle), movable );
+    const std::shared_ptr<fj::Particle> sharedParticle = getParticleManagerPtr()->registerParticle( std::move(particle), movable );
+    
+    getNeighborMapPtr()->registerParticle( std::cref(*sharedParticle) );
+    
+    if (getCollisionDispatcherPtr())
+    {
+        getCollisionDispatcherPtr()->registerParticle(sharedParticle);
+    }
     
     return kID;
 }

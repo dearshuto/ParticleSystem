@@ -6,11 +6,12 @@
 //
 //
 
+#include <memory>
 #include <ParticleSystem/particle/particle.hpp>
 
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-void fj::ParticleManager::registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable)
+const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable)
 {
     std::shared_ptr<fj::Particle> sharedParticle = std::move(particle);
     
@@ -24,5 +25,8 @@ void fj::ParticleManager::registerParticle(std::unique_ptr<fj::Particle> particl
     else
     {
         m_boundaryParticles.push_back(sharedParticle);
+    
     }
+    
+    return sharedParticle;
 }
