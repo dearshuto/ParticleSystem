@@ -20,6 +20,9 @@ namespace fj {
     class Solver;
 }
 
+/**
+ * 各粒子の加速度を求める. 
+ */
 class fj::Solver
 {
 public:
