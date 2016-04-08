@@ -9,6 +9,7 @@
 #ifndef neighbor_map_hpp
 #define neighbor_map_hpp
 
+#include <iostream>
 #include <functional>
 #include <tuple>
 #include <unordered_map>
@@ -22,6 +23,7 @@
 namespace fj {
     class Particle;
     class ParticleID;
+    class ParticleManager;
     class NeighborMap;
 }
 
@@ -38,6 +40,11 @@ public:
     ~NeighborMap() = default;
     
     /**
+     * 衝突判定対象となる粒子を登録する
+     */
+    void registerParticle(const fj::Particle& particle);
+    
+    /**
      * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!
      * @param ID 注目粒子
      * @param neighborID 注目粒子の近傍に入ってきた粒子
@@ -51,12 +58,22 @@ public:
      */
     void addNeighborInformation(const fj::Particle& particle, const fj::Particle& neighborParticle, const fj::Scalar& distance);
 
-    
+    /**
+     * マップ内の情報を初期化する. 登録されている登録されている粒子自体が消去されるわけではない.
+     */
     void clear();
     
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
-        return std::cref(m_neighbors.at(ID));
+
+        try {
+            const NeighborInformations& kNeighborInformation = m_neighbors.at(ID);
+            return kNeighborInformation;
+        } catch (const std::out_of_range& e) {
+            std::cout << ID.getData() << " is not found in NeighborMap." << std::endl;
+            std::cout << "Please register the particle with ID: " << ID.getData() << std::endl;
+        }
+        
     }
     
 private:

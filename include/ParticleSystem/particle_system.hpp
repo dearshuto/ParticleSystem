@@ -38,12 +38,7 @@ public:
     }
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
-    
-    /**
-     * シミュレーションにむけて登録された粒子を内部的に初期化する. シミュレーションの前に一度だけ呼ばなければならない.
-     */
-    void initSimulationStatus();
-    
+        
     /**
      * シミュレーションをタイムステップ分進める
      */
@@ -87,7 +82,7 @@ public:
     /**
      * 粒子の加速度を取得する
      */
-    const fj::Vector3 getAppliedAccel(const fj::ParticleID& ID)const
+    const fj::Vector3& getAppliedAccel(const fj::ParticleID& ID)const
     {
         return m_solver->getAccellAt(ID);
     }

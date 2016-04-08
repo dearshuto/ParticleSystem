@@ -27,7 +27,7 @@ namespace fj {
  */
 class fj::ParticleCollisionDispatcher
 {
-    typedef unsigned int HashValue;
+    typedef unsigned int HashValue_t;
     typedef std::vector<std::shared_ptr<fj::Particle>> Particles;
 public:
     ParticleCollisionDispatcher() = delete;
@@ -41,8 +41,8 @@ public:
     {
         m_cells.resize(width * height * depth);
     }
-    
-    void initialize(const fj::ParticleManager& particleManager);
+        
+    void registerParticle(const std::shared_ptr<fj::Particle>& particle);
     
     void updated();
     
@@ -55,11 +55,11 @@ private:
     /**
      * あるハッシュ値をもつセルからxyz方向に移動したセルを返す
      */
-    const Particles*const getSideCell(const HashValue& hash, const int x, const int y, const int z)const;
+    const Particles*const getSideCell(const HashValue_t& hash, const int x, const int y, const int z)const;
     
-    void updatedAt(const HashValue& currentHash);
+    void updatedAt(const HashValue_t& currentHash);
     
-    HashValue computeHash(const fj::Particle& particle)const;
+    HashValue_t computeHash(const fj::Particle& particle)const;
     
     /**
      * スカラー値をハッシュ値計算に利用可能な範囲に丸める

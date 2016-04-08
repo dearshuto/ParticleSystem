@@ -28,7 +28,7 @@ public:
     ParticleManager() = default;
     ~ParticleManager() = default;
     
-    void registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable);
+    const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable);
     
     std::shared_ptr<fj::Particle>& getParticleAt(const int i)
     {

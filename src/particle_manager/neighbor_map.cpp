@@ -11,10 +11,14 @@
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 
+void fj::NeighborMap::registerParticle(const fj::Particle &particle)
+{
+    const fj::ParticleID& kID = particle.getID();
+    m_neighbors[kID].clear();
+}
+
 void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2)
 {
-    // メモリを消費するが、アクセスを簡単にするために対象のデータ構造にする
-    
     const fj::ParticleID& kID1 = particle1.getID();
     const fj::ParticleID& kID2 = particle2.getID();
     const fj::Vector3 kDirection21 = particle1.getPosition() - particle2.getPosition();
@@ -27,8 +31,6 @@ void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, cons
 
 void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2, const fj::Scalar& distance)
 {
-    // メモリを消費するが、アクセスを簡単にするために対象のデータ構造にする
-    
     const fj::ParticleID& kID1 = particle1.getID();
     const fj::ParticleID& kID2 = particle2.getID();
     const fj::Vector3 kDirection21 = particle1.getPosition() - particle2.getPosition();

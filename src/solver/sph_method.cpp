@@ -39,11 +39,11 @@ void fj::SPHMethod::updateProperty(const fj::ParticleManager& particleManager, c
 
 std::unique_ptr<fj::SPHMethod::SPHProperty> fj::SPHMethod::computePropertyAt(const fj::Particle &particle, const fj::NeighborMap &neighborMap)
 {
-    const fj::ParticleID& kID = particle.getID();
-    const auto& kNeighbors = neighborMap.getAt(kID);
-    
     // 自分自身の重みで初期化しておく
     fj::Scalar sum = std::pow(SQUARED_H, 3);
+    
+    const fj::ParticleID& kID = particle.getID();
+    const auto& kNeighbors = neighborMap.getAt(kID);
     
     for (const auto& kNeighborParticle : kNeighbors)
     {
@@ -53,14 +53,12 @@ std::unique_ptr<fj::SPHMethod::SPHProperty> fj::SPHMethod::computePropertyAt(con
         
         sum += std::pow(kC, 3);
     }
-    
-    const fj::Scalar kDensity = sum * PARTICLE_MASS * Poly6Kernel;
-    return std::unique_ptr<SPHProperty>(new SPHProperty(kDensity));
+
+    return std::unique_ptr<SPHProperty>(new SPHProperty( sum * PARTICLE_MASS * Poly6Kernel ));
 }
 
 void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)
 {
-    // 藤代研究室0Bの上田さんのコードをもとにして実装されています
     fj::Vector3 F(0, 0, 0);
     
     for (const auto& particle : particleManager)
@@ -83,8 +81,9 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
             
             F += PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * kKernelTerm;
         }
-
+        
         setAccelAt(kID, F * kParticleProperty.getInverseDensity());
+        
         F = fj::Vector3(0, 0, 0);
     }
 }
