@@ -80,7 +80,7 @@ void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::Part
     const fj::Particle& particle1 = getParticleManager().search(ID1);
     const fj::Particle& particle2 = getParticleManager().search(ID2);
     
-    getNeighborMapPtr()->addNeighborInformation(particle1, particle2);
+    getNeighborMapPtr()->addNeighborInformation(particle1, particle2, distance);
 }
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::ParticleID &ID2)
