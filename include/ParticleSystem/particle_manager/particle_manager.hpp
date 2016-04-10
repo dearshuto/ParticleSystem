@@ -24,6 +24,7 @@ namespace fj {
 class fj::ParticleManager
 {
     typedef std::vector<std::shared_ptr<fj::Particle>> ParticleArray;
+    class ConstIterator;
 public:
     ParticleManager() = default;
     ~ParticleManager() = default;
@@ -64,6 +65,8 @@ public:
     {
         return std::end(m_particles);
     }
+
+    std::unique_ptr<fj::ParticleManager::ConstIterator> iterator();
     
 public:
     
@@ -92,6 +95,30 @@ private:
     ParticleArray m_flowParticles;
     ParticleArray m_boundaryParticles;
     fj::ParticleHashMap m_particleHashMap;
+};
+
+
+class fj::ParticleManager::ConstIterator
+{
+public:
+    ConstIterator() = delete;
+    ~ConstIterator() = default;
+    
+    ConstIterator(const fj::ParticleManager& particleManager)
+    : m_particleManager(particleManager)
+    , m_searchedIndex(0)
+    {
+        
+    }
+    
+    bool hasNext()const;
+    
+    const fj::Particle& next();
+    
+private:
+    const fj::ParticleManager& m_particleManager;
+    
+    size_t m_searchedIndex;
 };
 
 #endif /* particle_manager_hpp */
