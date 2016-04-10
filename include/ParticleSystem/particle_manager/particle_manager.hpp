@@ -66,7 +66,7 @@ public:
         return std::end(m_particles);
     }
 
-    std::unique_ptr<fj::ParticleManager::ConstIterator> iterator();
+    std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
     
 public:
     

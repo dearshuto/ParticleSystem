@@ -31,6 +31,11 @@ const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::u
     return sharedParticle;
 }
 
+std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const
+{
+    return std::unique_ptr<fj::ParticleManager::ConstIterator>( new ConstIterator(std::cref(*this)) );
+}
+
 bool fj::ParticleManager::ConstIterator::hasNext()const
 {
     if ( m_searchedIndex < m_particleManager.m_particles.size()) {
