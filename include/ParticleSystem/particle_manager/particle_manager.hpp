@@ -51,20 +51,20 @@ public:
         return std::begin(m_particles);
     }
 
-    ParticleArray::const_iterator begin()const
-    {
-        return std::begin(m_particles);
-    }
+//    ParticleArray::const_iterator begin()const
+//    {
+//        return std::begin(m_particles);
+//    }
     
     ParticleArray::iterator end()
     {
         return std::end(m_particles);
     }
     
-    ParticleArray::const_iterator end()const
-    {
-        return std::end(m_particles);
-    }
+//    ParticleArray::const_iterator end()const
+//    {
+//        return std::end(m_particles);
+//    }
 
     std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
     
