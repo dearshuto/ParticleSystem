@@ -7,3 +7,8 @@
 //
 
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
+
+void fj::MarchingCubes::execute()
+{
+    
+}

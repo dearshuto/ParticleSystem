@@ -32,6 +32,11 @@ public:
         
     }
     
+    /**
+     * メッシュを更新する
+     */
+    void execute();
+    
     const Range_t& getRangeX()const
     {
         return m_xRange;
