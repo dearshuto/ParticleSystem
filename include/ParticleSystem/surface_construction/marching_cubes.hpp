@@ -9,6 +9,15 @@
 #ifndef marching_cubes_hpp
 #define marching_cubes_hpp
 
-#include <stdio.h>
+namespace fj {
+    class MarchingCubes;
+}
+
+class fj::MarchingCubes
+{
+public:
+    MarchingCubes() = default;
+    ~MarchingCubes() = default;
+};
 
 #endif /* marching_cubes_hpp */
