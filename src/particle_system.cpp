@@ -31,6 +31,20 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
     clearParticleNeighbors();
 }
 
+void fj::ParticleSystem::stepParticlePosition(const float timestep)
+{
+    
+    for (auto& particle : *getParticleManagerPtr())
+    {
+        const fj::ParticleID& kID = particle->getID();
+        const fj::Vector3& kAccel = getSolverPtr()->getAccellAt(kID);
+        
+        particle->addVelocity(kAccel);
+        particle->stepSimulation(timestep);
+    }
+    
+}
+
 void fj::ParticleSystem::updateParticleNeighbor()
 {
     getCollisionDispatcherPtr()->updated();

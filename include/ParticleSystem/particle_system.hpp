@@ -45,6 +45,11 @@ public:
     void stepSimulation(const float timestep);
 
     /**
+     * 
+     */
+    void stepParticlePosition(const float timestep);
+    
+    /**
      * 指定された位置に粒子を生成する
      * @param position 粒子の位置
      * @param movable 移動可能の判断
