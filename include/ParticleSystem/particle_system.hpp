@@ -45,6 +45,11 @@ public:
     void stepSimulation(const float timestep);
 
     /**
+     * 
+     */
+    void stepParticlePosition(const float timestep);
+    
+    /**
      * 指定された位置に粒子を生成する
      * @param position 粒子の位置
      * @param movable 移動可能の判断
@@ -86,6 +91,8 @@ public:
     {
         return m_solver->getAccellAt(ID);
     }
+    
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
     
     void setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position);
     

@@ -25,29 +25,26 @@ int main(int argc, char** argv)
     
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
-            for (int k = 0; k < 5; k++) {
+            for (int k = 0; k < 1; k++) {
                 particleSystem.createParticle(fj::Vector3(fj::Scalar(i) * kParticleRadius, fj::Scalar(j) * kParticleRadius, 0));
             }
         }
     }
     
-    for (int i = 0; i < 3; i++) {
-        std::cout << std::endl;
-        std::cout << "step: " << (i + 1) << std::endl;
-        particleSystem.stepSimulation( kTimestep );
-        for (const auto& particle: particleSystem.getParticleManager())
+    for (int i = 0; i < 3; i++)
+    {
+        auto iterator = particleSystem.getParticleManager().iterator();
+        
+        particleSystem.stepSimulation(kTimestep);
+        particleSystem.stepParticlePosition(kTimestep);
+        
+        
+        while ( iterator->hasNext() )
         {
-            const fj::Vector3 kAccel =  particleSystem.getAppliedAccel(particle->getID());
-            particle->addVelocity(kAccel * kTimestep);
-            particle->addPosition(particle->getVelocity() * kTimestep);
+            const fj::Particle& kParticle = iterator->next();
             
-            std::cout << particle->getID().getData() << std::endl;
-            std::cout << "accel";
-            kAccel.print();
-            std::cout << "velocity";
-            particle->getVelocity().print();
-            std::cout << "position";
-            particle->getPosition().print();
+            std::cout << kParticle.getID().getData() << ": ";
+            kParticle.getVelocity().print();
         }
         
     }

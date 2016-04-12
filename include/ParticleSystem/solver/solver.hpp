@@ -36,6 +36,8 @@ public:
         return m_accelMap.at(ID);
     }
     
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
+    
 protected:
     void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
     {
