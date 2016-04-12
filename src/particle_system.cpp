@@ -39,7 +39,7 @@ void fj::ParticleSystem::stepParticlePosition(const float timestep)
         const fj::ParticleID& kID = particle->getID();
         const fj::Vector3& kAccel = getSolverPtr()->getAccellAt(kID);
         
-        particle->addVelocity(kAccel);
+        particle->addVelocity(kAccel * timestep);
         particle->stepSimulation(timestep);
     }
     
