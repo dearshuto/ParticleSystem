@@ -34,6 +34,12 @@ FILE(GLOB_RECURSE solvers
 	${CMAKE_SOURCE_DIR}/src/solver/*.cpp
 )
 
+FILE(GLOB_RECURSE surface_constructions
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/surface_construction/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/surface_construction/*.h
+	${CMAKE_SOURCE_DIR}/src/surface_construction/*.cpp
+)
+
 FILE(GLOB_RECURSE collision_dispatchers
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/collision_dispatcher/*.hpp
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/collision_dispatcher/*.h
@@ -55,6 +61,7 @@ SOURCE_GROUP(particle_system FILES ${particle_systems})
 SOURCE_GROUP(particle FILES ${particles})
 SOURCE_GROUP(particle_manager FILES ${particle_managers})
 SOURCE_GROUP(solver FILES ${solvers})
+SOURCE_GROUP(surface_construction FILES ${surface_constructions})
 SOURCE_GROUP(collision_dispatcher FILES ${collision_dispatchers})
 SOURCE_GROUP(type FILES ${types})
 
@@ -65,6 +72,7 @@ add_library(particle_system STATIC
 	${particles}
 	${particle_managers}
 	${solver}
+	${surface_constructions}
 	${collision_dispatchers}
 	${types}
 	${external_math_sources}
