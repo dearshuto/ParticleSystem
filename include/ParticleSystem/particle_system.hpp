@@ -87,6 +87,8 @@ public:
         return m_solver->getAccellAt(ID);
     }
     
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
+    
     void setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position);
     
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);

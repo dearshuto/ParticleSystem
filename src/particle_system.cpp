@@ -117,3 +117,8 @@ void fj::ParticleSystem::setParticleVelocityAt(const fj::ParticleID& ID, const f
     const std::shared_ptr<fj::Particle>& particle = getParticleManagerPtr()->search(ID);
     particle->setVelocity(velocity);
 }
+
+void fj::ParticleSystem::addAccelAt(const fj::ParticleID &ID, const fj::Vector3 &accel)
+{
+    getSolverPtr()->addAccelAt(ID, accel);
+}
