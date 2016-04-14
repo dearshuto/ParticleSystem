@@ -17,6 +17,7 @@
 
 namespace fj {
     class Particle;
+    class ParticleID;
     class ParticleManager;
     class BoundingBox;
 }
@@ -79,13 +80,15 @@ public:
         m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     
-    void registerParticle(const std::shared_ptr<fj::Particle>& particle);
+    void update(const fj::ParticleManager& particleManager);
     
     bool isOutOfRange(const fj::Particle& particle)const;
 
 protected:
     
-    void registerInBox(const std::shared_ptr<fj::Particle>& particle);
+    void registerParticle(const fj::Particle& particle);
+    
+    void registerInBox(const fj::Particle& particle);
     
 public:
 
@@ -109,8 +112,8 @@ private:
     Range m_yRange;
     Range m_zRange;
 
-    std::vector<std::shared_ptr<fj::Particle>> m_inBox;
-    std::vector<std::shared_ptr<fj::Particle>> m_outOfRangeParticle;
+    std::vector<fj::ParticleID> m_inBox;
+    std::vector<fj::ParticleID> m_outOfRangeParticle;
 };
 
 #endif /* bounding_box_hpp */
