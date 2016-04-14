@@ -355,9 +355,9 @@ void fj::MarchingCubes::execute(const fj::ParticleManager& particleManager)
         ofs << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
     }
     
-    for (int i = 0; i < m_triangleIndices.size(); i+=3)
+    for (int i = 0; i < m_triangleIndices.size(); i++)
     {
-        ofs << "f " << std::get<0>(m_triangleIndices[i]) << "// " << std::get<1>(m_triangleIndices[i]) << "// " << std::get<2>(m_triangleIndices[i]) << "//";
+        ofs << "f " << std::get<0>(m_triangleIndices[i]) << "// " << std::get<1>(m_triangleIndices[i]) << "// " << std::get<2>(m_triangleIndices[i]) << "//" << std::endl;
     }
     
 }
@@ -370,29 +370,46 @@ void fj::MarchingCubes::clear()
 
 void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager)
 {
-    CubeValue_t cubeValue;
-    
-    cubeValue[0] = 1.0;
-    
+    CubeValue_t cubeValue{0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
     const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cubeValue) );
-
+    fj::Vector3 asEdgeVertex[12];
     
-    std::vector<size_t> index;
+    for (int i = 0; i < 12; i++)
+    {
+        const int right = a2iEdgeConnection[i][0];
+        const int left = a2iEdgeConnection[i][1];
+        const fj::Vector3& kRight = a2fVertexOffset[right];
+        const fj::Vector3& kLeft = a2fVertexOffset[left];
+        
+        asEdgeVertex[i] = computeInteractionPoint(kRight, kLeft);
+        m_vertices.push_back(asEdgeVertex[i]);
+    }
+    
+    if (kFlagIndex == 0) {
+        return;
+    }
+    
     //Draw the triangles that were found.  There can be up to five per cube
+
     for(int iTriangle = 0; iTriangle < 5; iTriangle++)
     {
-        if(a2iTriangleConnectionTable[kFlagIndex][3*iTriangle] < 0)
+        int i = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle];
+        
+        if( i < 0)
             break;
         
-        const float kX = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+0];
-        const float kY = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+1];
-        const float kZ = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+2];
+        const int v1 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+0];
+        const int v2 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+1];
+        const int v3 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+2];
         
-        index.push_back(m_vertices.size());
-        m_vertices.push_back( fj::Vector3(kX, kY, kZ) );
+        const fj::Vector3 V1 = asEdgeVertex[v1];
+        const fj::Vector3 V2 = asEdgeVertex[v2];
+        const fj::Vector3 V3 = asEdgeVertex[v3];
+        
+        m_triangleIndices.emplace_back(v1 + 1, v2 + 1, v3 + 1);
     }
 
-    m_triangleIndices.emplace_back(index[0] + 1, index[1] + 1, index[2] + 1);
+
 }
 
 fj::Vector3 fj::MarchingCubes::computeInteractionPoint(const fj::Vector3 &vertex1, const fj::Vector3 &vertex2)const
@@ -413,7 +430,7 @@ uint8_t fj::MarchingCubes::calculateFlagIndex(const CubeValue_t& cubeValue)const
     
     for (int i = 0; i < cubeValue.size(); i++)
     {
-        if ( cubeValue[i] < getIsosurfaceValue() ) {
+        if ( cubeValue[i] <= getIsosurfaceValue() ) {
             index |= (1<<i);
         }
     }
