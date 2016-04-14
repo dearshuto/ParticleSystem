@@ -16,6 +16,7 @@
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/bounding_box.hpp>
+#include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
@@ -171,6 +172,8 @@ private:
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
     
     std::unique_ptr<fj::BoundingBox> m_bb;
+    
+    fj::MarchingCubes m_marchingCubes;
 };
 
 #endif /* particle_system_hpp */

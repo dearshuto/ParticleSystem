@@ -33,10 +33,10 @@ public:
         Range() = delete;
         ~Range() = default;
         
-        Range(const fj::Scalar& min, const fj::Scalar& max, const int& resolution)
+        Range(const fj::Scalar& min, const fj::Scalar& max, const int& resolution, const fj::Scalar& divisionSize)
         : m_range(min, max)
         , m_resolution(resolution)
-        , m_divisionSize( std::abs(max - min) / fj::Scalar(resolution))
+        , m_divisionSize( divisionSize )
         {
             
         }
@@ -71,7 +71,7 @@ public:
     BoundingBox() = delete;
     ~BoundingBox() = default;
     
-    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange, const fj::Scalar& resolution)
+    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange)
     : m_xRange(xRange)
     , m_yRange(yRange)
     , m_zRange(zRange)
@@ -107,12 +107,20 @@ public:
         return m_zRange;
     }
 
+    const std::vector<std::vector<fj::ParticleID>>& getBB()const
+    {
+        return m_inBox;
+    }
+    
+    const std::vector<fj::ParticleID>& get(const int x, const int y, const int z)const;
+
+    
 private:
     Range m_xRange;
     Range m_yRange;
     Range m_zRange;
 
-    std::vector<fj::ParticleID> m_inBox;
+    std::vector< std::vector<fj::ParticleID> > m_inBox;
     std::vector<fj::ParticleID> m_outOfRangeParticle;
 };
 

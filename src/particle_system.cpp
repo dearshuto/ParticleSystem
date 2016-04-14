@@ -29,6 +29,11 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
     simulateParticleBehavior(timestep);
     
     clearParticleNeighbors();
+    
+    if (m_bb) {
+        m_bb->update(getParticleManager());
+        m_marchingCubes.execute(getParticleManager(), *m_bb);
+    }
 }
 
 void fj::ParticleSystem::stepParticlePosition(const float timestep)
