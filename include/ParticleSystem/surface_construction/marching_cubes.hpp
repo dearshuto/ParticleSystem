@@ -16,6 +16,7 @@
 #include <FUJIMath/type/vector3.hpp>
 
 namespace fj {
+    class BoundingBox;
     class Vector3;
     class ParticleManager;
     class MarchingCubes;
