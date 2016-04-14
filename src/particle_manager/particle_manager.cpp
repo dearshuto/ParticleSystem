@@ -16,7 +16,7 @@ const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::u
     std::shared_ptr<fj::Particle> sharedParticle = std::move(particle);
     
     m_particles.push_back(sharedParticle);
-    m_particleHashMap.registerParticle(sharedParticle);
+    m_hashMap[sharedParticle->getID()] = sharedParticle;
     
     if (movable)
     {

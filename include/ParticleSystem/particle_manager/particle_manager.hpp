@@ -11,10 +11,10 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include <ParticleSystem/particle/particle_id.h>
-#include "particle_hash_map.hpp"
 
 namespace fj {
     class Particle;
@@ -38,12 +38,12 @@ public:
     
     std::shared_ptr<fj::Particle>& search(const fj::ParticleID& ID)
     {
-        return std::ref(m_particleHashMap.get(ID));
+        return std::ref(m_hashMap.at(ID));
     }
     
     const fj::Particle& search(const fj::ParticleID& ID)const
     {
-        return m_particleHashMap.get(ID);
+        return std::cref( *m_hashMap.at(ID) );
     }
     
     ParticleArray::iterator begin()
@@ -51,21 +51,11 @@ public:
         return std::begin(m_particles);
     }
 
-//    ParticleArray::const_iterator begin()const
-//    {
-//        return std::begin(m_particles);
-//    }
-    
     ParticleArray::iterator end()
     {
         return std::end(m_particles);
     }
     
-//    ParticleArray::const_iterator end()const
-//    {
-//        return std::end(m_particles);
-//    }
-
     std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
     
 public:
@@ -87,14 +77,16 @@ public:
     
     const fj::ParticleID getUnusedID()
     {
-        return m_particleHashMap.getUnusedID();
+        static int i = 0;
+        return fj::ParticleID(i++);
     }
     
 private:
     ParticleArray m_particles;
     ParticleArray m_flowParticles;
     ParticleArray m_boundaryParticles;
-    fj::ParticleHashMap m_particleHashMap;
+
+    std::unordered_map<fj::ParticleID, std::shared_ptr<fj::Particle>> m_hashMap;
 };
 
 
