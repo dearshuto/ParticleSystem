@@ -50,5 +50,11 @@ bool fj::BoundingBox::isOutOfRange(const fj::Particle &particle)const
 
 void fj::BoundingBox::registerInBox(const std::shared_ptr<fj::Particle> &particle)
 {
+    const fj::Vector3& kPosition = particle->getPosition();
+    const int kIndexX = std::abs(kPosition.x() - getRangeX().getMin()) / getRangeX().getResolusion();
+    const int kIndexY = std::abs(kPosition.y() - getRangeY().getMin()) / getRangeY().getResolusion();
+    const int kIndexZ = std::abs(kPosition.z() - getRangeZ().getMin()) / getRangeZ().getResolusion();
+    const int kIndex = kIndexX + getRangeX().getResolusion() * kIndexY + getRangeX() .getResolusion() * getRangeY().getResolusion() * kIndexZ;
     
+    m_inBox[kIndex] = particle;
 }

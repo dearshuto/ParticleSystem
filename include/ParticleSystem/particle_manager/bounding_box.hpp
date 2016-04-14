@@ -32,9 +32,10 @@ public:
         Range() = delete;
         ~Range() = default;
         
-        Range(const fj::Scalar& min, const fj::Scalar& max, const fj::Scalar& resolution)
+        Range(const fj::Scalar& min, const fj::Scalar& max, const int& resolution)
         : m_range(min, max)
         , m_resolution(resolution)
+        , m_divisionSize( std::abs(max - min) / fj::Scalar(resolution))
         {
             
         }
@@ -49,9 +50,20 @@ public:
             return std::get<1>(m_range);
         }
         
+        const int getResolusion()const
+        {
+            return m_resolution;
+        }
+        
+        const fj::Scalar& getDivisionSize()const
+        {
+            return m_divisionSize;
+        }
+        
     private:
         const std::pair<fj::Scalar, fj::Scalar> m_range;
-        const fj::Scalar m_resolution;
+        const int m_resolution;
+        const fj::Scalar m_divisionSize;
     };
 
 public:
@@ -64,7 +76,7 @@ public:
     , m_zRange(zRange)
 
     {
-        
+        m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     
     void registerParticle(const std::shared_ptr<fj::Particle>& particle);
@@ -97,6 +109,7 @@ private:
     Range m_yRange;
     Range m_zRange;
 
+    std::vector<std::shared_ptr<fj::Particle>> m_inBox;
     std::vector<std::shared_ptr<fj::Particle>> m_outOfRangeParticle;
 };
 
