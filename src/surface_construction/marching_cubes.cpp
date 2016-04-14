@@ -370,8 +370,14 @@ void fj::MarchingCubes::clear()
 
 void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager)
 {
-    CubeValue_t cubeValue{0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
-    const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cubeValue) );
+    CubeValue_t cubeValue{1.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f};
+
+    addMesh(cubeValue);
+}
+
+void fj::MarchingCubes::addMesh(const CubeValue_t &cube)
+{
+    const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cube) );
     fj::Vector3 asEdgeVertex[12];
     
     for (int i = 0; i < 12; i++)
@@ -390,7 +396,7 @@ void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager)
     }
     
     //Draw the triangles that were found.  There can be up to five per cube
-
+    
     for(int iTriangle = 0; iTriangle < 5; iTriangle++)
     {
         int i = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle];
@@ -408,12 +414,13 @@ void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager)
         
         m_triangleIndices.emplace_back(v1 + 1, v2 + 1, v3 + 1);
     }
-
-
+    
 }
 
 fj::Vector3 fj::MarchingCubes::computeInteractionPoint(const fj::Vector3 &vertex1, const fj::Vector3 &vertex2)const
 {
+    return (vertex1 + vertex2)/2;
+    
     const fj::Scalar kDelta = (vertex2 - vertex1).norm();
     
     if ( kDelta == fj::Scalar(0) )

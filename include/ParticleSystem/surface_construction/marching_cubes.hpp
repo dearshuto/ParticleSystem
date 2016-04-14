@@ -53,6 +53,8 @@ private:
     
     void updateMesh(const fj::ParticleManager& particleManager);
     
+    void addMesh(const CubeValue_t& cube);
+    
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 
     fj::Vector3 computeInteractionPoint(const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
