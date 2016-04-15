@@ -82,7 +82,7 @@ public:
     
     void execute(fj::ParticleManager* particleManager)override
     {
-        
+        update( std::cref(*particleManager) );
     }
     
     const fj::BoundingBox& getBoundingBox()const override
@@ -90,12 +90,11 @@ public:
         return *this;
     }
 
-    
+protected:
+
     void update(const fj::ParticleManager& particleManager);
     
     bool isOutOfRange(const fj::Particle& particle)const;
-
-protected:
     
     void registerParticle(const fj::Particle& particle);
     

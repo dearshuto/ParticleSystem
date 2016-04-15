@@ -12,8 +12,10 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+#include <tuple>
 #include <vector>
 
+#include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 
 namespace fj {
@@ -87,6 +89,11 @@ private:
     ParticleArray m_boundaryParticles;
 
     std::unordered_map<fj::ParticleID, std::shared_ptr<fj::Particle>> m_hashMap;
+    
+public:
+    // TODO: メッシュクラスとしてまとめたい
+    std::vector<fj::Vector3> m_meshVertexData;
+    std::tuple<unsigned int, unsigned int, unsigned int> m_meshTriangleIndex;
 };
 
 

@@ -28,6 +28,7 @@ namespace fj {
 class fj::MarchingCubes : public fj::BBAlgorithm
 {
     typedef std::array<float, 8> CubeValue_t;
+public:
     typedef std::tuple<unsigned int, unsigned int, unsigned int> TriangleIndex_t;
 public:
     MarchingCubes() = delete;
