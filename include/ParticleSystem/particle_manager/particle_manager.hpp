@@ -34,6 +34,8 @@ public:
     
     const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable);
     
+    void clearMesh();
+    
     std::shared_ptr<fj::Particle>& getParticleAt(const int i)
     {
         return std::ref(m_particles[i]);
@@ -95,7 +97,7 @@ public:
     std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > m_triangle;
     std::vector<fj::Vector3> m_vertex;
     
-    fj::TriangleMesh m_triangleMesh;
+//    fj::TriangleMesh m_triangleMesh;
 };
 
 
