@@ -15,7 +15,7 @@
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/particle_manager/bounding_box.hpp>
+#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 
