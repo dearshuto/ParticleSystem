@@ -15,6 +15,8 @@
 
 #include <FUJIMath/type/scalar.h>
 
+#include "bb_algorithm.h"
+
 namespace fj {
     class Particle;
     class ParticleID;
@@ -22,9 +24,7 @@ namespace fj {
     class BoundingBox;
 }
 
-
-
-class fj::BoundingBox
+class fj::BoundingBox : public fj::BBAlgorithm
 {
 public:
    class Range
@@ -79,6 +79,17 @@ public:
     {
         m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
+    
+    void execute(fj::ParticleManager* particleManager)override
+    {
+        
+    }
+    
+    const fj::BoundingBox& getBoundingBox()const override
+    {
+        return *this;
+    }
+
     
     void update(const fj::ParticleManager& particleManager);
     
