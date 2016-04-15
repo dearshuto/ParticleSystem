@@ -40,6 +40,13 @@ public:
         m_bb = std::move(bb);
     }
     
+    
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::BoundingBox> bb = nullptr)
+    : ParticleSystem(std::move(solver), nullptr, std::move(bb))
+    {
+    }
+
+    
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
         
     /**
