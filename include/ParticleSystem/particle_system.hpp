@@ -12,10 +12,10 @@
 #include <string>
 #include <vector>
 
+#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 
@@ -33,15 +33,15 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BoundingBox> bb = nullptr)
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
-        m_bb = std::move(bb);
+        m_bbAlgorithm = std::move(bb);
     }
     
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::BoundingBox> bb = nullptr)
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
     : ParticleSystem(std::move(solver), nullptr, std::move(bb))
     {
     }
@@ -178,9 +178,7 @@ private:
      */
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
     
-    std::unique_ptr<fj::BoundingBox> m_bb;
-    
-    fj::MarchingCubes m_marchingCubes;
+    std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
 };
 
 #endif /* particle_system_hpp */

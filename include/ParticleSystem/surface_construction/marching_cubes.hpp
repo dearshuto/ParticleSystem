@@ -11,9 +11,12 @@
 
 #include <array>
 #include <tuple>
+#include <memory>
 #include <vector>
 
 #include <FUJIMath/type/vector3.hpp>
+
+#include <ParticleSystem/bb_algorithm/bb_algorithm.h>
 
 namespace fj {
     class BoundingBox;
@@ -22,13 +25,27 @@ namespace fj {
     class MarchingCubes;
 }
 
-class fj::MarchingCubes
+class fj::MarchingCubes : public fj::BBAlgorithm
 {
     typedef std::array<float, 8> CubeValue_t;
     typedef std::tuple<unsigned int, unsigned int, unsigned int> TriangleIndex_t;
 public:
-    MarchingCubes() = default;
+    MarchingCubes() = delete;
     virtual~MarchingCubes() = default;
+
+    MarchingCubes(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
+    : m_bbAlgorithm( std::move(bbAlgorithm) )
+    {
+        
+    }
+    
+    void execute(fj::ParticleManager* particleManager) override;
+    
+    const fj::BoundingBox& getBoundingBox()const override
+    {
+        return m_bbAlgorithm->getBoundingBox();
+    }
+
     
     /**
      * メッシュを更新する
@@ -78,7 +95,7 @@ private:
 
     
 private:
-
+    std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
     float m_isosurfaceValue;
     
     std::vector<fj::Vector3> m_vertices;

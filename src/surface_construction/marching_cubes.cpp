@@ -333,6 +333,16 @@ int a2iTriangleConnectionTable[256][16] =
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 };
 
+/////////////////////////////////////////////////////////////////////////////////////
+//
+/////////////////////////////////////////////////////////////////////////////////////
+
+void fj::MarchingCubes::execute(fj::ParticleManager *particleManager)
+{
+    m_bbAlgorithm->execute(particleManager);
+}
+
+
 void fj::MarchingCubes::execute(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb)
 {
     clear();
