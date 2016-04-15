@@ -8,6 +8,7 @@
 
 #include <fstream>
 
+#include <ParticleSystem/type/triangle_mesh.hpp>
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
@@ -340,39 +341,32 @@ int a2iTriangleConnectionTable[256][16] =
 void fj::MarchingCubes::execute(fj::ParticleManager *particleManager)
 {
     m_bbAlgorithm->execute(particleManager);
+    
+    updateMesh( particleManager );
 }
 
 
-void fj::MarchingCubes::execute(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb)
+void fj::MarchingCubes::setMeshData(fj::ParticleManager* particleManager)
 {
-    clear();
-    updateMesh(particleManager, bb);
     
-    std::ofstream ofs("test.obj");
-    
-    for (const auto& vertex : m_vertices)
-    {
-        ofs << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
-    }
-    
-    for (int i = 0; i < m_triangleIndices.size(); i++)
-    {
-        ofs << "f " << std::get<0>(m_triangleIndices[i]) << "// " << std::get<1>(m_triangleIndices[i]) << "// " << std::get<2>(m_triangleIndices[i]) << "//" << std::endl;
-    }
+//    std::ofstream ofs("test.obj");
+//    
+//    for (const auto& vertex : m_vertices)
+//    {
+//        ofs << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
+//    }
+//    
+//    for (int i = 0; i < m_triangleIndices.size(); i++)
+//    {
+//        ofs << "f " << std::get<0>(m_triangleIndices[i]) << "// " << std::get<1>(m_triangleIndices[i]) << "// " << std::get<2>(m_triangleIndices[i]) << "//" << std::endl;
+//    }
     
 }
 
-void fj::MarchingCubes::clear()
+void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager)
 {
-    getVerticesPtr()->clear();
-    getTriangleIndicesPtr()->clear();
-}
-
-void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb)
-{
+    const fj::BoundingBox bb = getBoundingBox();
     CubeValue_t cubeValue;
-
-
     
     const int kResolusionX = bb.getRangeX().getResolusion();
     const int kResolusionY = bb.getRangeY().getResolusion();
@@ -391,7 +385,7 @@ void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager, c
                 cubeValue[6] = bb.get(i+1, j+1, k+1).size();
                 cubeValue[7] = bb.get(i, j+1, k+1).size();
 
-                addMesh(cubeValue, fj::Vector3(i, j, k));
+                addMesh(particleManager, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
@@ -399,7 +393,7 @@ void fj::MarchingCubes::updateMesh(const fj::ParticleManager& particleManager, c
     
 }
 
-void fj::MarchingCubes::addMesh(const CubeValue_t &cube, const fj::Vector3& kOffset)
+void fj::MarchingCubes::addMesh(fj::ParticleManager* particleManager, const CubeValue_t &cube, const fj::Vector3& kOffset)
 {
     const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cube) );
     const int kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
@@ -444,7 +438,7 @@ void fj::MarchingCubes::addMesh(const CubeValue_t &cube, const fj::Vector3& kOff
     
     //Draw the triangles that were found.  There can be up to five per cube
     
-
+    fj::TriangleMesh triMesh;
     for(int iTriangle = 0; iTriangle < 5; iTriangle++)
     {
         int i = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle];
@@ -456,12 +450,12 @@ void fj::MarchingCubes::addMesh(const CubeValue_t &cube, const fj::Vector3& kOff
         const int v2 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+1];
         const int v3 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+2];
         
-        const size_t offset = m_vertices.size();
+        const size_t offset = particleManager->m_vertex.size();
         for (const auto& position: asEdgeVertex){
-            m_vertices.push_back(position);
+            particleManager->m_vertex.push_back(position);
         }
         
-        m_triangleIndices.emplace_back(offset + v1 + 1, offset + v2 + 1, offset + v3 + 1);
+        particleManager->m_triangle.emplace_back(offset + v1 + 1, offset + v2 + 1, offset + v3 + 1);
     }
     
 }

@@ -17,6 +17,7 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/bb_algorithm/bb_algorithm.h>
+#include <ParticleSystem/type/triangle_mesh.hpp>
 
 namespace fj {
     class BoundingBox;
@@ -29,7 +30,7 @@ class fj::MarchingCubes : public fj::BBAlgorithm
 {
     typedef std::array<float, 8> CubeValue_t;
 public:
-    typedef std::tuple<unsigned int, unsigned int, unsigned int> TriangleIndex_t;
+//    typedef std::tuple<unsigned int, unsigned int, unsigned int> TriangleIndex_t;
 public:
     MarchingCubes() = delete;
     virtual~MarchingCubes() = default;
@@ -48,19 +49,17 @@ public:
     }
 
     
-    /**
-     * メッシュを更新する
-     */
-    void execute(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb);
     
     
 private:
+    /**
+     * メッシュを更新する
+     */
+    void setMeshData(fj::ParticleManager* particleManager);
     
-    void clear();
+    void updateMesh(fj::ParticleManager* particleManager);
     
-    void updateMesh(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb);
-    
-    void addMesh(const CubeValue_t& cube, const fj::Vector3& kOffset);
+    void addMesh(fj::ParticleManager* particleManager, const CubeValue_t& cube, const fj::Vector3& kOffset);
     
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 
@@ -73,34 +72,9 @@ public:
         return m_isosurfaceValue;
     }
     
-    const std::vector<fj::Vector3>& getVertices()const
-    {
-        return m_vertices;
-    }
-    
-    const std::vector<TriangleIndex_t>& getTriangleIndices()const
-    {
-        return m_triangleIndices;
-    }
-    
-private:
-    std::vector<fj::Vector3>* getVerticesPtr()
-    {
-        return &m_vertices;
-    }
-    
-    std::vector<TriangleIndex_t>* getTriangleIndicesPtr()
-    {
-        return &m_triangleIndices;
-    }
-
-    
 private:
     std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
     float m_isosurfaceValue;
-    
-    std::vector<fj::Vector3> m_vertices;
-    std::vector<TriangleIndex_t> m_triangleIndices;
 };
 
 #endif /* marching_cubes_hpp */
