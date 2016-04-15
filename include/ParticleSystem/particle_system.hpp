@@ -15,6 +15,8 @@
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
+#include <ParticleSystem/particle_manager/bounding_box.hpp>
+#include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
@@ -31,10 +33,11 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BoundingBox> bb = nullptr)
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
+        m_bb = std::move(bb);
     }
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
@@ -151,7 +154,7 @@ private:
      * 走査とID検索とを可能な状態で粒子を管理する
      */
     fj::ParticleManager m_particleManager;
-
+    
     /**
      * 粒子法アルゴリズム
      */
@@ -167,6 +170,10 @@ private:
      * 近傍粒子探索を外部にいたくするときは必要ない
      */
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
+    
+    std::unique_ptr<fj::BoundingBox> m_bb;
+    
+    fj::MarchingCubes m_marchingCubes;
 };
 
 #endif /* particle_system_hpp */
