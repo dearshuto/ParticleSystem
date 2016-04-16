@@ -95,9 +95,16 @@ protected:
     
     bool isOutOfRange(const fj::Particle& particle)const;
     
+    bool isOutOfRange(const int x, const int y, const int z)const;
+    
     void registerParticle(const fj::Particle& particle);
     
     void registerInBox(const fj::Particle& particle);
+    
+    int convertPositionToIndex(const int x, const int y, const int z)const
+    {
+        return x + getRangeX().getResolusion() * y + getRangeX().getResolusion() * getRangeY().getResolusion() * z;
+    }
     
 public:
 

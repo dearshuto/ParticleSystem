@@ -344,39 +344,39 @@ void fj::MarchingCubes::execute(fj::ParticleSystem* particleSystem)
 {
     m_mcbb->execute(particleSystem);
     
-    particleSystem->m_mesh = createMesh(particleSystem->getParticleManager(), particleSystem->getSolver());
+    particleSystem->m_mesh = createMesh();
 }
 
-fj::Mesh_t fj::MarchingCubes::createMesh(const fj::ParticleManager &particleManager, const fj::Solver &solver)
+fj::Mesh_t fj::MarchingCubes::createMesh()const
 {
     fj::Mesh_t mesh;
 
-    updateMesh(&mesh, particleManager, solver);
+    updateMesh(&mesh);
     
     return mesh;
 }
 
-void fj::MarchingCubes::updateMesh(fj::Mesh_t* mesh, const fj::ParticleManager& particleManager, const fj::Solver& solver)
+void fj::MarchingCubes::updateMesh(fj::Mesh_t* mesh)const
 {
-    const fj::MCBoundingBox& bb = getMCBB();
-    CubeValue_t cubeValue;
+    const fj::MarchingCubesInterface& mcInterface = getMCInterface();
+    const int kResolusionX = getMCBB().getRangeX().getResolusion();
+    const int kResolusionY = getMCBB().getRangeY().getResolusion();
+    const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
     
-    const int kResolusionX = bb.getRangeX().getResolusion();
-    const int kResolusionY = bb.getRangeY().getResolusion();
-    const int kResolusionZ = bb.getRangeZ().getResolusion();
+    CubeValue_t cubeValue;
     
     for (int i = 0; i < kResolusionX - 1; i++) {
         for (int j = 0; j < kResolusionY - 1; j++) {
             for (int k = 0; k < kResolusionZ - 1; k++) {
                 
-                cubeValue[0] = bb.getScalar(i, j, k, solver);
-                cubeValue[1] = bb.getScalar(i+1, j, k, solver);
-                cubeValue[2] = bb.getScalar(i+1, j+1, k, solver);
-                cubeValue[3] = bb.getScalar(i, j+1, k, solver);
-                cubeValue[4] = bb.getScalar(i, j, k+1, solver);
-                cubeValue[5] = bb.getScalar(i+1, j, k+1, solver);
-                cubeValue[6] = bb.getScalar(i+1, j+1, k+1, solver);
-                cubeValue[7] = bb.getScalar(i, j+1, k+1, solver);
+                cubeValue[0] = mcInterface.getScalar(i, j, k);
+                cubeValue[1] = mcInterface.getScalar(i+1, j, k);
+                cubeValue[2] = mcInterface.getScalar(i+1, j+1, k);
+                cubeValue[3] = mcInterface.getScalar(i, j+1, k);
+                cubeValue[4] = mcInterface.getScalar(i, j, k+1);
+                cubeValue[5] = mcInterface.getScalar(i+1, j, k+1);
+                cubeValue[6] = mcInterface.getScalar(i+1, j+1, k+1);
+                cubeValue[7] = mcInterface.getScalar(i, j+1, k+1);
 
                 addMesh(mesh, cubeValue, fj::Vector3(i, j, k));
             }
@@ -386,7 +386,7 @@ void fj::MarchingCubes::updateMesh(fj::Mesh_t* mesh, const fj::ParticleManager& 
     
 }
 
-void fj::MarchingCubes::addMesh(fj::Mesh_t* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)
+void fj::MarchingCubes::addMesh(fj::Mesh_t* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)const
 {
     const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cube) );
     const int kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];

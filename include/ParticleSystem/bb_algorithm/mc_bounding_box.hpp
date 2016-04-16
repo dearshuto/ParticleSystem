@@ -9,6 +9,8 @@
 #ifndef mc_bounding_box_hpp
 #define mc_bounding_box_hpp
 
+#include <vector>
+
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes_interface.h>
 
@@ -28,11 +30,25 @@ public:
     MCBoundingBox(const Range& xRange, const Range& yRange, const Range& zRange)
     : BoundingBox(xRange, yRange, zRange)
     {
-        
+        m_scalarMap.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     void execute(fj::ParticleSystem* particleSystem) override;
     
-    fj::Scalar getScalar(const int x, const int y, const int z, const fj::Solver& solver)const override;
+protected:
+    void clearScalarMap();
+    
+    void updateScalarMap(const fj::ParticleManager& particleManager, const fj::Solver& solver);
+    
+    void setScalarValue(const int i, const int j, const int k, const fj::Solver& solver);
+    
+public:
+    
+    fj::Scalar getScalar(const int x, const int y, const int z)const override;
+    
+    void setScalar(const int x, const int y, const int z, const fj::Scalar& scalar);
+    
+private:
+    std::vector<fj::Scalar> m_scalarMap;
 };
 
 #endif /* mc_bounding_box_hpp */

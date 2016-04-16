@@ -41,7 +41,7 @@ public:
 
     MarchingCubes(std::unique_ptr<fj::MCBoundingBox> bbAlgorithm)
     : m_mcbb( std::move(bbAlgorithm) )
-    , m_isosurfaceValue(2000)
+    , m_isosurfaceValue(350)
     {
         
     }
@@ -52,13 +52,11 @@ public:
     
 private:
 
-    fj::Mesh_t createMesh(const fj::ParticleManager& particleManager, const fj::Solver& solver);
+    fj::Mesh_t createMesh()const;
     
-    void updateMesh(fj::Mesh_t* mesh, const fj::ParticleManager& particleManager, const fj::Solver& solver);
+    void updateMesh(fj::Mesh_t* mesh)const;
     
-    const fj::Scalar computeDensoty();
-    
-    void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset);
+    void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 
@@ -66,6 +64,11 @@ private:
     
 public:
 
+    const fj::MarchingCubesInterface& getMCInterface()const
+    {
+        return getMCBB();
+    }
+    
     const fj::MCBoundingBox& getMCBB()const
     {
         return std::cref(*m_mcbb);

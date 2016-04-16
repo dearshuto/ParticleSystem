@@ -19,7 +19,7 @@ class fj::MarchingCubesInterface
 public:
     virtual ~MarchingCubesInterface() = default;
     
-    virtual fj::Scalar getScalar(const int x, const int y, const int z, const fj::Solver& solver)const = 0;
+    virtual fj::Scalar getScalar(const int x, const int y, const int z)const = 0;
 };
 
 #endif /* marching_cubes_interface_h */
