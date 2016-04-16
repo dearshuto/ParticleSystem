@@ -41,11 +41,15 @@ protected:
     
     void setScalarValue(const int i, const int j, const int k, const fj::Solver& solver);
     
+    void setInterpolateValue(const int i, const int j, const int k, const fj::Scalar& scalar);
+    
 public:
     
     fj::Scalar getScalar(const int x, const int y, const int z)const override;
     
     void setScalar(const int x, const int y, const int z, const fj::Scalar& scalar);
+    
+    void addScalar(const int x, const int y, const int z, const fj::Scalar& scalar);
     
 private:
     std::vector<fj::Scalar> m_scalarMap;

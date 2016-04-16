@@ -349,20 +349,12 @@ void fj::MarchingCubes::execute(fj::ParticleSystem* particleSystem)
 
 fj::Mesh_t fj::MarchingCubes::createMesh()const
 {
-    fj::Mesh_t mesh;
-
-    updateMesh(&mesh);
-    
-    return mesh;
-}
-
-void fj::MarchingCubes::updateMesh(fj::Mesh_t* mesh)const
-{
     const fj::MarchingCubesInterface& mcInterface = getMCInterface();
     const int kResolusionX = getMCBB().getRangeX().getResolusion();
     const int kResolusionY = getMCBB().getRangeY().getResolusion();
     const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
     
+    fj::Mesh_t mesh;
     CubeValue_t cubeValue;
     
     for (int i = 0; i < kResolusionX - 1; i++) {
@@ -377,30 +369,34 @@ void fj::MarchingCubes::updateMesh(fj::Mesh_t* mesh)const
                 cubeValue[5] = mcInterface.getScalar(i+1, j, k+1);
                 cubeValue[6] = mcInterface.getScalar(i+1, j+1, k+1);
                 cubeValue[7] = mcInterface.getScalar(i, j+1, k+1);
-
-                addMesh(mesh, cubeValue, fj::Vector3(i, j, k));
+                
+                addMesh(&mesh, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
-    
-    
+    return mesh;
 }
 
 void fj::MarchingCubes::addMesh(fj::Mesh_t* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)const
 {
     const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cube) );
-    const int kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
+    const uint32_t kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
     
     if (kEdgeFlags == 0) {
         return;
     }
     
+    setMeshFromTable(mesh, kFlagIndex, kEdgeFlags, kOffset);
+}
+
+void fj::MarchingCubes::setMeshFromTable(fj::Mesh_t* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3 &offset)const
+{
     fj::Vector3 asEdgeVertex[12];
     
     for(int iEdge = 0; iEdge < 12; iEdge++)
     {
         //if there is an intersection on this edge
-        if(kEdgeFlags & (1<<iEdge))
+        if(edgeFlags & (1<<iEdge))
         {
             const int right = a2iEdgeConnection[iEdge][0];
             const int left = a2iEdgeConnection[iEdge][1];
@@ -412,20 +408,20 @@ void fj::MarchingCubes::addMesh(fj::Mesh_t* mesh, const CubeValue_t &cube, const
             asEdgeVertex[iEdge].y() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][1]);
             asEdgeVertex[iEdge].z() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][2]);
             
-            asEdgeVertex[iEdge] = kOffset + computeInteractionPoint(kRight, kLeft);
+            asEdgeVertex[iEdge] = offset + computeInteractionPoint(kRight, kLeft);
         }
     }
     
     for(int iTriangle = 0; iTriangle < 5; iTriangle++)
     {
-        int i = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle];
+        int i = a2iTriangleConnectionTable[flagIndex][3*iTriangle];
         
         if( i < 0)
             break;
         
-        const int v1 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+0];
-        const int v2 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+1];
-        const int v3 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+2];
+        const int v1 = a2iTriangleConnectionTable[flagIndex][3*iTriangle+0];
+        const int v2 = a2iTriangleConnectionTable[flagIndex][3*iTriangle+1];
+        const int v3 = a2iTriangleConnectionTable[flagIndex][3*iTriangle+2];
         
         const size_t offset =  mesh->first.size();//vertex
         for (const auto& position: asEdgeVertex){
@@ -434,7 +430,7 @@ void fj::MarchingCubes::addMesh(fj::Mesh_t* mesh, const CubeValue_t &cube, const
         
         mesh->second.emplace_back(offset + v1 + 1, offset + v2 + 1, offset + v3 + 1);
     }
-    
+
 }
 
 fj::Vector3 fj::MarchingCubes::computeInteractionPoint(const fj::Vector3 &vertex1, const fj::Vector3 &vertex2)const

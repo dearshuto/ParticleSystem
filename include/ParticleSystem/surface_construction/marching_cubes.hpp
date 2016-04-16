@@ -54,9 +54,9 @@ private:
 
     fj::Mesh_t createMesh()const;
     
-    void updateMesh(fj::Mesh_t* mesh)const;
-    
     void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
+    
+    void setMeshFromTable(fj::Mesh_t* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 

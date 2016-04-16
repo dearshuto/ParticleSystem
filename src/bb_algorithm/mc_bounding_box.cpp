@@ -45,13 +45,36 @@ void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManag
 
 void fj::MCBoundingBox::setScalarValue(const int i, const int j, const int k, const fj::Solver &solver)
 {
+    fj::Scalar scalar = 0;
     
     for ( const auto& ID : Super::get(i, j, k))
     {
-        const fj::Scalar scalar = solver.calculateScalar(ID);
-        setScalar(i, j, k, scalar);
+        scalar += solver.calculateScalar(ID);
     }
+    
+    setInterpolateValue(i, j, k, scalar);
+}
 
+void fj::MCBoundingBox::setInterpolateValue(const int i, const int j, const int k, const fj::Scalar &scalar)
+{
+    const fj::Scalar kHalfValue = scalar / fj::Scalar(2);
+    
+    for (int x = -1; x < 2; x++){
+        for (int y = -1; y < 2; y++) {
+            for (int z = -1; z < 2; z++) {
+                const int kX = i + x;
+                const int kY = j + y;
+                const int kZ = k + z;
+                
+                if ( !isOutOfRange(kX, kY, kZ) ) {
+                    addScalar(kX, kY, kZ, kHalfValue);
+                }
+                
+            }
+        }
+    }
+    
+    addScalar(i, j, k, kHalfValue);
 }
 
 fj::Scalar fj::MCBoundingBox::getScalar(const int x, const int y, const int z)const
@@ -66,4 +89,11 @@ void fj::MCBoundingBox::setScalar(const int x, const int y, const int z, const f
     const int kIndex = convertPositionToIndex(x, y, z);
     
     m_scalarMap[kIndex] = scalar;
+}
+
+void fj::MCBoundingBox::addScalar(const int x, const int y, const int z, const fj::Scalar &scalar)
+{
+    const int kIndex = convertPositionToIndex(x, y, z);
+    
+    m_scalarMap[kIndex] += scalar;
 }
