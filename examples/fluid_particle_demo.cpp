@@ -22,23 +22,23 @@ int main(int argc, char** argv)
     constexpr fj::Scalar kParticleRadius = fj::SimulationConstant::PARTICLE_RADIUS;
     const fj::Scalar kBLockSize = kParticleRadius * 5;
     
-    fj::BoundingBox::Range kRange(0, 3, 10, 0.01);
-    std::unique_ptr<fj::BoundingBox> bb(new fj::BoundingBox(kRange, kRange, kRange) );
+    fj::BoundingBox::Range kRange(0, 3.0, 0.01);
+    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
     std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
     
     std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    fj::ParticleSystem particleSystem(std::move(solver), std::move(mc));
+    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
-            for (int k = 0; k < 1; k++) {
-                particleSystem.createParticle(fj::Vector3(fj::Scalar(i) * kParticleRadius, fj::Scalar(j) * kParticleRadius, 0));
+            for (int k = 0; k < 5; k++) {
+                particleSystem.createParticle(fj::Vector3(0.05 + fj::Scalar(i) * kParticleRadius, 0.05 + fj::Scalar(j) * kParticleRadius, 0.05 + fj::Scalar(k) * kParticleRadius));
             }
         }
     }
     
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         auto iterator = particleSystem.getParticleManager().iterator();
         
@@ -56,8 +56,8 @@ int main(int argc, char** argv)
         
     }
     
-    const auto& vertices = particleSystem.getParticleManager().m_vertex;
-    const auto& indices = particleSystem.getParticleManager().m_triangle;
+    const auto& vertices = particleSystem.m_mesh.first;
+    const auto& indices = particleSystem.m_mesh.second;
     
         std::ofstream ofs("test.obj");
     

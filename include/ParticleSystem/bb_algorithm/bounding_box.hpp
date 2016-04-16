@@ -35,9 +35,9 @@ public:
         Range() = delete;
         ~Range() = default;
         
-        Range(const fj::Scalar& min, const fj::Scalar& max, const int& resolution, const fj::Scalar& divisionSize)
+        Range(const fj::Scalar& min, const fj::Scalar& max, const fj::Scalar& divisionSize)
         : m_range(min, max)
-        , m_resolution(resolution)
+        , m_resolution( (max - min) / divisionSize )
         , m_divisionSize( divisionSize )
         {
             

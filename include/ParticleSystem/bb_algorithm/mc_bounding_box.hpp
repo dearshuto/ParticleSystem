@@ -43,6 +43,8 @@ protected:
     
     void setInterpolateValue(const int i, const int j, const int k, const fj::Scalar& scalar);
     
+    void setNDInterpolateValue(const int i, const int j, const int k, const fj::Scalar& scalar, const int n);
+    
 public:
     
     fj::Scalar getScalar(const int x, const int y, const int z)const override;

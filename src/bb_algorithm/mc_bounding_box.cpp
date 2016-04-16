@@ -57,25 +57,38 @@ void fj::MCBoundingBox::setScalarValue(const int i, const int j, const int k, co
 
 void fj::MCBoundingBox::setInterpolateValue(const int i, const int j, const int k, const fj::Scalar &scalar)
 {
-    const fj::Scalar kHalfValue = scalar / fj::Scalar(2);
+    setNDInterpolateValue(i, j, k, scalar, 1);
+}
+
+void fj::MCBoundingBox::setNDInterpolateValue(const int i, const int j, const int k, const fj::Scalar &scalar, const int n)
+{
     
-    for (int x = -1; x < 2; x++){
-        for (int y = -1; y < 2; y++) {
-            for (int z = -1; z < 2; z++) {
+    for (int x = -n; x <= n; x++){
+        for (int y = -n; y <= n; y++) {
+            for (int z = -n; z <= n; z++) {
                 const int kX = i + x;
                 const int kY = j + y;
                 const int kZ = k + z;
                 
                 if ( !isOutOfRange(kX, kY, kZ) ) {
-                    addScalar(kX, kY, kZ, kHalfValue);
+                    const fj::Scalar kOffset = std::abs(x) + std::abs(y) + std::abs(z);
+                    
+                    if (kOffset == 0) {
+                        addScalar(kX, kY, kZ, scalar);
+                    }
+                    else
+                    {
+                        const fj::Scalar kWeight = fj::Scalar(1) / (kOffset + 1);
+                        addScalar(kX, kY, kZ, scalar * kWeight);
+                    }
                 }
                 
             }
         }
     }
     
-    addScalar(i, j, k, kHalfValue);
 }
+
 
 fj::Scalar fj::MCBoundingBox::getScalar(const int x, const int y, const int z)const
 {
