@@ -133,6 +133,11 @@ public:
         return m_neighborMap;
     }
     
+    const fj::Solver& getSolver()const
+    {
+        return std::cref(*m_solver);
+    }
+    
 protected:
     
     std::unique_ptr<fj::ParticleCollisionDispatcher>& getCollisionDispatcherPtr()

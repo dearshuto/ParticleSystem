@@ -94,3 +94,8 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
 
     }
 }
+
+const fj::Scalar fj::SPHMethod::calculateScalar(const fj::ParticleID &ID)const
+{
+    return (m_propertyMap.at(ID))->getDensity();
+}

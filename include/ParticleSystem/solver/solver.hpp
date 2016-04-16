@@ -38,6 +38,11 @@ public:
     
     void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
     
+    /**
+     * 粒子の物理量を返す. マーチングキューブ法などのスカラ値を必要とする処理で利用する. ソルバに起因するスカラならなんでもいい.
+     */
+    virtual const fj::Scalar calculateScalar(const fj::ParticleID& ID)const = 0;
+    
 protected:
     void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
     {

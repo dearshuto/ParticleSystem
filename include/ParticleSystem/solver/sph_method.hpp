@@ -32,6 +32,8 @@ public:
     
     void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
     
+    const fj::Scalar calculateScalar(const fj::ParticleID& ID)const override;
+    
 protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     std::unique_ptr<SPHProperty> computePropertyAt(const fj::Particle& particle, const fj::NeighborMap& neighborMap);
@@ -75,6 +77,11 @@ public:
         m_pressure = (density - RESTDENSITY) * INSTIFF;
     }
 
+    const fj::Scalar& getDensity()const
+    {
+        return m_density;
+    }
+    
     const fj::Scalar& getInverseDensity()const
     {
         return m_inverseDensity;

@@ -10,6 +10,7 @@
 
 #include <ParticleSystem/type/triangle_mesh.hpp>
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 
@@ -31,13 +32,13 @@ static const int a2iEdgeConnection[12][2] =
     {0,4}, {1,5}, {2,6}, {3,7}
 };
 
-//a2fEdgeDirection lists the direction vector (vertex1-vertex0) for each edge in the cube
-static const float a2fEdgeDirection[12][3] =
-{
-    {1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{-1.0, 0.0, 0.0},{0.0, -1.0, 0.0},
-    {1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{-1.0, 0.0, 0.0},{0.0, -1.0, 0.0},
-    {0.0, 0.0, 1.0},{0.0, 0.0, 1.0},{ 0.0, 0.0, 1.0},{0.0,  0.0, 1.0}
-};
+////a2fEdgeDirection lists the direction vector (vertex1-vertex0) for each edge in the cube
+//static const float a2fEdgeDirection[12][3] =
+//{
+//    {1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{-1.0, 0.0, 0.0},{0.0, -1.0, 0.0},
+//    {1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{-1.0, 0.0, 0.0},{0.0, -1.0, 0.0},
+//    {0.0, 0.0, 1.0},{0.0, 0.0, 1.0},{ 0.0, 0.0, 1.0},{0.0,  0.0, 1.0}
+//};
 
 
 // For any edge, if one vertex is inside of the surface and the other is outside of the surface
@@ -338,52 +339,34 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-void fj::MarchingCubes::execute(fj::ParticleManager *particleManager)
+void fj::MarchingCubes::execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver)
 {
-    m_bbAlgorithm->execute(particleManager);
+    m_mcbb->execute(particleManager, neighborMap, solver);
     
-    updateMesh( particleManager );
+    updateMesh( particleManager, solver );
 }
 
-
-void fj::MarchingCubes::setMeshData(fj::ParticleManager* particleManager)
+void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager, const fj::Solver& solver)
 {
-    
-//    std::ofstream ofs("test.obj");
-//    
-//    for (const auto& vertex : m_vertices)
-//    {
-//        ofs << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
-//    }
-//    
-//    for (int i = 0; i < m_triangleIndices.size(); i++)
-//    {
-//        ofs << "f " << std::get<0>(m_triangleIndices[i]) << "// " << std::get<1>(m_triangleIndices[i]) << "// " << std::get<2>(m_triangleIndices[i]) << "//" << std::endl;
-//    }
-    
-}
-
-void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager)
-{
-    const fj::BoundingBox bb = getBoundingBox();
+    const fj::MCBoundingBox& bb = getMCBB();
     CubeValue_t cubeValue;
     
     const int kResolusionX = bb.getRangeX().getResolusion();
     const int kResolusionY = bb.getRangeY().getResolusion();
     const int kResolusionZ = bb.getRangeZ().getResolusion();
     
-    for (int i = 0; i < kResolusionX - 1; i++) {
-        for (int j = 0; j < kResolusionY - 1; j++) {
-            for (int k = 0; k < kResolusionZ - 1; k++) {
+    for (int i = 1; i < kResolusionX - 1; i++) {
+        for (int j = 1; j < kResolusionY - 1; j++) {
+            for (int k = 1; k < kResolusionZ - 1; k++) {
                 
-                cubeValue[0] = bb.get(i, j, k).size();
-                cubeValue[1] = bb.get(i+1, j, k).size();
-                cubeValue[2] = bb.get(i+1, j+1, k).size();
-                cubeValue[3] = bb.get(i, j+1, k).size();
-                cubeValue[4] = bb.get(i, j, k+1).size();
-                cubeValue[5] = bb.get(i+1, j, k+1).size();
-                cubeValue[6] = bb.get(i+1, j+1, k+1).size();
-                cubeValue[7] = bb.get(i, j+1, k+1).size();
+                cubeValue[0] = bb.getScalar(i, j, k, solver);
+                cubeValue[1] = bb.getScalar(i+1, j, k, solver);
+                cubeValue[2] = bb.getScalar(i+1, j+1, k, solver);
+                cubeValue[3] = bb.getScalar(i, j+1, k, solver);
+                cubeValue[4] = bb.getScalar(i, j, k+1, solver);
+                cubeValue[5] = bb.getScalar(i+1, j, k+1, solver);
+                cubeValue[6] = bb.getScalar(i+1, j+1, k+1, solver);
+                cubeValue[7] = bb.getScalar(i, j+1, k+1, solver);
 
                 addMesh(particleManager, cubeValue, fj::Vector3(i, j, k));
             }
@@ -404,39 +387,24 @@ void fj::MarchingCubes::addMesh(fj::ParticleManager* particleManager, const Cube
     
     fj::Vector3 asEdgeVertex[12];
     
-    for (int i = 0; i < 12; i++)
-    {
-//        m_vertices.push_back(asEdgeVertex[i]);
-    }
-    
     for(int iEdge = 0; iEdge < 12; iEdge++)
     {
         //if there is an intersection on this edge
         if(kEdgeFlags & (1<<iEdge))
         {
-//            fOffset = fGetOffset(afCubeValue[ a2iEdgeConnection[iEdge][0] ], afCubeValue[ a2iEdgeConnection[iEdge][1] ], fTargetValue);
-            
             const int right = a2iEdgeConnection[iEdge][0];
             const int left = a2iEdgeConnection[iEdge][1];
             const fj::Vector3& kRight = a2fVertexOffset[right];
             const fj::Vector3& kLeft = a2fVertexOffset[left];
             
-            auto temp = computeInteractionPoint(kRight, kLeft);
-
             
-            const float fOffset = 0.5;
-            asEdgeVertex[iEdge].x() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][0]);//  +  temp.x() * a2fEdgeDirection[iEdge][0]);
-            asEdgeVertex[iEdge].y() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][1]);//  +  temp.y() * a2fEdgeDirection[iEdge][1]);
-            asEdgeVertex[iEdge].z() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][2]);//  +  temp.z() * a2fEdgeDirection[iEdge][2]);
+            asEdgeVertex[iEdge].x() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][0]);
+            asEdgeVertex[iEdge].y() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][1]);
+            asEdgeVertex[iEdge].z() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][2]);
             
-            asEdgeVertex[iEdge] = temp + kOffset;
-//            vGetNormal(asEdgeNorm[iEdge], asEdgeVertex[iEdge].fX, asEdgeVertex[iEdge].fY, asEdgeVertex[iEdge].fZ);
+            asEdgeVertex[iEdge] = kOffset + computeInteractionPoint(kRight, kLeft);
         }
     }
-
-    
-    
-    //Draw the triangles that were found.  There can be up to five per cube
     
     fj::TriangleMesh triMesh;
     for(int iTriangle = 0; iTriangle < 5; iTriangle++)
@@ -486,4 +454,9 @@ uint8_t fj::MarchingCubes::calculateFlagIndex(const CubeValue_t& cubeValue)const
     }
     
     return index;
+}
+
+const fj::BoundingBox& fj::MarchingCubes::getBoundingBox()const
+{
+    return getMCBB();
 }

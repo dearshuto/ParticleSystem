@@ -33,7 +33,7 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
     if (m_bbAlgorithm)
     {
         getParticleManagerPtr()->clearMesh();
-        m_bbAlgorithm->execute( getParticleManagerPtr() );
+        m_bbAlgorithm->execute( getParticleManagerPtr(), getNeighborMap(), getSolver());
     }
 }
 

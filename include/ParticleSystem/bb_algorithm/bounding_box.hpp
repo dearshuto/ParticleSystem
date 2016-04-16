@@ -15,12 +15,14 @@
 
 #include <FUJIMath/type/scalar.h>
 
+#include <ParticleSystem/particle/particle_id.h>
 #include "bb_algorithm.h"
 
 namespace fj {
     class Particle;
     class ParticleID;
     class ParticleManager;
+    class Solver;
     class BoundingBox;
 }
 
@@ -80,9 +82,9 @@ public:
         m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     
-    void execute(fj::ParticleManager* particleManager)override
+    void execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver)override
     {
-        update( std::cref(*particleManager) );
+        update( *particleManager );
     }
     
     const fj::BoundingBox& getBoundingBox()const override
