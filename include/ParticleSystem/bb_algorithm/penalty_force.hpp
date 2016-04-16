@@ -31,7 +31,7 @@ public:
         
    }
     
-    void execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver)override;
+    void execute(fj::ParticleSystem* particleSystem)override;
     
     const fj::BoundingBox& getBoundingBox()const override
     {

@@ -6,12 +6,13 @@
 //
 //
 
+#include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
 
-void fj::MCBoundingBox::execute(fj::ParticleManager *particleManager, const fj::NeighborMap &neighborMap, const fj::Solver &solver)
+void fj::MCBoundingBox::execute(fj::ParticleSystem* particleSystem)
 {
-    Super::execute(particleManager, neighborMap, solver);
+    Super::execute(particleSystem);
 
 }
 

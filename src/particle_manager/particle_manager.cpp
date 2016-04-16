@@ -31,12 +31,6 @@ const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::u
     return sharedParticle;
 }
 
-void fj::ParticleManager::clearMesh()
-{
-    m_vertex.clear();
-    m_triangle.clear();
-}
-
 std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const
 {
     return std::unique_ptr<fj::ParticleManager::ConstIterator>( new ConstIterator(std::cref(*this)) );

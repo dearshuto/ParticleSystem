@@ -20,13 +20,13 @@
 
 #include <ParticleSystem/bb_algorithm/bb_algorithm.h>
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
-#include <ParticleSystem/type/triangle_mesh.hpp>
+#include <ParticleSystem/type/mesh.h>
 
 namespace fj {
     class BoundingBox;
     class MCBoundingBox;
     class Vector3;
-    class ParticleManager;
+    class ParticleSystem;
     class MarchingCubesInterface;
     class MarchingCubes;
 }
@@ -46,17 +46,19 @@ public:
         
     }
     
-    virtual void execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver) override;
+    virtual void execute(fj::ParticleSystem* particleSystem) override;
     
     const fj::BoundingBox& getBoundingBox()const override;
     
 private:
 
-    void updateMesh(fj::ParticleManager* particleManager, const fj::Solver& solver);
+    fj::Mesh_t createMesh(const fj::ParticleManager& particleManager, const fj::Solver& solver);
+    
+    void updateMesh(fj::Mesh_t* mesh, const fj::ParticleManager& particleManager, const fj::Solver& solver);
     
     const fj::Scalar computeDensoty();
     
-    void addMesh(fj::ParticleManager* particleManager, const CubeValue_t& cube, const fj::Vector3& kOffset);
+    void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset);
     
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 

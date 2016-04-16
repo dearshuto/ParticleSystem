@@ -7,15 +7,17 @@
 //
 
 #include <FUJIMath/type/scalar.h>
+
+#include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/bb_algorithm/penalty_force.hpp>
 
-void fj::PenaltyForce::execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver)
+void fj::PenaltyForce::execute(fj::ParticleSystem* particleSystem)
 {
-    m_bb->execute(particleManager, neighborMap, solver);
+    m_bb->execute(particleSystem);
     
     const fj::BoundingBox::Range& kRangeX = getBoundingBox().getRangeX();
     const fj::BoundingBox::Range& kRangeY = getBoundingBox().getRangeY();

@@ -10,6 +10,7 @@
 #define particle_system_hpp
 
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
@@ -18,6 +19,7 @@
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
+#include <ParticleSystem/type/mesh.h>
 
 namespace fj {
     class Particle;
@@ -184,6 +186,9 @@ private:
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
     
     std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
+
+public:
+    fj::Mesh_t m_mesh;
 };
 
 #endif /* particle_system_hpp */

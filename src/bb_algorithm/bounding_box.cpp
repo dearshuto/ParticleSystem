@@ -8,11 +8,17 @@
 
 #include <FUJIMath/type/vector3.hpp>
 
+#include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
+
+void fj::BoundingBox::execute(fj::ParticleSystem *particleSystem)
+{
+    update( particleSystem->getParticleManager() );
+}
 
 void fj::BoundingBox::update(const fj::ParticleManager &particleManager)
 {

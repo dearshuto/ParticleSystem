@@ -17,7 +17,6 @@
 
 #include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle_id.h>
-#include <ParticleSystem/type/triangle_mesh.hpp>
 
 namespace fj {
     class Particle;
@@ -33,8 +32,6 @@ public:
     ~ParticleManager() = default;
     
     const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable);
-    
-    void clearMesh();
     
     std::shared_ptr<fj::Particle>& getParticleAt(const int i)
     {
@@ -92,12 +89,6 @@ private:
     ParticleArray m_boundaryParticles;
 
     std::unordered_map<fj::ParticleID, std::shared_ptr<fj::Particle>> m_hashMap;
-    
-public:
-    std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > m_triangle;
-    std::vector<fj::Vector3> m_vertex;
-    
-//    fj::TriangleMesh m_triangleMesh;
 };
 
 

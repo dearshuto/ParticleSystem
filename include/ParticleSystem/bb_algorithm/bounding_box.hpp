@@ -82,10 +82,7 @@ public:
         m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     
-    void execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver)override
-    {
-        update( *particleManager );
-    }
+    void execute(fj::ParticleSystem* particleSystem)override;
     
     const fj::BoundingBox& getBoundingBox()const override
     {

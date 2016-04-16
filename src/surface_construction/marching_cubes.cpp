@@ -8,7 +8,8 @@
 
 #include <fstream>
 
-#include <ParticleSystem/type/triangle_mesh.hpp>
+#include <ParticleSystem/particle_system.hpp>
+#include <ParticleSystem/type/mesh.h>
 #include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
@@ -339,14 +340,23 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-void fj::MarchingCubes::execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver)
+void fj::MarchingCubes::execute(fj::ParticleSystem* particleSystem)
 {
-    m_mcbb->execute(particleManager, neighborMap, solver);
+    m_mcbb->execute(particleSystem);
     
-    updateMesh( particleManager, solver );
+    particleSystem->m_mesh = createMesh(particleSystem->getParticleManager(), particleSystem->getSolver());
 }
 
-void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager, const fj::Solver& solver)
+fj::Mesh_t fj::MarchingCubes::createMesh(const fj::ParticleManager &particleManager, const fj::Solver &solver)
+{
+    fj::Mesh_t mesh;
+
+    updateMesh(&mesh, particleManager, solver);
+    
+    return mesh;
+}
+
+void fj::MarchingCubes::updateMesh(fj::Mesh_t* mesh, const fj::ParticleManager& particleManager, const fj::Solver& solver)
 {
     const fj::MCBoundingBox& bb = getMCBB();
     CubeValue_t cubeValue;
@@ -355,9 +365,9 @@ void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager, const f
     const int kResolusionY = bb.getRangeY().getResolusion();
     const int kResolusionZ = bb.getRangeZ().getResolusion();
     
-    for (int i = 1; i < kResolusionX - 1; i++) {
-        for (int j = 1; j < kResolusionY - 1; j++) {
-            for (int k = 1; k < kResolusionZ - 1; k++) {
+    for (int i = 0; i < kResolusionX - 1; i++) {
+        for (int j = 0; j < kResolusionY - 1; j++) {
+            for (int k = 0; k < kResolusionZ - 1; k++) {
                 
                 cubeValue[0] = bb.getScalar(i, j, k, solver);
                 cubeValue[1] = bb.getScalar(i+1, j, k, solver);
@@ -368,7 +378,7 @@ void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager, const f
                 cubeValue[6] = bb.getScalar(i+1, j+1, k+1, solver);
                 cubeValue[7] = bb.getScalar(i, j+1, k+1, solver);
 
-                addMesh(particleManager, cubeValue, fj::Vector3(i, j, k));
+                addMesh(mesh, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
@@ -376,7 +386,7 @@ void fj::MarchingCubes::updateMesh(fj::ParticleManager* particleManager, const f
     
 }
 
-void fj::MarchingCubes::addMesh(fj::ParticleManager* particleManager, const CubeValue_t &cube, const fj::Vector3& kOffset)
+void fj::MarchingCubes::addMesh(fj::Mesh_t* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)
 {
     const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cube) );
     const int kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
@@ -406,7 +416,6 @@ void fj::MarchingCubes::addMesh(fj::ParticleManager* particleManager, const Cube
         }
     }
     
-    fj::TriangleMesh triMesh;
     for(int iTriangle = 0; iTriangle < 5; iTriangle++)
     {
         int i = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle];
@@ -418,12 +427,12 @@ void fj::MarchingCubes::addMesh(fj::ParticleManager* particleManager, const Cube
         const int v2 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+1];
         const int v3 = a2iTriangleConnectionTable[kFlagIndex][3*iTriangle+2];
         
-        const size_t offset = particleManager->m_vertex.size();
+        const size_t offset =  mesh->first.size();//vertex
         for (const auto& position: asEdgeVertex){
-            particleManager->m_vertex.push_back(position);
+            mesh->first.push_back(position);
         }
         
-        particleManager->m_triangle.emplace_back(offset + v1 + 1, offset + v2 + 1, offset + v3 + 1);
+        mesh->second.emplace_back(offset + v1 + 1, offset + v2 + 1, offset + v3 + 1);
     }
     
 }

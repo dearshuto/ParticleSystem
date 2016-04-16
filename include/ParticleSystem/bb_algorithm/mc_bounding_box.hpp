@@ -14,6 +14,7 @@
 
 namespace fj {
     class SPHMethod;
+    class ParticleSystem;
     class MCBoundingBox;
 }
 
@@ -29,7 +30,7 @@ public:
     {
         
     }
-    void execute(fj::ParticleManager* particleManager, const fj::NeighborMap& neighborMap, const fj::Solver& solver) override;
+    void execute(fj::ParticleSystem* particleSystem) override;
     
     fj::Scalar getScalar(const int x, const int y, const int z, const fj::Solver& solver)const override;
 };
