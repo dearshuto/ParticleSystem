@@ -35,7 +35,7 @@ public:
     void execute(fj::ParticleSystem* particleSystem) override;
     
 protected:
-    void clearScalarMap();
+    void clearScalarMap(const fj::ParticleManager& particleManager);
     
     void updateScalarMap(const fj::ParticleManager& particleManager, const fj::Solver& solver);
     
@@ -50,6 +50,10 @@ public:
     fj::Scalar getScalar(const int x, const int y, const int z)const override;
     
     void setScalar(const int x, const int y, const int z, const fj::Scalar& scalar);
+    
+    void setScalar(const int index, const fj::Scalar& scalar);
+    
+    void addScalar(const int index, const fj::Scalar& scalar);
     
     void addScalar(const int x, const int y, const int z, const fj::Scalar& scalar);
     

@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <FUJIMath/type/scalar.h>
+#include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/particle/particle_id.h>
 #include "bb_algorithm.h"
@@ -91,6 +92,8 @@ public:
 
 protected:
 
+    void clear();
+    
     void update(const fj::ParticleManager& particleManager);
     
     bool isOutOfRange(const fj::Particle& particle)const;
@@ -100,6 +103,15 @@ protected:
     void registerParticle(const fj::Particle& particle);
     
     void registerInBox(const fj::Particle& particle);
+    
+    int convertPositionToIndex(const fj::Vector3& position)const
+    {
+        const int kIndexX = (position.x() - getRangeX().getMin()) / getRangeX().getDivisionSize();
+        const int kIndexY = (position.y() - getRangeY().getMin()) / getRangeY().getDivisionSize();
+        const int kIndexZ = (position.z() - getRangeZ().getMin()) / getRangeZ().getDivisionSize();
+
+        return convertPositionToIndex(kIndexX, kIndexY, kIndexZ);
+    }
     
     int convertPositionToIndex(const int x, const int y, const int z)const
     {
@@ -129,7 +141,11 @@ public:
     }
     
     const std::vector<fj::ParticleID>& get(const int x, const int y, const int z)const;
-
+    
+    const std::vector<fj::ParticleID>& getInBoxParticle()const
+    {
+        return m_inBoxParticle;
+    }
     
 private:
     Range m_xRange;
@@ -137,6 +153,7 @@ private:
     Range m_zRange;
 
     std::vector< std::vector<fj::ParticleID> > m_inBox;
+    std::vector<fj::ParticleID> m_inBoxParticle;
     std::vector<fj::ParticleID> m_outOfRangeParticle;
 };
 

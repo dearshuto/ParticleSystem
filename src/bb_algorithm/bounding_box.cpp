@@ -17,7 +17,15 @@
 
 void fj::BoundingBox::execute(fj::ParticleSystem *particleSystem)
 {
+    clear();
     update( particleSystem->getParticleManager() );
+}
+
+void fj::BoundingBox::clear()
+{
+    m_outOfRangeParticle.clear();
+    m_inBox.clear();
+    m_inBoxParticle.clear();
 }
 
 void fj::BoundingBox::update(const fj::ParticleManager &particleManager)
@@ -42,6 +50,8 @@ void fj::BoundingBox::registerParticle(const fj::Particle &particle)
     }
     else
     {
+        m_inBoxParticle.push_back(particle.getID());
+    
         registerInBox( particle );
     }
     
@@ -85,10 +95,7 @@ bool fj::BoundingBox::isOutOfRange(const int x, const int y, const int z)const
 void fj::BoundingBox::registerInBox(const fj::Particle &particle)
 {
     const fj::Vector3& kPosition = particle.getPosition();
-    const int kIndexX = std::abs(kPosition.x() - getRangeX().getMin()) / getRangeX().getDivisionSize();
-    const int kIndexY = std::abs(kPosition.y() - getRangeY().getMin()) / getRangeY().getDivisionSize();
-    const int kIndexZ = std::abs(kPosition.z() - getRangeZ().getMin()) / getRangeZ().getDivisionSize();
-    const int kIndex = kIndexX + getRangeX().getResolusion() * kIndexY + getRangeX() .getResolusion() * getRangeY().getResolusion() * kIndexZ;
+    const int kIndex = convertPositionToIndex(kPosition);
     
     m_inBox[kIndex].push_back( particle.getID() );
 }
