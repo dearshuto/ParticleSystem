@@ -69,7 +69,7 @@ public:
     
     const fj::MCBoundingBox& getMCBB()const
     {
-       return  dynamic_cast<const fj::MCBoundingBox&>( getBBAlgorithm() );
+        return  static_cast<const fj::MCBoundingBox&>( const_cast<fj::BBAlgorithm&>( getBBAlgorithm()) );
     }
     
     float getIsosurfaceValue()const
