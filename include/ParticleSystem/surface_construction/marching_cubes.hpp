@@ -18,7 +18,7 @@
 #include <FUJIMath/type/scalar.h>
 #include <FUJIMath/type/vector3.hpp>
 
-#include <ParticleSystem/bb_algorithm/bb_algorithm.h>
+#include <ParticleSystem/bb_algorithm/bb_algorithm_decorator.hpp>
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/type/mesh.h>
 
@@ -32,7 +32,7 @@ namespace fj {
 }
 
 
-class fj::MarchingCubes : public fj::BBAlgorithm
+class fj::MarchingCubes : public fj::BBAlgorithmDecorator
 {
     typedef std::array<float, 8> CubeValue_t;
 public:
@@ -40,18 +40,16 @@ public:
     virtual~MarchingCubes() = default;
 
     MarchingCubes(std::unique_ptr<fj::MCBoundingBox> bbAlgorithm)
-    : m_mcbb( std::move(bbAlgorithm) )
+    : BBAlgorithmDecorator(std::move(bbAlgorithm))
     , m_isosurfaceValue(350)
     {
         
     }
     
-    virtual void execute(fj::ParticleSystem* particleSystem) override;
-    
-    const fj::BoundingBox& getBoundingBox()const override;
-    
 private:
-
+    
+    virtual void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
+    
     fj::Mesh_t createMesh()const;
     
     void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
@@ -71,7 +69,7 @@ public:
     
     const fj::MCBoundingBox& getMCBB()const
     {
-        return std::cref(*m_mcbb);
+       return  dynamic_cast<const fj::MCBoundingBox&>( getBBAlgorithm() );
     }
     
     float getIsosurfaceValue()const
@@ -80,7 +78,6 @@ public:
     }
     
 private:
-    std::unique_ptr<fj::MCBoundingBox> m_mcbb;
     float m_isosurfaceValue;
 };
 

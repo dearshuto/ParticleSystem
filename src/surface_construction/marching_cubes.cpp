@@ -340,10 +340,8 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-void fj::MarchingCubes::execute(fj::ParticleSystem* particleSystem)
+void fj::MarchingCubes::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
 {
-    m_mcbb->execute(particleSystem);
-    
     particleSystem->m_mesh = createMesh();
 }
 
@@ -459,9 +457,4 @@ uint8_t fj::MarchingCubes::calculateFlagIndex(const CubeValue_t& cubeValue)const
     }
     
     return index;
-}
-
-const fj::BoundingBox& fj::MarchingCubes::getBoundingBox()const
-{
-    return getMCBB();
 }
