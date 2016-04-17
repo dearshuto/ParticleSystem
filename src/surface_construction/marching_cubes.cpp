@@ -421,12 +421,13 @@ void fj::MarchingCubes::setMeshFromTable(fj::Mesh_t* mesh,const uint8_t flagInde
         const int v2 = a2iTriangleConnectionTable[flagIndex][3*iTriangle+1];
         const int v3 = a2iTriangleConnectionTable[flagIndex][3*iTriangle+2];
         
-        const size_t offset =  mesh->first.size();//vertex
-        for (const auto& position: asEdgeVertex){
-            mesh->first.push_back(position);
-        }
+        const size_t offset =  mesh->first.size();//first = vertex
+
+        mesh->first.push_back( asEdgeVertex[v1] );
+        mesh->first.push_back( asEdgeVertex[v2] );
+        mesh->first.push_back( asEdgeVertex[v3] );
         
-        mesh->second.emplace_back(offset + v1 + 1, offset + v2 + 1, offset + v3 + 1);
+        mesh->second.emplace_back(offset + 1, offset + 2, offset + 3 );
     }
 
 }
