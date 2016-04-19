@@ -43,7 +43,11 @@ protected:
     
     void setInterpolateValue(const int i, const int j, const int k, const fj::Scalar& scalar);
     
-    void setNDInterpolateValue(const int i, const int j, const int k, const fj::Scalar& scalar, const int n);
+    void setNDInterpolateValue(const int index, const int n, const fj::Scalar& scalar);
+    
+    void resetNDInterpolateValue(const int index, const int n);
+    
+    fj::Scalar* getShiftedScalar(const int kIndex, const int x, const int y, const int z);
     
 public:
     

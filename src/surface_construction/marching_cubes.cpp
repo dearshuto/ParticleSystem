@@ -347,7 +347,7 @@ void fj::MarchingCubes::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
     particleSystem->clearMesh();
     particleSystem->m_mesh = createMesh();
     
-    m_isosurfaceValue = 300;
+    m_isosurfaceValue = temp - 100;
     particleSystem->m_subMesh = createMesh();
 
     m_isosurfaceValue = temp;

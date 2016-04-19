@@ -28,7 +28,8 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
         
         assert(0 <= kIndex);
         
-        setScalar(kIndex, 0);
+        resetNDInterpolateValue(kIndex, 15);
+//        setScalar(kIndex, 0);
     }
 
 }
@@ -42,7 +43,7 @@ void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManag
         const int kIndex = convertPositionToIndex(kParticle.getPosition());
         const fj::Scalar kScalar = solver.calculateScalar(ID);
         
-        addScalar(kIndex, kScalar);
+        setNDInterpolateValue(kIndex, 15, kScalar);
     }
     
 }
@@ -55,36 +56,53 @@ void fj::MCBoundingBox::setScalarValue(const int i, const int j, const int k, co
     {
         scalar += solver.calculateScalar(ID);
     }
-    setScalar(i, j, k, scalar);
-//    setInterpolateValue(i, j, k, scalar);
+//    setScalar(i, j, k, scalar);
+    setInterpolateValue(i, j, k, scalar);
 }
 
 void fj::MCBoundingBox::setInterpolateValue(const int i, const int j, const int k, const fj::Scalar &scalar)
 {
-    setNDInterpolateValue(i, j, k, scalar, 1);
+//    setNDInterpolateValue(i, j, k, scalar, 5);
 }
 
-void fj::MCBoundingBox::setNDInterpolateValue(const int i, const int j, const int k, const fj::Scalar &scalar, const int n)
+void fj::MCBoundingBox::setNDInterpolateValue(const int index, const int n, const fj::Scalar& scalar)
 {
     
     for (int x = -n; x <= n; x++){
         for (int y = -n; y <= n; y++) {
             for (int z = -n; z <= n; z++) {
-                const int kX = i + x;
-                const int kY = j + y;
-                const int kZ = k + z;
+                fj::Scalar* scalarPtr = getShiftedScalar(index, x, y, z);
                 
-                if ( !isOutOfRange(kX, kY, kZ) ) {
-                    const fj::Scalar kOffset = std::abs(x) + std::abs(y) + std::abs(z);
+                if (scalarPtr) {
+                    const int kWeight = std::abs(x) + std::abs(y) + std::abs(z);
                     
-                    if (kOffset == 0) {
-                        addScalar(kX, kY, kZ, scalar);
+                    if (kWeight == 0)
+                    {
+                        *scalarPtr += scalar;
                     }
                     else
                     {
-                        const fj::Scalar kWeight = fj::Scalar(1) / (kOffset + 1);
-                        addScalar(kX, kY, kZ, scalar * kWeight);
+                        *scalarPtr += scalar * float(1.0 / kWeight);
                     }
+                    
+                }
+                
+            }
+        }
+    }
+    
+}
+
+void fj::MCBoundingBox::resetNDInterpolateValue(const int index, const int n)
+{
+    
+    for (int x = -n; x <= n; x++){
+        for (int y = -n; y <= n; y++) {
+            for (int z = -n; z <= n; z++) {
+                fj::Scalar* scalarPtr = getShiftedScalar(index, x, y, z);
+                
+                if (scalarPtr) {
+                    *scalarPtr = 0;
                 }
                 
             }
@@ -126,4 +144,15 @@ void fj::MCBoundingBox::addScalar(const int index, const fj::Scalar& scalar)
     assert(index < m_scalarMap.size());
     
     m_scalarMap[index] += scalar;
+}
+
+fj::Scalar* fj::MCBoundingBox::getShiftedScalar(const int kIndex, const int x, const int y, const int z)
+{
+    const int kShiftedIndex = kIndex + convertPositionToIndex(x, y, z);
+    
+    if ((0 <= kShiftedIndex) && (kShiftedIndex < m_scalarMap.size()) ) {
+        return &m_scalarMap[kShiftedIndex];
+    }
+    
+    return nullptr;
 }
