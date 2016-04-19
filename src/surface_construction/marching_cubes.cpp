@@ -342,6 +342,8 @@ int a2iTriangleConnectionTable[256][16] =
 
 void fj::MarchingCubes::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
 {
+	particleSystem->m_mesh.first.clear();
+	particleSystem->m_mesh.second.clear();
     particleSystem->m_mesh = createMesh();
 }
 
