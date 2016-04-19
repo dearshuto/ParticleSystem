@@ -68,6 +68,9 @@ public:
     {
         m_mesh.first.clear();
         m_mesh.second.clear();
+        
+        m_subMesh.first.clear();
+        m_subMesh.second.clear();
     }
     
     /**
@@ -198,6 +201,7 @@ private:
 
 public:
     fj::Mesh_t m_mesh;
+    fj::Mesh_t m_subMesh;
 };
 
 #endif /* particle_system_hpp */

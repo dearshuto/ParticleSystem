@@ -342,9 +342,15 @@ int a2iTriangleConnectionTable[256][16] =
 
 void fj::MarchingCubes::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
 {
-	particleSystem->m_mesh.first.clear();
-	particleSystem->m_mesh.second.clear();
+    const auto temp = m_isosurfaceValue;
+    
+    particleSystem->clearMesh();
     particleSystem->m_mesh = createMesh();
+    
+    m_isosurfaceValue = 300;
+    particleSystem->m_subMesh = createMesh();
+
+    m_isosurfaceValue = temp;
 }
 
 fj::Mesh_t fj::MarchingCubes::createMesh()const
