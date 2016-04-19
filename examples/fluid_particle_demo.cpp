@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     constexpr fj::Scalar kParticleRadius = fj::SimulationConstant::PARTICLE_RADIUS;
     const fj::Scalar kBLockSize = kParticleRadius * 5;
     
-    fj::BoundingBox::Range kRange(0, 3.0, 0.01);
+    fj::BoundingBox::Range kRange(0, 2.0, 0.01);
     std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
     std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
     
@@ -38,39 +38,29 @@ int main(int argc, char** argv)
         }
     }
     
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 8; i++)
     {
         auto iterator = particleSystem.getParticleManager().iterator();
         
         particleSystem.stepSimulation(kTimestep);
         particleSystem.stepParticlePosition(kTimestep);
-        
-        
-        while ( iterator->hasNext() )
-        {
-            const fj::Particle& kParticle = iterator->next();
-            
-            std::cout << kParticle.getID().getData() << ": ";
-            kParticle.getVelocity().print();
-        }
-        
+        particleSystem.clearMesh();
     }
     
     const auto& vertices = particleSystem.m_mesh.first;
     const auto& indices = particleSystem.m_mesh.second;
     
-        std::ofstream ofs("test.obj");
+    std::ofstream ofs("test.obj");
     
-        for (const auto& vertex : vertices)
-        {
-            ofs << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
-        }
+    for (const auto& vertex : vertices)
+    {
+        ofs << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
+    }
     
-        for (const auto& index : indices)
-        {
-            ofs << "f " << std::get<0>(index) << "// " << std::get<1>(index) << "// " << std::get<2>(index) << "//" << std::endl;
-        }
-
+    for (const auto& index : indices)
+    {
+        ofs << "f " << std::get<0>(index) << "// " << std::get<1>(index) << "// " << std::get<2>(index) << "//" << std::endl;
+    }
     
     return EXIT_SUCCESS;
 }

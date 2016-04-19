@@ -62,6 +62,15 @@ public:
     void stepParticlePosition(const float timestep);
     
     /**
+     * 表面抽出されたメッシュを初期化する
+     */
+    void clearMesh()
+    {
+        m_mesh.first.clear();
+        m_mesh.second.clear();
+    }
+    
+    /**
      * 指定された位置に粒子を生成する
      * @param position 粒子の位置
      * @param movable 移動可能の判断
