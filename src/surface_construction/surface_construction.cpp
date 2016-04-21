@@ -12,7 +12,8 @@
 
 void fj::SurfaceConstruction::executeBBAlgorithm(fj::ParticleSystem *particleSystem)
 {
- 
+    particleSystem->clearMesh();
+    
     for (auto& mesh : *particleSystem->getMeshesPtr())
     {
         mesh = std::move( createMesh(mesh.getLevel()) );
