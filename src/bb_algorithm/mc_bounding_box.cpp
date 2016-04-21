@@ -29,7 +29,6 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
         assert(0 <= kIndex);
         
         resetNDInterpolateValue(kIndex, 15);
-//        setScalar(kIndex, 0);
     }
 
 }
@@ -43,46 +42,35 @@ void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManag
         const int kIndex = convertPositionToIndex(kParticle.getPosition());
         const fj::Scalar kScalar = solver.calculateScalar(ID);
         
-        setNDInterpolateValue(kIndex, 15, kScalar);
+        setNDInterpolateValue(kIndex, 3, kScalar);
     }
     
-}
-
-void fj::MCBoundingBox::setScalarValue(const int i, const int j, const int k, const fj::Solver &solver)
-{
-    fj::Scalar scalar = 0;
-    
-    for ( const auto& ID : Super::get(i, j, k))
-    {
-        scalar += solver.calculateScalar(ID);
-    }
-//    setScalar(i, j, k, scalar);
-    setInterpolateValue(i, j, k, scalar);
-}
-
-void fj::MCBoundingBox::setInterpolateValue(const int i, const int j, const int k, const fj::Scalar &scalar)
-{
-//    setNDInterpolateValue(i, j, k, scalar, 5);
 }
 
 void fj::MCBoundingBox::setNDInterpolateValue(const int index, const int n, const fj::Scalar& scalar)
 {
+    // 影響範囲 "H = 0.01"と仮定する
+    constexpr fj::Scalar H = 0.01;
+    const fj::Scalar kDivisionSizeX = getRangeX().getDivisionSize();
+    const fj::Scalar kDivisionSizeY = getRangeX().getDivisionSize();
+    const fj::Scalar kDivisionSizeZ = getRangeX().getDivisionSize();
     
-    for (int x = -n; x <= n; x++){
-        for (int y = -n; y <= n; y++) {
-            for (int z = -n; z <= n; z++) {
+    const int kX = H / kDivisionSizeX;
+    const int kY = H / kDivisionSizeY;
+    const int kZ = H / kDivisionSizeZ;
+
+    
+    for (int x = -kX; x <= kX; x++){
+        for (int y = -kY; y <= kY; y++) {
+            for (int z = -kZ; z <= kZ; z++) {
+                const fj::Scalar kSquaredDistance = std::pow((x * kDivisionSizeX), 2) + std::pow((y * kDivisionSizeY), 2) + std::pow((z * kDivisionSizeZ), 2);
+                const fj::Scalar kWeight = 1.0 - std::sqrt(kSquaredDistance) / H;
                 fj::Scalar* scalarPtr = getShiftedScalar(index, x, y, z);
                 
                 if (scalarPtr) {
-                    const int kWeight = std::abs(x) + std::abs(y) + std::abs(z);
                     
-                    if (kWeight == 0)
-                    {
-                        *scalarPtr += scalar;
-                    }
-                    else
-                    {
-                        *scalarPtr += scalar * float(1.0 / kWeight);
+                    if (kSquaredDistance < H*H) {
+                        *scalarPtr += scalar * kWeight;
                     }
                     
                 }

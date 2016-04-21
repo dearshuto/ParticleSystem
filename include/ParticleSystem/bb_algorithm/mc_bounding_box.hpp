@@ -39,9 +39,7 @@ protected:
     
     void updateScalarMap(const fj::ParticleManager& particleManager, const fj::Solver& solver);
     
-    void setScalarValue(const int i, const int j, const int k, const fj::Solver& solver);
-    
-    void setInterpolateValue(const int i, const int j, const int k, const fj::Scalar& scalar);
+//    void setScalarValue(const int i, const int j, const int k, const fj::Solver& solver);
     
     void setNDInterpolateValue(const int index, const int n, const fj::Scalar& scalar);
     

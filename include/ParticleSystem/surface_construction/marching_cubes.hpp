@@ -41,7 +41,7 @@ public:
 
     MarchingCubes(std::unique_ptr<fj::MCBoundingBox> bbAlgorithm)
     : BBAlgorithmDecorator(std::move(bbAlgorithm))
-    , m_isosurfaceValue(350)
+    , m_isosurfaceValue(100)
     {
         
     }
