@@ -30,6 +30,10 @@ int main(int argc, char** argv)
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
     fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
+    particleSystem.createIsosurface(150);
+    particleSystem.createIsosurface(170);
+    
+    
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
             for (int k = 0; k < 1; k++) {
@@ -38,17 +42,16 @@ int main(int argc, char** argv)
         }
     }
     
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         auto iterator = particleSystem.getParticleManager().iterator();
         
         particleSystem.stepSimulation(kTimestep);
         particleSystem.stepParticlePosition(kTimestep);
-//        particleSystem.clearMesh();
     }
     
-    const auto& vertices = particleSystem.m_mesh.first;
-    const auto& indices = particleSystem.m_mesh.second;
+    const auto& vertices = particleSystem.getMeshes()[0].getVertices();
+    const auto& indices = particleSystem.getMeshes()[0].getTriangleIndices();
     
     std::ofstream ofs("test.obj");
     
@@ -59,12 +62,12 @@ int main(int argc, char** argv)
     
     for (const auto& index : indices)
     {
-        ofs << "f " << std::get<0>(index) << "// " << std::get<1>(index) << "// " << std::get<2>(index) << "//" << std::endl;
+        ofs << "f " << std::get<0>(index) + 1 << "// " << std::get<1>(index) + 1 << "// " << std::get<2>(index) + 1 << "//" << std::endl;
     }
 
     
-    const auto& verticesSub = particleSystem.m_subMesh.first;
-    const auto& indicesSub = particleSystem.m_subMesh.second;
+    const auto& verticesSub = particleSystem.getMeshes()[1].getVertices();
+    const auto& indicesSub = particleSystem.getMeshes()[1].getTriangleIndices();
     
     std::ofstream ofsSub("testSub.obj");
     
@@ -75,7 +78,7 @@ int main(int argc, char** argv)
     
     for (const auto& indexSub : indicesSub)
     {
-        ofsSub << "f " << std::get<0>(indexSub) << "// " << std::get<1>(indexSub) << "// " << std::get<2>(indexSub) << "//" << std::endl;
+        ofsSub << "f " << std::get<0>(indexSub) + 1 << "// " << std::get<1>(indexSub) + 1 << "// " << std::get<2>(indexSub) + 1 << "//" << std::endl;
     }
 
     return EXIT_SUCCESS;

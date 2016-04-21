@@ -19,7 +19,7 @@
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
-#include <ParticleSystem/type/mesh.h>
+#include <ParticleSystem/type/mesh.hpp>
 
 namespace fj {
     class Particle;
@@ -30,7 +30,7 @@ namespace fj {
 class fj::ParticleSystem
 {
 public:
-    ParticleSystem() = default;
+    ParticleSystem() = delete;
     virtual~ParticleSystem() = default;
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
@@ -66,11 +66,10 @@ public:
      */
     void clearMesh()
     {
-        m_mesh.first.clear();
-        m_mesh.second.clear();
-        
-        m_subMesh.first.clear();
-        m_subMesh.second.clear();
+        for (auto& mesh : *getMeshesPtr())
+        {
+            mesh.clear();
+        }
     }
     
     /**
@@ -80,6 +79,11 @@ public:
      */
     fj::ParticleID createParticle(const fj::Vector3& position, const bool movable = true);
 
+    void createIsosurface(const fj::Scalar& level)
+    {
+        m_meshes.emplace_back(level);
+    }
+    
     /**
      * 粒子間の衝突を作る
      * @param index1 衝突を検知した粒子のID
@@ -151,6 +155,16 @@ public:
     {
         return std::cref(*m_solver);
     }
+ 
+    const std::vector<fj::Mesh>& getMeshes()const
+    {
+        return std::cref(m_meshes);
+    }
+    
+    std::vector<fj::Mesh>* getMeshesPtr()
+    {
+        return &m_meshes;
+    }
     
 protected:
     
@@ -173,7 +187,7 @@ protected:
     {
         return m_solver;
     }
-    
+        
 private:
     
     /**
@@ -199,9 +213,7 @@ private:
     
     std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
 
-public:
-    fj::Mesh_t m_mesh;
-    fj::Mesh_t m_subMesh;
+    std::vector<fj::Mesh> m_meshes;
 };
 
 #endif /* particle_system_hpp */
