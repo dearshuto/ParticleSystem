@@ -45,6 +45,7 @@ public:
     ParticleID& operator=(const ParticleID& other)
     {
         m_ID = other.getData();
+        return *this;
     }
 
     

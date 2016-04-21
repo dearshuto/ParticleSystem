@@ -30,9 +30,9 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
     
     clearParticleNeighbors();
     
-    if (m_bb) {
-        m_bb->update(getParticleManager());
-        m_marchingCubes.execute(getParticleManager(), *m_bb);
+    if (m_bbAlgorithm)
+    {
+        m_bbAlgorithm->execute( this );
     }
 }
 

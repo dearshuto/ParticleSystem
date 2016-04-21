@@ -14,17 +14,20 @@
 #include <vector>
 
 #include <FUJIMath/type/scalar.h>
+#include <FUJIMath/type/vector3.hpp>
+
+#include <ParticleSystem/particle/particle_id.h>
+#include "bb_algorithm.h"
 
 namespace fj {
     class Particle;
     class ParticleID;
     class ParticleManager;
+    class Solver;
     class BoundingBox;
 }
 
-
-
-class fj::BoundingBox
+class fj::BoundingBox : public fj::BBAlgorithm
 {
 public:
    class Range
@@ -33,9 +36,9 @@ public:
         Range() = delete;
         ~Range() = default;
         
-        Range(const fj::Scalar& min, const fj::Scalar& max, const int& resolution, const fj::Scalar& divisionSize)
+        Range(const fj::Scalar& min, const fj::Scalar& max, const fj::Scalar& divisionSize)
         : m_range(min, max)
-        , m_resolution(resolution)
+        , m_resolution( (max - min) / divisionSize )
         , m_divisionSize( divisionSize )
         {
             
@@ -80,15 +83,40 @@ public:
         m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     
+    void execute(fj::ParticleSystem* particleSystem)override;
+    
+    const fj::BoundingBox& getBoundingBox()const override
+    {
+        return *this;
+    }
+
+protected:
+
+    void clear();
+    
     void update(const fj::ParticleManager& particleManager);
     
     bool isOutOfRange(const fj::Particle& particle)const;
-
-protected:
+    
+    bool isOutOfRange(const int x, const int y, const int z)const;
     
     void registerParticle(const fj::Particle& particle);
     
     void registerInBox(const fj::Particle& particle);
+    
+    int convertPositionToIndex(const fj::Vector3& position)const
+    {
+        const int kIndexX = (position.x() - getRangeX().getMin()) / getRangeX().getDivisionSize();
+        const int kIndexY = (position.y() - getRangeY().getMin()) / getRangeY().getDivisionSize();
+        const int kIndexZ = (position.z() - getRangeZ().getMin()) / getRangeZ().getDivisionSize();
+
+        return convertPositionToIndex(kIndexX, kIndexY, kIndexZ);
+    }
+    
+    int convertPositionToIndex(const int x, const int y, const int z)const
+    {
+        return x + getRangeX().getResolusion() * y + getRangeX().getResolusion() * getRangeY().getResolusion() * z;
+    }
     
 public:
 
@@ -113,7 +141,11 @@ public:
     }
     
     const std::vector<fj::ParticleID>& get(const int x, const int y, const int z)const;
-
+    
+    const std::vector<fj::ParticleID>& getInBoxParticle()const
+    {
+        return m_inBoxParticle;
+    }
     
 private:
     Range m_xRange;
@@ -121,6 +153,7 @@ private:
     Range m_zRange;
 
     std::vector< std::vector<fj::ParticleID> > m_inBox;
+    std::vector<fj::ParticleID> m_inBoxParticle;
     std::vector<fj::ParticleID> m_outOfRangeParticle;
 };
 

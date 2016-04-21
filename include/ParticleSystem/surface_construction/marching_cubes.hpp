@@ -10,79 +10,75 @@
 #define marching_cubes_hpp
 
 #include <array>
+#include <functional>
 #include <tuple>
+#include <memory>
 #include <vector>
 
+#include <FUJIMath/type/scalar.h>
 #include <FUJIMath/type/vector3.hpp>
+
+#include <ParticleSystem/bb_algorithm/bb_algorithm_decorator.hpp>
+#include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
+#include <ParticleSystem/type/mesh.h>
 
 namespace fj {
     class BoundingBox;
+    class MCBoundingBox;
     class Vector3;
-    class ParticleManager;
+    class ParticleSystem;
+    class MarchingCubesInterface;
     class MarchingCubes;
 }
 
-class fj::MarchingCubes
+
+class fj::MarchingCubes : public fj::BBAlgorithmDecorator
 {
     typedef std::array<float, 8> CubeValue_t;
-    typedef std::tuple<unsigned int, unsigned int, unsigned int> TriangleIndex_t;
 public:
-    MarchingCubes() = default;
+    MarchingCubes() = delete;
     virtual~MarchingCubes() = default;
-    
-    /**
-     * メッシュを更新する
-     */
-    void execute(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb);
-    
+
+    MarchingCubes(std::unique_ptr<fj::MCBoundingBox> bbAlgorithm)
+    : BBAlgorithmDecorator(std::move(bbAlgorithm))
+    , m_isosurfaceValue(100)
+    {
+        
+    }
     
 private:
     
-    void clear();
+    virtual void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
     
-    void updateMesh(const fj::ParticleManager& particleManager, const fj::BoundingBox& bb);
+    fj::Mesh_t createMesh()const;
     
-    void addMesh(const CubeValue_t& cube, const fj::Vector3& kOffset);
+    void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
+    
+    void setMeshFromTable(fj::Mesh_t* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 
     fj::Vector3 computeInteractionPoint(const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
     
 public:
+
+    const fj::MarchingCubesInterface& getMCInterface()const
+    {
+        return getMCBB();
+    }
+    
+    const fj::MCBoundingBox& getMCBB()const
+    {
+        return  static_cast<const fj::MCBoundingBox&>( const_cast<fj::BBAlgorithm&>( getBBAlgorithm()) );
+    }
     
     float getIsosurfaceValue()const
     {
         return m_isosurfaceValue;
     }
     
-    const std::vector<fj::Vector3>& getVertices()const
-    {
-        return m_vertices;
-    }
-    
-    const std::vector<TriangleIndex_t>& getTriangleIndices()const
-    {
-        return m_triangleIndices;
-    }
-    
 private:
-    std::vector<fj::Vector3>* getVerticesPtr()
-    {
-        return &m_vertices;
-    }
-    
-    std::vector<TriangleIndex_t>* getTriangleIndicesPtr()
-    {
-        return &m_triangleIndices;
-    }
-
-    
-private:
-
     float m_isosurfaceValue;
-    
-    std::vector<fj::Vector3> m_vertices;
-    std::vector<TriangleIndex_t> m_triangleIndices;
 };
 
 #endif /* marching_cubes_hpp */

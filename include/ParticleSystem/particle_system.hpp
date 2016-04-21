@@ -10,14 +10,16 @@
 #define particle_system_hpp
 
 #include <string>
+#include <tuple>
 #include <vector>
 
+#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/particle_manager/bounding_box.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
+#include <ParticleSystem/type/mesh.h>
 
 namespace fj {
     class Particle;
@@ -33,12 +35,19 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BoundingBox> bb = nullptr)
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
-        m_bb = std::move(bb);
+        m_bbAlgorithm = std::move(bb);
     }
+    
+    
+    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
+    : ParticleSystem(std::move(solver), nullptr, std::move(bb))
+    {
+    }
+
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
         
@@ -51,6 +60,18 @@ public:
      * 
      */
     void stepParticlePosition(const float timestep);
+    
+    /**
+     * 表面抽出されたメッシュを初期化する
+     */
+    void clearMesh()
+    {
+        m_mesh.first.clear();
+        m_mesh.second.clear();
+        
+        m_subMesh.first.clear();
+        m_subMesh.second.clear();
+    }
     
     /**
      * 指定された位置に粒子を生成する
@@ -126,6 +147,11 @@ public:
         return m_neighborMap;
     }
     
+    const fj::Solver& getSolver()const
+    {
+        return std::cref(*m_solver);
+    }
+    
 protected:
     
     std::unique_ptr<fj::ParticleCollisionDispatcher>& getCollisionDispatcherPtr()
@@ -171,9 +197,11 @@ private:
      */
     std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
     
-    std::unique_ptr<fj::BoundingBox> m_bb;
-    
-    fj::MarchingCubes m_marchingCubes;
+    std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
+
+public:
+    fj::Mesh_t m_mesh;
+    fj::Mesh_t m_subMesh;
 };
 
 #endif /* particle_system_hpp */

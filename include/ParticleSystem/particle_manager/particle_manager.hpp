@@ -12,8 +12,10 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+#include <tuple>
 #include <vector>
 
+#include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 
 namespace fj {

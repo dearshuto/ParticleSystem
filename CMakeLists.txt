@@ -52,6 +52,12 @@ FILE(GLOB_RECURSE types
 	${CMAKE_SOURCE_DIR}/src/type/*.cpp
 )
 
+FILE(GLOB_RECURSE bb_algorithms
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/bb_algorithm/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/bb_algorithm/*.h
+	${CMAKE_SOURCE_DIR}/src/bb_algorithm/*.cpp
+)
+
 FILE(GLOB_RECURSE external_math_sources
 	${CMAKE_SOURCE_DIR}/external/FUJI-Math/src/type/*.cpp
 )
@@ -64,6 +70,7 @@ SOURCE_GROUP(solver FILES ${solvers})
 SOURCE_GROUP(surface_construction FILES ${surface_constructions})
 SOURCE_GROUP(collision_dispatcher FILES ${collision_dispatchers})
 SOURCE_GROUP(type FILES ${types})
+SOURCE_GROUP(bb_algorithm FILES ${bb_algorithms})
 
 SOURCE_GROUP(external_math FILES ${external_math_sources})
 
@@ -75,6 +82,7 @@ add_library(particle_system STATIC
 	${surface_constructions}
 	${collision_dispatchers}
 	${types}
+	${bb_algorithms}
 	${external_math_sources}
 )
 
