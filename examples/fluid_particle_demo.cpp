@@ -31,6 +31,9 @@ int main(int argc, char** argv)
     fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
     particleSystem.createIsosurface(150);
+    particleSystem.createIsosurface(170);
+    
+    
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
             for (int k = 0; k < 1; k++) {
@@ -39,13 +42,12 @@ int main(int argc, char** argv)
         }
     }
     
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         auto iterator = particleSystem.getParticleManager().iterator();
         
         particleSystem.stepSimulation(kTimestep);
         particleSystem.stepParticlePosition(kTimestep);
-//        particleSystem.clearMesh();
     }
     
     const auto& vertices = particleSystem.getMeshes()[0].getVertices();
@@ -64,20 +66,20 @@ int main(int argc, char** argv)
     }
 
     
-//    const auto& verticesSub = particleSystem.m_subMesh.first;
-//    const auto& indicesSub = particleSystem.m_subMesh.second;
-//    
-//    std::ofstream ofsSub("testSub.obj");
-//    
-//    for (const auto& vertexSub : verticesSub)
-//    {
-//        ofsSub << "v " << vertexSub.x() << " " << vertexSub.y() << " " << vertexSub.z() << std::endl;
-//    }
-//    
-//    for (const auto& indexSub : indicesSub)
-//    {
-//        ofsSub << "f " << std::get<0>(indexSub) << "// " << std::get<1>(indexSub) << "// " << std::get<2>(indexSub) << "//" << std::endl;
-//    }
+    const auto& verticesSub = particleSystem.getMeshes()[1].getVertices();
+    const auto& indicesSub = particleSystem.getMeshes()[1].getTriangleIndices();
+    
+    std::ofstream ofsSub("testSub.obj");
+    
+    for (const auto& vertexSub : verticesSub)
+    {
+        ofsSub << "v " << vertexSub.x() << " " << vertexSub.y() << " " << vertexSub.z() << std::endl;
+    }
+    
+    for (const auto& indexSub : indicesSub)
+    {
+        ofsSub << "f " << std::get<0>(indexSub) + 1 << "// " << std::get<1>(indexSub) + 1 << "// " << std::get<2>(indexSub) + 1 << "//" << std::endl;
+    }
 
     return EXIT_SUCCESS;
 }
