@@ -20,7 +20,7 @@
 
 #include <ParticleSystem/bb_algorithm/bb_algorithm_decorator.hpp>
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
-#include <ParticleSystem/type/mesh.h>
+#include <ParticleSystem/type/mesh.hpp>
 
 namespace fj {
     class BoundingBox;
@@ -50,11 +50,11 @@ private:
     
     virtual void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
     
-    fj::Mesh_t createMesh()const;
+    fj::Mesh createMesh()const;
     
-    void addMesh(fj::Mesh_t* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
+    void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
-    void setMeshFromTable(fj::Mesh_t* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
+    void setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
     uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
 

@@ -19,7 +19,7 @@
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/solver.hpp>
-#include <ParticleSystem/type/mesh.h>
+#include <ParticleSystem/type/mesh.hpp>
 
 namespace fj {
     class Particle;
@@ -66,11 +66,7 @@ public:
      */
     void clearMesh()
     {
-        m_mesh.first.clear();
-        m_mesh.second.clear();
-        
-        m_subMesh.first.clear();
-        m_subMesh.second.clear();
+        Mesh.clear();
     }
     
     /**
@@ -173,7 +169,7 @@ protected:
     {
         return m_solver;
     }
-    
+        
 private:
     
     /**
@@ -200,8 +196,8 @@ private:
     std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
 
 public:
-    fj::Mesh_t m_mesh;
-    fj::Mesh_t m_subMesh;
+    fj::Mesh Mesh;
+    
 };
 
 #endif /* particle_system_hpp */

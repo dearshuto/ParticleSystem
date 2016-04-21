@@ -47,8 +47,8 @@ int main(int argc, char** argv)
 //        particleSystem.clearMesh();
     }
     
-    const auto& vertices = particleSystem.m_mesh.first;
-    const auto& indices = particleSystem.m_mesh.second;
+    const auto& vertices = particleSystem.Mesh.getVertices();
+    const auto& indices = particleSystem.Mesh.getTriangleIndices();
     
     std::ofstream ofs("test.obj");
     
@@ -59,24 +59,24 @@ int main(int argc, char** argv)
     
     for (const auto& index : indices)
     {
-        ofs << "f " << std::get<0>(index) << "// " << std::get<1>(index) << "// " << std::get<2>(index) << "//" << std::endl;
+        ofs << "f " << std::get<0>(index) + 1 << "// " << std::get<1>(index) + 1 << "// " << std::get<2>(index) + 1 << "//" << std::endl;
     }
 
     
-    const auto& verticesSub = particleSystem.m_subMesh.first;
-    const auto& indicesSub = particleSystem.m_subMesh.second;
-    
-    std::ofstream ofsSub("testSub.obj");
-    
-    for (const auto& vertexSub : verticesSub)
-    {
-        ofsSub << "v " << vertexSub.x() << " " << vertexSub.y() << " " << vertexSub.z() << std::endl;
-    }
-    
-    for (const auto& indexSub : indicesSub)
-    {
-        ofsSub << "f " << std::get<0>(indexSub) << "// " << std::get<1>(indexSub) << "// " << std::get<2>(indexSub) << "//" << std::endl;
-    }
+//    const auto& verticesSub = particleSystem.m_subMesh.first;
+//    const auto& indicesSub = particleSystem.m_subMesh.second;
+//    
+//    std::ofstream ofsSub("testSub.obj");
+//    
+//    for (const auto& vertexSub : verticesSub)
+//    {
+//        ofsSub << "v " << vertexSub.x() << " " << vertexSub.y() << " " << vertexSub.z() << std::endl;
+//    }
+//    
+//    for (const auto& indexSub : indicesSub)
+//    {
+//        ofsSub << "f " << std::get<0>(indexSub) << "// " << std::get<1>(indexSub) << "// " << std::get<2>(indexSub) << "//" << std::endl;
+//    }
 
     return EXIT_SUCCESS;
 }
