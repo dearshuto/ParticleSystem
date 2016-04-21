@@ -22,6 +22,8 @@
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/type/mesh.hpp>
 
+#include "surface_construction.hpp"
+
 namespace fj {
     class BoundingBox;
     class MCBoundingBox;
@@ -32,7 +34,7 @@ namespace fj {
 }
 
 
-class fj::MarchingCubes : public fj::BBAlgorithmDecorator
+class fj::MarchingCubes : public fj::SurfaceConstruction
 {
     typedef std::array<float, 8> CubeValue_t;
 public:
@@ -40,25 +42,23 @@ public:
     virtual~MarchingCubes() = default;
 
     MarchingCubes(std::unique_ptr<fj::MCBoundingBox> bbAlgorithm)
-    : BBAlgorithmDecorator(std::move(bbAlgorithm))
-    , m_isosurfaceValue(100)
+    : SurfaceConstruction(std::move(bbAlgorithm))
     {
         
     }
     
 private:
     
-    virtual void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
-    
-    fj::Mesh createMesh()const;
+
+    virtual fj::Mesh createMesh(const fj::Scalar& level)const override;
     
     void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
     void setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
-    uint8_t calculateFlagIndex(const CubeValue_t& cubeValue)const;
+    uint8_t calculateFlagIndex(const fj::Scalar& level, const CubeValue_t& cubeValue)const;
 
-    fj::Vector3 computeInteractionPoint(const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
+    fj::Vector3 computeInteractionPoint(const fj::Scalar& level, const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
     
 public:
 
@@ -72,13 +72,6 @@ public:
         return  static_cast<const fj::MCBoundingBox&>( const_cast<fj::BBAlgorithm&>( getBBAlgorithm()) );
     }
     
-    float getIsosurfaceValue()const
-    {
-        return m_isosurfaceValue;
-    }
-    
-private:
-    float m_isosurfaceValue;
 };
 
 #endif /* marching_cubes_hpp */

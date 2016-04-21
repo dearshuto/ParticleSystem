@@ -12,6 +12,8 @@
 #include <tuple>
 #include <vector>
 
+#include <FUJIMath/type/scalar.h>
+
 namespace fj {
     class Vector3;
     class Mesh;
@@ -26,7 +28,7 @@ public:
     typedef std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > TriangleIndices_t;
     typedef std::vector<fj::Vector3> Vertices_t;
 public:
-    Mesh() = default;
+    Mesh() = delete;
     ~Mesh() = default;
     
     /**
@@ -42,9 +44,16 @@ public:
     
     fj::Mesh& operator=(fj::Mesh&& other)
     {
-        m_vertices = std::move(other.getVertices());
+        m_level = other.getLevel();
+        m_vertices = std::move( *other.getVerticesPtr() );
         m_triangleIndices = std::move(other.getTriangleIndices());
         return std::ref(*this);
+    }
+    
+    Mesh(const fj::Scalar& level)
+    : m_level(level)
+    {
+        
     }
     
     /**
@@ -60,10 +69,26 @@ public:
     void clear();
     
 public:
+    const fj::Scalar& getLevel()const
+    {
+        return m_level;
+    }
+    
+    void setLevel(const fj::Scalar& level)
+    {
+        m_level = level;
+    }
+    
     const Vertices_t& getVertices()const
     {
         return m_vertices;
     }
+
+    Vertices_t* getVerticesPtr()
+    {
+        return &m_vertices;
+    }
+
     
     const TriangleIndices_t& getTriangleIndices()const
     {
@@ -71,6 +96,9 @@ public:
     }
     
 private:
+    // レベルセット法の閾値
+    fj::Scalar m_level;
+    
     Vertices_t m_vertices;
     TriangleIndices_t m_triangleIndices;
 };

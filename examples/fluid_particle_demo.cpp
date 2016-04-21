@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
     fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
+    particleSystem.createIsosurface(150);
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
             for (int k = 0; k < 1; k++) {
@@ -47,8 +48,8 @@ int main(int argc, char** argv)
 //        particleSystem.clearMesh();
     }
     
-    const auto& vertices = particleSystem.Mesh.getVertices();
-    const auto& indices = particleSystem.Mesh.getTriangleIndices();
+    const auto& vertices = particleSystem.getMeshes()[0].getVertices();
+    const auto& indices = particleSystem.getMeshes()[0].getTriangleIndices();
     
     std::ofstream ofs("test.obj");
     

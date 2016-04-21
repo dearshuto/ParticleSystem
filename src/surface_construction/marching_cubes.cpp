@@ -340,27 +340,15 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-void fj::MarchingCubes::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
-{
-    const auto temp = m_isosurfaceValue;
-    
-    particleSystem->clearMesh();
-    particleSystem->Mesh = std::move( createMesh() );
-    
-//    m_isosurfaceValue = temp - 100;
-//    particleSystem->Mesh = std::move( createMesh() );
-
-    m_isosurfaceValue = temp;
-}
-
-fj::Mesh fj::MarchingCubes::createMesh()const
+fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level)const
 {
     const fj::MarchingCubesInterface& mcInterface = getMCInterface();
     const int kResolusionX = getMCBB().getRangeX().getResolusion();
     const int kResolusionY = getMCBB().getRangeY().getResolusion();
     const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
     
-    fj::Mesh mesh;
+    fj::Mesh mesh(level);
+    
     CubeValue_t cubeValue;
     
     for (int i = 0; i < kResolusionX - 1; i++) {
@@ -385,7 +373,7 @@ fj::Mesh fj::MarchingCubes::createMesh()const
 
 void fj::MarchingCubes::addMesh(fj::Mesh* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)const
 {
-    const uint8_t kFlagIndex = calculateFlagIndex( std::cref(cube) );
+    const uint8_t kFlagIndex = calculateFlagIndex(mesh->getLevel(), std::cref(cube) );
     const uint32_t kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
     
     if (kEdgeFlags == 0) {
@@ -414,7 +402,7 @@ void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex,
             asEdgeVertex[iEdge].y() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][1]);
             asEdgeVertex[iEdge].z() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][2]);
             
-            asEdgeVertex[iEdge] = offset + computeInteractionPoint(kRight, kLeft);
+            asEdgeVertex[iEdge] = offset + computeInteractionPoint(mesh->getLevel(), kRight, kLeft);
         }
     }
     
@@ -440,7 +428,7 @@ void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex,
 
 }
 
-fj::Vector3 fj::MarchingCubes::computeInteractionPoint(const fj::Vector3 &vertex1, const fj::Vector3 &vertex2)const
+fj::Vector3 fj::MarchingCubes::computeInteractionPoint(const fj::Scalar& level, const fj::Vector3 &vertex1, const fj::Vector3 &vertex2)const
 {
     return (vertex1 + vertex2)/2;
     
@@ -451,16 +439,16 @@ fj::Vector3 fj::MarchingCubes::computeInteractionPoint(const fj::Vector3 &vertex
         return (vertex1 + vertex2) / fj::Scalar(2);
     }
     
-    return ( fj::Vector3{getIsosurfaceValue(), getIsosurfaceValue(), getIsosurfaceValue()} - vertex1 ) / kDelta;
+    return ( fj::Vector3{level, level, level} - vertex1 ) / kDelta;
 }
 
-uint8_t fj::MarchingCubes::calculateFlagIndex(const CubeValue_t& cubeValue)const
+uint8_t fj::MarchingCubes::calculateFlagIndex(const fj::Scalar& level, const CubeValue_t& cubeValue)const
 {
     uint8_t index = 0;
     
     for (int i = 0; i < cubeValue.size(); i++)
     {
-        if ( cubeValue[i] <= getIsosurfaceValue() ) {
+        if ( cubeValue[i] <= level ) {
             index |= (1<<i);
         }
     }
