@@ -6,6 +6,18 @@
 //
 //
 
+/*! \mainpage Particle-Based Simulation
+ *
+ * \section intro_sec Introduction
+ *
+ * 粒子法を実装した最強プログラム. ParticleSystemクラスがすべてを統括するクラスなので、まずは彼を見てください.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: buildフォルダを作成する
+ *
+ */
+
 #ifndef marching_cubes_hpp
 #define marching_cubes_hpp
 
