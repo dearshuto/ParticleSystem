@@ -18,6 +18,9 @@ namespace fj {
     class BloodSPHMethod;
 }
 
+/**
+ * 粘性が時間変化する液体の解法
+ */
 class fj::BloodSPHMethod : public fj::SPHMethod
 {
     typedef fj::SPHMethod Super;
@@ -39,6 +42,9 @@ public:
     void updateViscosityMap(const fj::Scalar& timestep, const fj::ParticleManager& particleManager);
     
 private:
+    /**
+     * 時間変化する粘性
+     */
     std::unordered_map<fj::ParticleID, fj::Scalar> m_viscosityMap;
 };
 
