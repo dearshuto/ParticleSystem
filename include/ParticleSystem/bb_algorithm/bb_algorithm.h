@@ -15,6 +15,9 @@ namespace fj {
     class BBAlgorithm;
 }
 
+/**
+ * デコレータパターンで設計されたバウンディングボックスアルゴリズムのインタフェース.
+ */
 class fj::BBAlgorithm
 {
 public:

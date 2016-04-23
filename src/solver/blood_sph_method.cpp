@@ -12,8 +12,8 @@
 
 void fj::BloodSPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
 {
-    updateViscosityMap(timestep, particleManager);
     Super::compute(timestep, particleManager, neighborMap);
+    updateViscosityMap(timestep, particleManager);
 }
 
 void fj::BloodSPHMethod::updateViscosityMap(const fj::Scalar& timestep, const fj::ParticleManager &particleManager)

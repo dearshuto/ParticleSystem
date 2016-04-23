@@ -20,6 +20,9 @@ namespace fj {
     class BloodParticleSystem;
 }
 
+/**
+ * 血液のシミュレーション
+ */
 class fj::BloodParticleSystem : public fj::ParticleSystem
 {
     typedef fj::ParticleSystem Super;
