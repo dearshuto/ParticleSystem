@@ -19,6 +19,9 @@ namespace fj {
     class SimulationConstant;
 }
 
+/**
+ * シミュレーションで仕様する定数. ただし非推奨。将来的にはこのクラスで一括管理ではなく、各ソルバに管理させる。
+ */
 class fj::SimulationConstant
 {
 private:

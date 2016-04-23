@@ -12,34 +12,33 @@
 #include <memory>
 
 #include <FUJIMath/type/scalar.h>
-#include <ParticleSystem/bb_algorithm/bb_algorithm.h>
+#include <ParticleSystem/bb_algorithm/bb_algorithm_decorator.hpp>
 
 namespace fj {
     class PenaltyForce;
 }
 
-class fj::PenaltyForce : public fj::BBAlgorithm
-{
+class fj::PenaltyForce : public fj::BBAlgorithmDecorator
+{   
 public:
     PenaltyForce() = delete;
     ~PenaltyForce() = default;
     
     PenaltyForce(std::unique_ptr<fj::BBAlgorithm> bb, const fj::Scalar& K)
-    : m_bb(std::move(bb))
+    : BBAlgorithmDecorator( std::move(bb) )
     , m_K(K)
     {
         
    }
     
-    void execute(fj::ParticleSystem* particleSystem)override;
+    void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
     
-    const fj::BoundingBox& getBoundingBox()const override
+    const fj::Scalar& getK()const
     {
-        return m_bb->getBoundingBox();
+        return m_K;
     }
     
 private:
-    std::unique_ptr<fj::BBAlgorithm> m_bb;
     fj::Scalar m_K;
 };
 

@@ -70,6 +70,24 @@ void fj::ParticleSystem::updateParticleNeighbor()
 void fj::ParticleSystem::simulateParticleBehavior(const fj::Scalar& timestep)
 {
     getSolverPtr()->compute(timestep, getParticleManager(), getNeighborMap());
+    
+    if (m_enableGravity)
+    {
+        applyGravity();
+    }
+}
+
+void fj::ParticleSystem::applyGravity()
+{
+    const fj::Vector3& kGravity = getGravity();
+    auto iterator = getParticleManager().iterator();
+
+    while ( iterator->hasNext() )
+    {
+        const fj::ParticleID& kID = (iterator->next()).getID();
+        
+        getSolverPtr()->addAccelAt(kID, kGravity);
+    }
 }
 
 void fj::ParticleSystem::clearParticleNeighbors()
