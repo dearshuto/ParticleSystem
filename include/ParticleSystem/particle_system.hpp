@@ -36,6 +36,8 @@ public:
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
     ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
+    : m_enableGravity(false)
+    , m_gravity( fj::Vector3(0, -9.8, 0) )
     {
         m_solver = std::move(solver);
         m_collisionDispatcher =  std::move(collisionDispatcher);
@@ -50,7 +52,17 @@ public:
 
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
-        
+    
+    void enableGravity()
+    {
+        m_enableGravity = true;
+    }
+    
+    void disableGravity()
+    {
+        m_enableGravity = false;
+    }
+    
     /**
      * シミュレーションをタイムステップ分進める
      */
@@ -129,6 +141,8 @@ public:
 protected:
     virtual void simulateParticleBehavior(const fj::Scalar& timestep);
     
+    void applyGravity();
+    
 private:
     void updateParticleNeighbor();
     void clearParticleNeighbors();
@@ -136,6 +150,16 @@ private:
 //getters & setters
 public:
 
+    const fj::Vector3& getGravity()const
+    {
+        return m_gravity;
+    }
+    
+    void setGravity(const fj::Vector3& gravity)
+    {
+        m_gravity = gravity;
+    }
+    
     const fj::ParticleManager& getParticleManager()const
     {
         return m_particleManager;
@@ -189,6 +213,9 @@ protected:
     }
         
 private:
+    bool m_enableGravity;
+    
+    fj::Vector3 m_gravity;
     
     /**
      * 走査とID検索とを可能な状態で粒子を管理する
