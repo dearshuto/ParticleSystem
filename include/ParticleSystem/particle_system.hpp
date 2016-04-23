@@ -27,6 +27,9 @@ namespace fj {
     class ParticleSystem;
 }
 
+/**
+ * 粒子の作成、シミュレーション、管理などなど.
+ */
 class fj::ParticleSystem
 {
 public:
@@ -69,7 +72,7 @@ public:
     void stepSimulation(const float timestep);
 
     /**
-     * 
+     * Solverが計算した加速度をもとに全粒子の位置を更新する
      */
     void stepParticlePosition(const float timestep);
     
@@ -91,6 +94,9 @@ public:
      */
     fj::ParticleID createParticle(const fj::Vector3& position, const bool movable = true);
 
+    /**
+     * 等置面を定義する.
+     */
     void createIsosurface(const fj::Scalar& level)
     {
         m_meshes.emplace_back(level);
@@ -132,10 +138,20 @@ public:
         return m_solver->getAccellAt(ID);
     }
     
+    /**
+     * 粒子に加速度を追加する
+     * @params ID 粒子の識別子
+     */
     void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
-    
+
+    /**
+     * 強制的に粒子の位置を変更する
+     */
     void setParticlePositionAt(const fj::ParticleID& ID, const fj::Vector3& position);
     
+    /**
+     * 強制的に粒子の速度を変更する
+     */
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
 
 protected:
@@ -144,7 +160,14 @@ protected:
     void applyGravity();
     
 private:
+    /**
+     * ParticleCollisionDispatcherを利用して近傍粒子探索を行う. ParticleCollisionDispatcherがnullptrのときは何も起きない.
+     */
     void updateParticleNeighbor();
+
+    /**
+     * NeighborMapに登録されている近傍情報をすべて消去する
+     */
     void clearParticleNeighbors();
 
 //getters & setters

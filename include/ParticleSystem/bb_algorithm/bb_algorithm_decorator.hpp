@@ -20,6 +20,9 @@ namespace fj {
     class BBAlgorithmDecorator;
 }
 
+/**
+ * デコレータパターンの装飾アルゴリズム. バウンディングボックスを利用するアルゴリズムはこのクラスを継承する.
+ */
 class fj::BBAlgorithmDecorator : public fj::BBAlgorithm
 {
 public:

@@ -26,7 +26,7 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
         updateParticleNeighbor();
     }
     
-    simulateParticleBehavior(timestep);
+    getSolverPtr()->compute(timestep, getParticleManager(), getNeighborMap());
     
     clearParticleNeighbors();
     
