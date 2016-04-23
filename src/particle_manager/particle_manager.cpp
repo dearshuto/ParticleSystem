@@ -16,7 +16,7 @@ const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::u
     std::shared_ptr<fj::Particle> sharedParticle = std::move(particle);
     
     m_particles.push_back(sharedParticle);
-    m_particleHashMap.registerParticle(sharedParticle);
+    m_hashMap[sharedParticle->getID()] = sharedParticle;
     
     if (movable)
     {
@@ -29,4 +29,23 @@ const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::u
     }
     
     return sharedParticle;
+}
+
+std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const
+{
+    return std::unique_ptr<fj::ParticleManager::ConstIterator>( new ConstIterator(std::cref(*this)) );
+}
+
+bool fj::ParticleManager::ConstIterator::hasNext()const
+{
+    if ( m_searchedIndex < m_particleManager.m_particles.size()) {
+        return true;
+    }
+    
+    return false;
+}
+
+const fj::Particle& fj::ParticleManager::ConstIterator::next()
+{
+    return std::cref( *m_particleManager.m_particles[m_searchedIndex++] );
 }

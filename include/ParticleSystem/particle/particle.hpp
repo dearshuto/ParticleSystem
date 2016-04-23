@@ -21,6 +21,9 @@ namespace fj {
     class Particle;
 }
 
+/**
+ * シミュレーションで利用される体積をもたない粒子.
+ */
 class fj::Particle
 {
 public:
@@ -100,6 +103,8 @@ public:
 	}
     
 private:
+    // この粒子クラスが管理する変数はこれ以上増やさないでください.
+    // 粒子の計算に追加のパラメータが必要なときはこのクラスを継承したクラスを自作してください
     
     /**
      * 各パーティクルを識別するのに利用する数字
@@ -107,10 +112,19 @@ private:
      */
     const fj::ParticleID m_ID;
     
+    /**
+     * 質量
+     */
     fj::Scalar m_mass;
     
+    /**
+     * 中心の位置
+     */
     fj::Vector3 m_position;
 
+    /**
+     * 中心の速度
+     */
     fj::Vector3 m_velocity;
 };
 

@@ -23,7 +23,11 @@ namespace fj {
 class fj::ParticleID
 {
 public:
-    ParticleID() = delete;
+    ParticleID()
+    : m_ID(0)
+    {
+    }
+    
     ~ParticleID() = default;
     
     ParticleID(const ParticleID& other)
@@ -38,7 +42,11 @@ public:
         
     }
     
-    ParticleID& operator=(const ParticleID& other) = delete;
+    ParticleID& operator=(const ParticleID& other)
+    {
+        m_ID = other.getData();
+        return *this;
+    }
 
     
     bool operator==(const ParticleID& other)const

@@ -65,15 +65,7 @@ public:
     
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
-
-        try {
-            const NeighborInformations& kNeighborInformation = m_neighbors.at(ID);
-            return kNeighborInformation;
-        } catch (const std::out_of_range& e) {
-            std::cout << ID.getData() << " is not found in NeighborMap." << std::endl;
-            std::cout << "Please register the particle with ID: " << ID.getData() << std::endl;
-        }
-        
+        return std::cref( m_neighbors.at(ID) );
     }
     
 private:

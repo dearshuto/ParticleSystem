@@ -20,6 +20,9 @@ namespace fj {
     class BloodParticleSystem;
 }
 
+/**
+ * 血液のシミュレーション
+ */
 class fj::BloodParticleSystem : public fj::ParticleSystem
 {
     typedef fj::ParticleSystem Super;
@@ -27,8 +30,8 @@ public:
     BloodParticleSystem() = delete;
     ~BloodParticleSystem() = default;
     
-    BloodParticleSystem(std::unique_ptr<fj::BloodSPHMethod> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr)
-    : ParticleSystem(std::move(solver), std::move(collisionDispatcher))
+    BloodParticleSystem(std::unique_ptr<fj::BloodSPHMethod> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BoundingBox> bb = nullptr)
+    : ParticleSystem(std::move(solver), std::move(collisionDispatcher), std::move(bb))
     {
         
     }

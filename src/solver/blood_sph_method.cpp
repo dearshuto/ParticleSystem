@@ -12,17 +12,19 @@
 
 void fj::BloodSPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
 {
-    updateViscosityMap(timestep, particleManager);
     Super::compute(timestep, particleManager, neighborMap);
+    updateViscosityMap(timestep, particleManager);
 }
 
 void fj::BloodSPHMethod::updateViscosityMap(const fj::Scalar& timestep, const fj::ParticleManager &particleManager)
 {
     constexpr fj::Scalar kMAX = 50;
+    auto iterator = particleManager.iterator();
     
-    for (const auto& particle : particleManager)
+    while (iterator->hasNext())
     {
-        const fj::ParticleID& kID = particle->getID();
+        const fj::Particle& kParticle = iterator->next();
+        const fj::ParticleID& kID = kParticle.getID();
         const fj::Scalar kViscosity = m_viscosityMap[kID] + 0.001;
         
         if (kViscosity > kMAX)
@@ -33,7 +35,7 @@ void fj::BloodSPHMethod::updateViscosityMap(const fj::Scalar& timestep, const fj
         {
             m_viscosityMap[kID] = kViscosity;
         }
-        
+
     }
     
 }

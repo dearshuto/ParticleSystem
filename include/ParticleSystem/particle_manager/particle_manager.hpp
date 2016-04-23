@@ -11,38 +11,48 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
+#include <tuple>
 #include <vector>
 
+#include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle_id.h>
-#include "particle_hash_map.hpp"
 
 namespace fj {
     class Particle;
     class ParticleManager;
 }
 
+/**
+ * 粒子の入出力の管理. 粒子の識別はIDを利用する. 粒子に対する処理はこのクラスを通すことでプログラムの頑健性を高める.
+ */
 class fj::ParticleManager
 {
     typedef std::vector<std::shared_ptr<fj::Particle>> ParticleArray;
+    class ConstIterator;
 public:
     ParticleManager() = default;
     ~ParticleManager() = default;
     
-    const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable);
+    ParticleManager(const fj::ParticleManager& other) = delete;
+    ParticleManager& operator=(const fj::ParticleManager& other) = delete;
     
-    std::shared_ptr<fj::Particle>& getParticleAt(const int i)
-    {
-        return std::ref(m_particles[i]);
-    }
-    
+    const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
+
+    /**
+     * 指定されたIDをもつ粒子を返す.
+     */
     std::shared_ptr<fj::Particle>& search(const fj::ParticleID& ID)
     {
-        return std::ref(m_particleHashMap.get(ID));
+        return std::ref(m_hashMap.at(ID));
     }
-    
+
+    /**
+     * 指定されたIDをもつ粒子を返す.
+     */
     const fj::Particle& search(const fj::ParticleID& ID)const
     {
-        return m_particleHashMap.get(ID);
+        return std::cref( *m_hashMap.at(ID) );
     }
     
     ParticleArray::iterator begin()
@@ -50,20 +60,12 @@ public:
         return std::begin(m_particles);
     }
 
-    ParticleArray::const_iterator begin()const
-    {
-        return std::begin(m_particles);
-    }
-    
     ParticleArray::iterator end()
     {
         return std::end(m_particles);
     }
     
-    ParticleArray::const_iterator end()const
-    {
-        return std::end(m_particles);
-    }
+    std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
     
 public:
     
@@ -82,16 +84,59 @@ public:
         return m_particles.size();
     }
     
+    /**
+     * ParticleManagerで使用されていないIDを返す.
+     */
     const fj::ParticleID getUnusedID()
     {
-        return m_particleHashMap.getUnusedID();
+        // 返す値が絶対にダブらないように死守すること
+        static unsigned int i = 0;
+        return fj::ParticleID(i++);
     }
     
 private:
+    // ひとつの粒子をいろいろな形式で保持することで、ランダムアクセスやイテレートを可能にする
+    // STLを利用すると、仕様上例外が投げられてしまう。そうならないようにこのクラスで徹底的に管理すること
+    
+    /**
+     * 1次配列として保管された粒子
+     */
     ParticleArray m_particles;
+    
+    /**
+     * IDをハッシュ値とするハッシュマップで保管された粒子
+     */
+    std::unordered_map<fj::ParticleID, std::shared_ptr<fj::Particle>> m_hashMap;
+    
     ParticleArray m_flowParticles;
     ParticleArray m_boundaryParticles;
-    fj::ParticleHashMap m_particleHashMap;
+};
+
+
+/**
+ * ParticleManagerの粒子をconst状態で返すためのイテレータ
+ */
+class fj::ParticleManager::ConstIterator
+{
+public:
+    ConstIterator() = delete;
+    ~ConstIterator() = default;
+    
+    ConstIterator(const fj::ParticleManager& particleManager)
+    : m_particleManager(particleManager)
+    , m_searchedIndex(0)
+    {
+        
+    }
+    
+    bool hasNext()const;
+    
+    const fj::Particle& next();
+    
+private:
+    const fj::ParticleManager& m_particleManager;
+    
+    size_t m_searchedIndex;
 };
 
 #endif /* particle_manager_hpp */
