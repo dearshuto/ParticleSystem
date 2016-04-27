@@ -1,0 +1,2 @@
+The files in this repository are licensed under the WTFPL.
+ここに置いてあるファイルはすべてWTFPLライセンスにします. 好き放題やってください.
