@@ -42,7 +42,7 @@ public:
     /**
      * 衝突判定対象となる粒子を登録する
      */
-    void registerParticle(const fj::Particle& particle);
+    void registerParticle(const fj::ParticleID& particle);
     
     /**
      * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!

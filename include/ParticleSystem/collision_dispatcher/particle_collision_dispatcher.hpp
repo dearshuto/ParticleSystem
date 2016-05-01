@@ -28,7 +28,7 @@ namespace fj {
 class fj::ParticleCollisionDispatcher
 {
     typedef unsigned int HashValue_t;
-    typedef std::vector<std::shared_ptr<fj::Particle>> Particles;
+    typedef std::vector<fj::ParticleID> Particles;
 public:
     ParticleCollisionDispatcher() = delete;
     ~ParticleCollisionDispatcher() = default;
@@ -42,22 +42,22 @@ public:
         m_cells.resize(width * height * depth);
     }
         
-    void registerParticle(const std::shared_ptr<fj::Particle>& particle);
+    void registerParticle(const fj::ParticleID& particle, const fj::ParticleManager& particleManager);
     
-    void updated();
+    void updated(const fj::ParticleManager& particleManager);
     
-    fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle)const;
+    fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle, const fj::ParticleManager& particleManager)const;
     
 private:
     
-    void setNeighbors(const fj::Particle& particle, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles)const;
+    void setNeighbors(const fj::Particle& particle, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles, const fj::ParticleManager& particleManager)const;
     
     /**
      * あるハッシュ値をもつセルからxyz方向に移動したセルを返す
      */
     const Particles*const getSideCell(const HashValue_t& hash, const int x, const int y, const int z)const;
     
-    void updatedAt(const HashValue_t& currentHash);
+    void updatedAt(const HashValue_t& currentHash, const fj::ParticleManager& particleManager);
     
     HashValue_t computeHash(const fj::Particle& particle)const;
     

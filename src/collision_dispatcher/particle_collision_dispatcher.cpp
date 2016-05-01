@@ -17,24 +17,26 @@
 
 #include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 
-void fj::ParticleCollisionDispatcher::registerParticle(const std::shared_ptr<fj::Particle>& particle)
+void fj::ParticleCollisionDispatcher::registerParticle(const fj::ParticleID& particleID, const fj::ParticleManager& particleManager)
 {
-    const HashValue_t kHash = computeHash( std::cref(*particle) );
-    m_cells[kHash].push_back(particle);
+    const fj::Particle& kParticle = particleManager.search(particleID);
+    const HashValue_t kHash = computeHash( kParticle );
+    
+    m_cells[kHash].push_back(particleID);
 }
 
-void fj::ParticleCollisionDispatcher::updated()
+void fj::ParticleCollisionDispatcher::updated(const fj::ParticleManager& particleManager)
 {
     const size_t kCellSize = m_cells.size();
     
     for (int i = 0; i < kCellSize; i++)
     {
-        updatedAt(i);
+        updatedAt(i, particleManager);
     }
     
 }
 
-void fj::ParticleCollisionDispatcher::updatedAt(const HashValue_t &currentHash)
+void fj::ParticleCollisionDispatcher::updatedAt(const HashValue_t &currentHash, const fj::ParticleManager& particleManager)
 {
     // 走査しながらハッシュ値を計算していく. 走査と削除を並行して実行するにはイテレータをもちいたトリッキーなアルゴリズムを使うので要注意
     // ハッシュ値が変わっていたら削除してあらたなセルに追加する
@@ -43,13 +45,14 @@ void fj::ParticleCollisionDispatcher::updatedAt(const HashValue_t &currentHash)
     
     for (Particles::iterator it = std::begin(currentCell); it != std::end(currentCell);)
     {
-        const std::shared_ptr<fj::Particle> particle = *it;
-        const HashValue_t kHash = computeHash( std::cref(*particle) );
+        const fj::ParticleID& kID = *it;
+        const fj::Particle& kParticle = particleManager.search(kID);
+        const HashValue_t kHash = computeHash( kParticle );
         
         if (kHash != currentHash)
         {
             it = currentCell.erase(it);
-            m_cells[kHash].push_back(particle);
+            m_cells[kHash].push_back(kID);
         }
         else
         {
@@ -60,7 +63,7 @@ void fj::ParticleCollisionDispatcher::updatedAt(const HashValue_t &currentHash)
 
 }
 
-fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle)const
+fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle, const fj::ParticleManager& particleManager)const
 {
     const HashValue_t kHash = computeHash( particle );
     fj::Particle::NeighborParticles neighborParticles;
@@ -72,7 +75,7 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
                 
                 const Particles*const kCell = getSideCell(kHash, x, y, z);
                 if (kCell) {
-                    setNeighbors(particle, std::cref(*kCell), &neighborParticles);
+                    setNeighbors(particle, std::cref(*kCell), &neighborParticles, particleManager);
                 }
                 
             }
@@ -82,14 +85,15 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
     return neighborParticles;
 }
 
-void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Particle &particle, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles)const
+void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Particle &particle, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles, const fj::ParticleManager& particleManager)const
 {
     constexpr fj::Scalar kH2 = fj::SimulationConstant::SQUARED_H;
     
     for (const auto& neighbor : cell)
     {
+        const fj::Particle& kNeighborParticle = particleManager.search(neighbor);
         
-        fj::Scalar kDistance = (neighbor->getPosition() - particle.getPosition()).squaredNorm();
+        fj::Scalar kDistance = (kNeighborParticle.getPosition() - particle.getPosition()).squaredNorm();
         
         if (kDistance == 0) {
             continue;

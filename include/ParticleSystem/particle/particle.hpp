@@ -30,7 +30,7 @@ public:
     /**
      * 循環参照を起こさないように弱い参照で保持された近傍粒子
      */
-    typedef std::vector<std::weak_ptr<fj::Particle>> NeighborParticles;
+    typedef std::vector<fj::ParticleID> NeighborParticles;
 public:
     Particle() = delete;
     virtual~Particle() = default;

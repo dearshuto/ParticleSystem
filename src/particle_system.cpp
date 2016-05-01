@@ -51,15 +51,18 @@ void fj::ParticleSystem::stepParticlePosition(const float timestep)
 
 void fj::ParticleSystem::updateParticleNeighbor()
 {
-    getCollisionDispatcherPtr()->updated();
+    auto iterator = getParticleManager().iterator();
     
-    for (auto& particle : *getParticleManagerPtr())
+    getCollisionDispatcherPtr()->updated( getParticleManager() );
+    
+    while ( iterator->hasNext() )
     {
-        auto neighbors = getCollisionDispatcherPtr()->getNeighborParticlesAt(std::ref(*particle));
+        const fj::Particle& kParticle = iterator->next();
+        auto neighbors = getCollisionDispatcherPtr()->getNeighborParticlesAt(kParticle, getParticleManager());
         
         for (const auto& neighbor : neighbors)
         {
-            makeCollision(particle->getID(), (neighbor.lock())->getID());
+            makeCollision(kParticle.getID(), neighbor);
         }
         
     }
@@ -101,11 +104,11 @@ fj::ParticleID fj::ParticleSystem::createParticle(const fj::Vector3& position, c
     std::unique_ptr<fj::Particle> particle(new fj::Particle(kID, position));
     const std::shared_ptr<fj::Particle> sharedParticle = getParticleManagerPtr()->registerParticle( std::move(particle), movable );
     
-    getNeighborMapPtr()->registerParticle( std::cref(*sharedParticle) );
+    getNeighborMapPtr()->registerParticle( kID );
     
     if (getCollisionDispatcherPtr())
     {
-        getCollisionDispatcherPtr()->registerParticle(sharedParticle);
+        getCollisionDispatcherPtr()->registerParticle(kID, getParticleManager());
     }
     
     return kID;
