@@ -9,7 +9,9 @@
 #include <cmath>
 
 #include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
+#include <ParticleSystem/particle_manager/particle_manager.hpp>
 
 void fj::NeighborMap::registerParticle(const fj::Particle &particle)
 {
@@ -17,29 +19,27 @@ void fj::NeighborMap::registerParticle(const fj::Particle &particle)
     m_neighbors[kID].clear();
 }
 
-void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2)
+void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, const fj::ParticleID &particle2, const fj::ParticleManager& particleManager)
 {
-    const fj::ParticleID& kID1 = particle1.getID();
-    const fj::ParticleID& kID2 = particle2.getID();
-    const fj::Vector3 kDirection21 = particle1.getPosition() - particle2.getPosition();
-    const fj::Scalar kSquaredDistance = kDirection21.squaredNorm();
-    const fj::Scalar kDistance = std::sqrt( kSquaredDistance );
-    const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
+    const fj::Particle& kParticle1 =  particleManager.search(particle1);
+    const fj::Particle& kParticle2 = particleManager.search(particle2);
+    const fj::Vector3 kDirection21 = kParticle1.getPosition() - kParticle2.getPosition();
+    const fj::Scalar kDistance = kDirection21.norm();
     
-    m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
+    addNeighborInformation(particle1, particle2, kDistance, particleManager);
 }
 
-void fj::NeighborMap::addNeighborInformation(const fj::Particle &particle1, const fj::Particle &particle2, const fj::Scalar& distance)
+void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, const fj::ParticleID &particle2, const fj::Scalar& distance, const fj::ParticleManager& particleManager)
 {
-    const fj::ParticleID& kID1 = particle1.getID();
-    const fj::ParticleID& kID2 = particle2.getID();
-    const fj::Vector3 kDirection21 = particle1.getPosition() - particle2.getPosition();
+    const fj::Particle& kParticle1 = particleManager.search(particle1);
+    const fj::Particle& kParticle2 = particleManager.search(particle2);
+    const fj::Vector3 kDirection21 = kParticle1.getPosition() - kParticle2.getPosition();
     
     const fj::Scalar kDistance = distance;
     const fj::Scalar kSquaredDistance = std::pow(kDistance, 2);
     const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
     
-    m_neighbors[kID1].emplace_back(kID2, kNormalizedDirection21, kSquaredDistance, kDistance);
+    m_neighbors[particle1].emplace_back(particle2, kNormalizedDirection21, kSquaredDistance, kDistance);
 }
 
 void fj::NeighborMap::clear()

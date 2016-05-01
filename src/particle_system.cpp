@@ -113,18 +113,12 @@ fj::ParticleID fj::ParticleSystem::createParticle(const fj::Vector3& position, c
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
-    const fj::Particle& particle1 = getParticleManager().search(ID1);
-    const fj::Particle& particle2 = getParticleManager().search(ID2);
-    
-    getNeighborMapPtr()->addNeighborInformation(particle1, particle2, distance);
+    getNeighborMapPtr()->addNeighborInformation(ID1, ID2, distance, getParticleManager());
 }
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::ParticleID &ID2)
 {
-    const fj::Particle& particle1 = getParticleManager().search(ID1);
-    const fj::Particle& particle2 = getParticleManager().search(ID2);
-    
-    getNeighborMapPtr()->addNeighborInformation(particle1, particle2);
+    getNeighborMapPtr()->addNeighborInformation(ID1, ID2, getParticleManager());
 }
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)
