@@ -24,12 +24,13 @@ public:
     PenaltyForce() = delete;
     ~PenaltyForce() = default;
     
-    PenaltyForce(std::unique_ptr<fj::BBAlgorithm> bb, const fj::Scalar& K)
+    PenaltyForce(std::unique_ptr<fj::BBAlgorithm> bb, const fj::Scalar& K, const fj::Scalar offset)
     : BBAlgorithmDecorator( std::move(bb) )
     , m_K(K)
+    , m_offset(offset)
     {
         
-   }
+    }
     
     void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
     
@@ -40,6 +41,8 @@ public:
     
 private:
     fj::Scalar m_K;
+    
+    fj::Scalar m_offset;
 };
 
 #endif /* penalty_force_hpp */

@@ -17,6 +17,7 @@
 
 void fj::PenaltyForce::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
 {
+    const fj::Scalar kOffset = m_offset;
     const fj::BoundingBox::Range& kRangeX = getBoundingBox().getRangeX();
     const fj::BoundingBox::Range& kRangeY = getBoundingBox().getRangeY();
     const fj::BoundingBox::Range& kRangeZ = getBoundingBox().getRangeZ();
@@ -29,32 +30,32 @@ void fj::PenaltyForce::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
         const fj::ParticleID& kID = kParticle.getID();
         const fj::Vector3& kPosition = kParticle.getPosition();
         
-        if( fj::Scalar kIX = (kRangeX.getMin() - kPosition.x()) > 0)
+        if( fj::Scalar kIX = (kRangeX.getMin() - kPosition.x()) > kOffset)
         {
             particleSystem->addAccelAt(kID, m_K * kIX * fj::Vector3(1, 0, 0) );
         }
 
-        if( fj::Scalar kAX = (kRangeX.getMax() - kPosition.x()) < 0)
+        if( fj::Scalar kAX = (kRangeX.getMax() - kPosition.x()) < kOffset)
         {
             particleSystem->addAccelAt(kID, m_K * kAX * fj::Vector3(-1, 0, 0) );
         }
 
-        if( fj::Scalar kY = (kRangeY.getMin() - kPosition.y()) > 0)
+        if( fj::Scalar kY = (kRangeY.getMin() - kPosition.y()) > kOffset)
         {
             particleSystem->addAccelAt(kID, m_K * kY * fj::Vector3(0, 1, 0) );
         }
 
-        if( fj::Scalar kY = (kRangeY.getMax() - kPosition.y()) < 0)
+        if( fj::Scalar kY = (kRangeY.getMax() - kPosition.y()) < kOffset)
         {
             particleSystem->addAccelAt(kID, m_K * kY * fj::Vector3(0, -1, 0) );
         }
 
-        if( fj::Scalar kZ = (kRangeZ.getMin() - kPosition.z()) > 0)
+        if( fj::Scalar kZ = (kRangeZ.getMin() - kPosition.z()) > kOffset)
         {
             particleSystem->addAccelAt(kID, m_K * kZ * fj::Vector3(0, 0, 1) );
         }
 
-        if( fj::Scalar kZ = (kRangeZ.getMax() - kPosition.z()) < 0)
+        if( fj::Scalar kZ = (kRangeZ.getMax() - kPosition.z()) < kOffset)
         {
             particleSystem->addAccelAt(kID, m_K * kZ * fj::Vector3(0, 0, -1) );
         }
