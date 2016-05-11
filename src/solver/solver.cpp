@@ -14,3 +14,11 @@ void fj::Solver::addAccelAt(const fj::ParticleID &ID, const fj::Vector3 &accel)
     
     setAccelAt(ID, kVector + accel);
 }
+
+void fj::Solver::clearAccel()
+{
+    for (auto& accel: m_accelMap)
+    {
+        accel.second = fj::Vector3(0, 0, 0);
+    }
+}

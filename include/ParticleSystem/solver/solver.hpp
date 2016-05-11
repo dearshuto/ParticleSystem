@@ -30,7 +30,9 @@ public:
     virtual~Solver() = default;
     
     virtual void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) = 0;
-        
+ 
+    void clearAccel();
+    
     const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
     {
         return m_accelMap.at(ID);

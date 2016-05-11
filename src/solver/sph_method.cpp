@@ -89,7 +89,7 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
             F += PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * kKernelTerm;
         }
         
-        setAccelAt(kID, F * kParticleProperty.getInverseDensity());
+        addAccelAt(kID, F * kParticleProperty.getInverseDensity());
         F = fj::Vector3(0, 0, 0);
 
     }
