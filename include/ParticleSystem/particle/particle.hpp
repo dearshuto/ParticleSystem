@@ -41,7 +41,7 @@ public:
     
     
     Particle(const fj::ParticleID& ID, const fj::Vector3& position)
-    : m_ID(ID.getData())
+    : m_ID(ID)
     , m_mass( fj::Scalar(1) )
     , m_position(position)
     , m_velocity( fj::Vector3(0, 0, 0) )

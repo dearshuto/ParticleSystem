@@ -79,7 +79,7 @@ public:
     ~NeighborInformation() = default;
     
     NeighborInformation(const fj::ParticleID& ID, const fj::Vector3& direction, const fj::Scalar& kSquaredDistance, const fj::Scalar& distance)
-    : m_ID(ID)
+    : m_ID( ID.getData() )
     , m_direction(direction)
     , m_squaredDistance(kSquaredDistance)
     , m_distance(distance)

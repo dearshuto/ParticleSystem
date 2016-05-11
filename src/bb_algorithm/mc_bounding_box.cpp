@@ -6,6 +6,9 @@
 //
 //
 
+#include <cassert>
+#include <numeric>
+
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 #include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
@@ -28,7 +31,7 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
         
         assert(0 <= kIndex);
         
-        resetNDInterpolateValue(kIndex, 15);
+        resetNDInterpolateValue(kIndex, 3);
     }
 
 }
@@ -52,8 +55,8 @@ void fj::MCBoundingBox::setNDInterpolateValue(const int index, const int n, cons
     // 影響範囲 "H = 0.01"と仮定する
     constexpr fj::Scalar H = 0.01;
     const fj::Scalar kDivisionSizeX = getRangeX().getDivisionSize();
-    const fj::Scalar kDivisionSizeY = getRangeX().getDivisionSize();
-    const fj::Scalar kDivisionSizeZ = getRangeX().getDivisionSize();
+    const fj::Scalar kDivisionSizeY = getRangeY().getDivisionSize();
+    const fj::Scalar kDivisionSizeZ = getRangeZ().getDivisionSize();
     
     const int kX = H / kDivisionSizeX;
     const int kY = H / kDivisionSizeY;
@@ -68,6 +71,8 @@ void fj::MCBoundingBox::setNDInterpolateValue(const int index, const int n, cons
                 fj::Scalar* scalarPtr = getShiftedScalar(index, x, y, z);
                 
                 if (scalarPtr) {
+                    
+                    assert(std::isfinite(kSquaredDistance));
                     
                     if (kSquaredDistance < H*H) {
                         *scalarPtr += scalar * kWeight;
@@ -137,7 +142,7 @@ void fj::MCBoundingBox::addScalar(const int index, const fj::Scalar& scalar)
 fj::Scalar* fj::MCBoundingBox::getShiftedScalar(const int kIndex, const int x, const int y, const int z)
 {
     const int kShiftedIndex = kIndex + convertPositionToIndex(x, y, z);
-    
+
     if ((0 <= kShiftedIndex) && (kShiftedIndex < m_scalarMap.size()) ) {
         return &m_scalarMap[kShiftedIndex];
     }
