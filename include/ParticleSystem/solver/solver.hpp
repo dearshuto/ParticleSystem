@@ -38,7 +38,10 @@ public:
         return m_accelMap.at(ID);
     }
     
-    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
+    {
+        m_accelMap[ID] += accel;
+    }
     
     /**
      * 粒子の物理量を返す. マーチングキューブ法などのスカラ値を必要とする処理で利用する. ソルバに起因するスカラならなんでもいい.
