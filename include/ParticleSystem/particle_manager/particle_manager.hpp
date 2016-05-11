@@ -37,7 +37,7 @@ public:
     ParticleManager(const fj::ParticleManager& other) = delete;
     ParticleManager& operator=(const fj::ParticleManager& other) = delete;
     
-    const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
+    const fj::Particle& registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
 
     /**
      * 指定されたIDをもつ粒子を返す.
@@ -67,6 +67,12 @@ public:
     
     std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
     
+private:
+    const fj::Particle& getLastRegisteredParticle()const
+    {
+        return std::cref( *m_particles[m_particles.size() - 1] );
+    }
+    
 public:
     
     const ParticleArray& getFlowParticles()const
@@ -87,11 +93,12 @@ public:
     /**
      * ParticleManagerで使用されていないIDを返す.
      */
-    const fj::ParticleID getUnusedID()
+    fj::ParticleID getUnusedID()
     {
         // 返す値が絶対にダブらないように死守すること
         static unsigned int i = 0;
-        return fj::ParticleID(i++);
+        fj::ParticleID id(i++);
+        return id;
     }
     
 private:

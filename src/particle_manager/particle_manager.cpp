@@ -11,7 +11,7 @@
 
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable)
+const fj::Particle& fj::ParticleManager::registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable)
 {
     std::shared_ptr<fj::Particle> sharedParticle = std::move(particle);
     
@@ -28,7 +28,7 @@ const std::shared_ptr<fj::Particle> fj::ParticleManager::registerParticle(std::u
     
     }
     
-    return sharedParticle;
+    return getLastRegisteredParticle();
 }
 
 std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const

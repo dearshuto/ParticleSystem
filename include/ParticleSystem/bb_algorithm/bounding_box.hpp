@@ -9,6 +9,7 @@
 #ifndef bounding_box_hpp
 #define bounding_box_hpp
 
+#include <algorithm>
 #include <tuple>
 #include <memory>
 #include <vector>
@@ -104,19 +105,11 @@ protected:
     
     void registerInBox(const fj::Particle& particle);
     
-    int convertPositionToIndex(const fj::Vector3& position)const
-    {
-        const int kIndexX = (position.x() - getRangeX().getMin()) / getRangeX().getDivisionSize();
-        const int kIndexY = (position.y() - getRangeY().getMin()) / getRangeY().getDivisionSize();
-        const int kIndexZ = (position.z() - getRangeZ().getMin()) / getRangeZ().getDivisionSize();
-
-        return convertPositionToIndex(kIndexX, kIndexY, kIndexZ);
-    }
+    int convertPositionToIndex(const fj::Vector3& position)const;
     
-    int convertPositionToIndex(const int x, const int y, const int z)const
-    {
-        return x + getRangeX().getResolusion() * y + getRangeX().getResolusion() * getRangeY().getResolusion() * z;
-    }
+    int convertPositionToIndex(const int x, const int y, const int z)const;
+    
+    int clamp(const int value, const Range& range)const;
     
 public:
 

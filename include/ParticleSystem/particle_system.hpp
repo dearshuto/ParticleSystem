@@ -92,7 +92,7 @@ public:
      * @param position 粒子の位置
      * @param movable 移動可能の判断
      */
-    fj::ParticleID createParticle(const fj::Vector3& position, const bool movable = true);
+    const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
 
     /**
      * 等置面を定義する.
