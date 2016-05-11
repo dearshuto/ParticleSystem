@@ -30,13 +30,18 @@ public:
     virtual~Solver() = default;
     
     virtual void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) = 0;
-        
+ 
+    void clearAccel();
+    
     const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
     {
         return m_accelMap.at(ID);
     }
     
-    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
+    {
+        m_accelMap[ID] += accel;
+    }
     
     /**
      * 粒子の物理量を返す. マーチングキューブ法などのスカラ値を必要とする処理で利用する. ソルバに起因するスカラならなんでもいい.

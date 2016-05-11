@@ -8,9 +8,10 @@
 
 #include <ParticleSystem/solver/solver.hpp>
 
-void fj::Solver::addAccelAt(const fj::ParticleID &ID, const fj::Vector3 &accel)
+void fj::Solver::clearAccel()
 {
-    const fj::Vector3& kVector = getAccellAt(ID);
-    
-    setAccelAt(ID, kVector + accel);
+    for (auto& accel: m_accelMap)
+    {
+        accel.second = fj::Vector3(0, 0, 0);
+    }
 }
