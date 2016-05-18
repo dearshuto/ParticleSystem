@@ -9,11 +9,11 @@
 #include <FUJIMath/type/scalar.h>
 
 #include <ParticleSystem/particle_system.hpp>
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
-#include <ParticleSystem/bb_algorithm/penalty_force.hpp>
+#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/bb_algorithm/penalty_force.hpp>
 
 void fj::PenaltyForce::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
 {

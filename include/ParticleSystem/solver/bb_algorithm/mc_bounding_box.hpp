@@ -11,8 +11,8 @@
 
 #include <vector>
 
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/surface_construction/marching_cubes_interface.h>
+#include "bounding_box.hpp"
+#include <ParticleSystem/solver/surface_construction/marching_cubes_interface.h>
 
 namespace fj {
     class SPHMethod;

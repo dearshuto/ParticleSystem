@@ -29,6 +29,11 @@ public:
     Solver() = default;
     virtual~Solver() = default;
     
+    virtual void execute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)
+    {
+        
+    }
+    
     virtual void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) = 0;
  
     void clearAccel();

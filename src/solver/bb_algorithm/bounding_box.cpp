@@ -13,7 +13,7 @@
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 
 void fj::BoundingBox::execute(fj::ParticleSystem *particleSystem)
 {

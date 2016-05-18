@@ -10,10 +10,10 @@
 
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/type/mesh.hpp>
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
-#include <ParticleSystem/surface_construction/marching_cubes.hpp>
+#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/bb_algorithm/mc_bounding_box.hpp>
+#include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>
 
 //These tables are used so that everything can be done in little loops that you can look at all at once
 // rather than in pages and pages of unrolled code.

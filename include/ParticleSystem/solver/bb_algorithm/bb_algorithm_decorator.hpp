@@ -12,8 +12,8 @@
 #include <functional>
 #include <memory>
 
-#include <ParticleSystem/bb_algorithm/bb_algorithm.h>
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
+#include "bb_algorithm.h"
+#include "bounding_box.hpp"
 
 namespace fj {
     class BoundingBox;

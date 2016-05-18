@@ -29,33 +29,38 @@ FILE(GLOB_RECURSE particle_managers
 )
 
 FILE(GLOB_RECURSE solvers
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/*.h
-	${CMAKE_SOURCE_DIR}/src/solver/*.cpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/solver.hpp
+	${CMAKE_SOURCE_DIR}/src/solver/solver.cpp
 )
 
-FILE(GLOB_RECURSE surface_constructions
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/surface_construction/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/surface_construction/*.h
-	${CMAKE_SOURCE_DIR}/src/surface_construction/*.cpp
+FILE(GLOB_RECURSE bb_algorithms
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/bb_algorithm/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/bb_algorithm/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/bb_algorithm/*.cpp
 )
 
 FILE(GLOB_RECURSE collision_dispatchers
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/collision_dispatcher/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/collision_dispatcher/*.h
-	${CMAKE_SOURCE_DIR}/src/collision_dispatcher/*.cpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/collision_dispatcher/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/collision_dispatcher/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/collision_dispatcher/*.cpp
+)
+
+FILE(GLOB_RECURSE continuum_solvers
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/continuum_solver/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/continuum_solver/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/continuum_solver/*.cpp
+)
+
+FILE(GLOB_RECURSE surface_constructions
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/surface_construction/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/surface_construction/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/surface_construction/*.cpp
 )
 
 FILE(GLOB_RECURSE types
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/type/*.hpp
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/type/*.h
 	${CMAKE_SOURCE_DIR}/src/type/*.cpp
-)
-
-FILE(GLOB_RECURSE bb_algorithms
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/bb_algorithm/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/bb_algorithm/*.h
-	${CMAKE_SOURCE_DIR}/src/bb_algorithm/*.cpp
 )
 
 FILE(GLOB_RECURSE external_math_sources
@@ -67,20 +72,22 @@ SOURCE_GROUP(particle_system FILES ${particle_systems})
 SOURCE_GROUP(particle FILES ${particles})
 SOURCE_GROUP(particle_manager FILES ${particle_managers})
 SOURCE_GROUP(solver FILES ${solvers})
-SOURCE_GROUP(surface_construction FILES ${surface_constructions})
-SOURCE_GROUP(collision_dispatcher FILES ${collision_dispatchers})
+SOURCE_GROUP(solver\\bb_algorithm FILES ${bb_algorithms})
+SOURCE_GROUP(solver\\collision_dispatcher FILES ${collision_dispatchers})
+SOURCE_GROUP(solver\\continuum_solver FILES ${continuum_solvers})
+SOURCE_GROUP(solver\\surface_construction FILES ${surface_constructions})
 SOURCE_GROUP(type FILES ${types})
-SOURCE_GROUP(bb_algorithm FILES ${bb_algorithms})
 
-SOURCE_GROUP(external_math FILES ${external_math_sources})
+SOURCE_GROUP(type\\external_math FILES ${external_math_sources})
 
 add_library(particle_system STATIC
 	${particle_systems}
 	${particles}
 	${particle_managers}
-	${solver}
+	${solvers}
 	${surface_constructions}
 	${collision_dispatchers}
+	${continuum_solvers}
 	${types}
 	${bb_algorithms}
 	${external_math_sources}

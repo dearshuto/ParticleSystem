@@ -13,13 +13,13 @@
 #include <tuple>
 #include <vector>
 
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
-#include <ParticleSystem/particle_manager/particle_manager.hpp>
-#include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/surface_construction/marching_cubes.hpp>
-#include <ParticleSystem/solver/solver.hpp>
-#include <ParticleSystem/type/mesh.hpp>
+#include "particle_manager/particle_manager.hpp"
+#include "particle_manager/neighbor_map.hpp"
+#include "solver/bb_algorithm/bounding_box.hpp"
+#include "solver/collision_dispatcher/particle_collision_dispatcher.hpp"
+#include "solver/surface_construction/marching_cubes.hpp"
+#include "solver/solver.hpp"
+#include "type/mesh.hpp"
 
 namespace fj {
     class Particle;
@@ -101,6 +101,8 @@ public:
     {
         m_meshes.emplace_back(level);
     }
+    
+    bool hasNextSurfaceTriangle()const;
     
     /**
      * 粒子間の衝突を作る

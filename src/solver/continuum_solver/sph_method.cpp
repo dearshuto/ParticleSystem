@@ -13,7 +13,7 @@
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
-#include <ParticleSystem/solver/sph_method.hpp>
+#include <ParticleSystem/solver/continuum_solver/sph_method.hpp>
 
 const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64) * M_PI * std::pow( H, fj::Scalar(9) ));
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));

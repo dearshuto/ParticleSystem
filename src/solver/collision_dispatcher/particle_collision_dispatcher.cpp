@@ -15,7 +15,7 @@
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/type/simulation_constant.hpp>
 
-#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
+#include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 
 void fj::ParticleCollisionDispatcher::registerParticle(const fj::ParticleID& particleID, const fj::ParticleManager& particleManager)
 {

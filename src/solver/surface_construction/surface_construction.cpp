@@ -7,7 +7,7 @@
 //
 
 #include <ParticleSystem/particle_system.hpp>
-#include <ParticleSystem/surface_construction/surface_construction.hpp>
+#include <ParticleSystem/solver/surface_construction/surface_construction.hpp>
 #include <ParticleSystem/type/mesh.hpp>
 
 void fj::SurfaceConstruction::executeBBAlgorithm(fj::ParticleSystem *particleSystem)

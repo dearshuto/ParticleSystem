@@ -12,7 +12,7 @@
 #include <memory>
 
 #include <FUJIMath/type/scalar.h>
-#include <ParticleSystem/bb_algorithm/bb_algorithm_decorator.hpp>
+#include <ParticleSystem/solver/bb_algorithm/bb_algorithm_decorator.hpp>
 
 namespace fj {
     class Mesh;

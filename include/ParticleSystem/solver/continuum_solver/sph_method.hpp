@@ -16,6 +16,7 @@
 #include <unordered_map>
 
 #include <ParticleSystem/solver/solver.hpp>
+#include "continuum_solver.hpp"
 
 namespace fj {
     class Particle;
@@ -23,7 +24,7 @@ namespace fj {
     class SPHMethod;
 }
 
-class fj::SPHMethod : public fj::Solver
+class fj::SPHMethod : public fj::ContinuumSolver
 {
     class SPHProperty;
 public:

@@ -8,7 +8,7 @@
 
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/solver/blood_sph_method.hpp>
+#include <ParticleSystem/solver/continuum_solver/blood_sph_method.hpp>
 
 void fj::BloodSPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
 {

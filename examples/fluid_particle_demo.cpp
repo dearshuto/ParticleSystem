@@ -9,12 +9,12 @@
 #include <iostream>
 #include <fstream>
 
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
+#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/continuum_solver/sph_method.hpp>
+#include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/type/simulation_constant.hpp>
-#include <ParticleSystem/solver/sph_method.hpp>
 
 int main(int argc, char** argv)
 {
@@ -24,15 +24,18 @@ int main(int argc, char** argv)
     
     fj::BoundingBox::Range kRange(0, 0.05, 0.001);
     std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
-    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
+//    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
     
     std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
+    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(bb));
+//    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
+    
     
     particleSystem.createIsosurface(150);
     particleSystem.createIsosurface(170);
-    
+    particleSystem.enableGravity();
+    particleSystem.setGravity(fj::Vector3(0, 100000, 0));
     
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
@@ -42,7 +45,7 @@ int main(int argc, char** argv)
         }
     }
     
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 100; i++)
     {
         auto iterator = particleSystem.getParticleManager().iterator();
         
