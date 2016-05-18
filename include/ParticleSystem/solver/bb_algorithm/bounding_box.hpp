@@ -75,8 +75,9 @@ public:
     BoundingBox() = delete;
     ~BoundingBox() = default;
     
-    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange)
-    : m_xRange(xRange)
+    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange, const unsigned int priority = 0)
+    : fj::BBAlgorithm(priority)
+    , m_xRange(xRange)
     , m_yRange(yRange)
     , m_zRange(zRange)
 
@@ -84,7 +85,7 @@ public:
         m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
     
-    void execute(fj::ParticleSystem* particleSystem)override;
+    virtual void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override;
     
     const fj::BoundingBox& getBoundingBox()const override
     {

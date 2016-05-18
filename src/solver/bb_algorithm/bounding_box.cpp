@@ -15,7 +15,7 @@
 
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 
-void fj::BoundingBox::execute(fj::ParticleSystem *particleSystem)
+void fj::BoundingBox::execute(const fj::Scalar& timestep, fj::ParticleSystem *particleSystem)
 {
     clear();
     update( particleSystem->getParticleManager() );

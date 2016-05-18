@@ -32,7 +32,7 @@ public:
     {
         m_scalarMap.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
     }
-    void execute(fj::ParticleSystem* particleSystem) override;
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
 protected:
     void clearScalarMap(const fj::ParticleManager& particleManager);

@@ -29,17 +29,18 @@ public:
     BBAlgorithmDecorator() = delete;
     virtual ~BBAlgorithmDecorator() = default;
     
-    BBAlgorithmDecorator(std::unique_ptr<fj::BBAlgorithm> bb)
-    : m_bbAlgorithm( std::move(bb) )
+    BBAlgorithmDecorator(std::unique_ptr<fj::BBAlgorithm> bb, const unsigned int priority = 0)
+    : fj::BBAlgorithm(priority)
+    , m_bbAlgorithm( std::move(bb) )
     , m_tickSkipCount(0)
     , m_TickSkipNum(1)
     {
         
     }
     
-    void execute(fj::ParticleSystem* particleSystem)override
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override
     {
-        getBBPAlgorithPtr()->execute(particleSystem);
+        getBBPAlgorithPtr()->execute(timestep, particleSystem);
         
         if ( getTickSkipNum() <= (++m_tickSkipCount) )
         {

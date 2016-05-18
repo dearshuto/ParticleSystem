@@ -23,14 +23,11 @@ namespace fj {
 class fj::BBAlgorithm : public fj::Solver
 {
 public:
+    BBAlgorithm() = delete;
     virtual ~BBAlgorithm() = default;
     
-    void execute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override
-    {
-        
-    }
-    
-    void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)override
+    BBAlgorithm(const unsigned int priority)
+    : fj::Solver(priority)
     {
         
     }
@@ -39,8 +36,6 @@ public:
     {
         
     }
-    
-    virtual void execute(fj::ParticleSystem* particleSystem) = 0;
     
     virtual const fj::BoundingBox& getBoundingBox()const = 0;
 };

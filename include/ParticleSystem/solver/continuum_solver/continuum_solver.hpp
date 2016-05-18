@@ -17,7 +17,15 @@ namespace fj {
 
 class fj::ContinuumSolver : public fj::Solver
 {
+public:
+    ContinuumSolver() = delete;
+    virtual~ContinuumSolver() = default;
     
+    ContinuumSolver(const unsigned int priority = 0)
+    : fj::Solver(priority)
+    {
+        
+    }
 };
 
 #endif /* continuum_solver_hpp */

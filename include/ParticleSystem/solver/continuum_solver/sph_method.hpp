@@ -28,10 +28,20 @@ class fj::SPHMethod : public fj::ContinuumSolver
 {
     class SPHProperty;
 public:
-    SPHMethod() = default;
+    SPHMethod()
+    : SPHMethod(0)
+    {
+        
+    }
     virtual~SPHMethod() = default;
     
-    void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
+    SPHMethod(const unsigned int priority)
+    : fj::ContinuumSolver(priority)
+    {
+        
+    }
+    
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
     const fj::Scalar calculateScalar(const fj::ParticleID& ID)const override;
     

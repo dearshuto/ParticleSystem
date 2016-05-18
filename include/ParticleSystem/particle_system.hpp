@@ -38,23 +38,24 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
+    ParticleSystem(std::unique_ptr<fj::Solver> solver)
     : m_enableGravity(false)
     , m_gravity( fj::Vector3(0, -9.8, 0) )
     {
+        m_neighborMap = std::make_shared<fj::NeighborMap>();
         m_solver = std::move(solver);
-        m_collisionDispatcher =  std::move(collisionDispatcher);
-        m_bbAlgorithm = std::move(bb);
-    }
-    
-    
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
-    : ParticleSystem(std::move(solver), nullptr, std::move(bb))
-    {
+        
+        m_solvers.push_back(m_neighborMap);
+        m_solvers.push_back(m_solver);
     }
 
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
+    
+    /**
+     * 毎フレーム更新する処理を登録する
+     */
+    void addSolver(std::unique_ptr<fj::Solver> solver);
     
     void enableGravity()
     {
@@ -167,11 +168,6 @@ private:
      */
     void updateParticleNeighbor();
 
-    /**
-     * NeighborMapに登録されている近傍情報をすべて消去する
-     */
-    void clearParticleNeighbors();
-
 //getters & setters
 public:
 
@@ -190,14 +186,9 @@ public:
         return m_particleManager;
     }
     
-    const fj::ParticleCollisionDispatcher& getCollisionDispatcher()const
-    {
-        return *m_collisionDispatcher;
-    }
-    
     const fj::NeighborMap& getNeighborMap()const
     {
-        return m_neighborMap;
+        return std::cref(*m_neighborMap);
     }
     
     const fj::Solver& getSolver()const
@@ -217,22 +208,17 @@ public:
     
 protected:
     
-    std::unique_ptr<fj::ParticleCollisionDispatcher>& getCollisionDispatcherPtr()
-    {
-        return m_collisionDispatcher;
-    }
-
     fj::ParticleManager* getParticleManagerPtr()
     {
         return &m_particleManager;
     }
     
-    fj::NeighborMap*const getNeighborMapPtr()
+    std::shared_ptr<fj::NeighborMap>& getNeighborMapPtr()
     {
-        return &m_neighborMap;
+        return m_neighborMap;
     }
     
-    std::unique_ptr<fj::Solver>& getSolverPtr()
+    std::shared_ptr<fj::Solver>& getSolverPtr()
     {
         return m_solver;
     }
@@ -250,22 +236,17 @@ private:
     /**
      * 粒子法アルゴリズム
      */
-    std::unique_ptr<fj::Solver> m_solver;
+    std::shared_ptr<fj::Solver> m_solver;
+
+    std::vector<fj::Mesh> m_meshes;
+    
+    std::vector<std::shared_ptr<fj::Solver>> m_solvers;
     
     /**
      * 近傍情報の管理
      */
-    fj::NeighborMap m_neighborMap;
+    std::shared_ptr<fj::NeighborMap> m_neighborMap;
     
-    /**
-     * 独自実装の近傍探索アルゴリズム
-     * 近傍粒子探索を外部にいたくするときは必要ない
-     */
-    std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
-    
-    std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
-
-    std::vector<fj::Mesh> m_meshes;
 };
 
 #endif /* particle_system_hpp */

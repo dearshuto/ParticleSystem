@@ -10,6 +10,7 @@
 #include <math.h> //for using M_PI
 #include <cmath>
 
+#include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
@@ -19,10 +20,13 @@ const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64)
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 const fj::Scalar fj::SPHMethod::LaplacianKernel = fj::Scalar(45) / (fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 
-void fj::SPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
+void fj::SPHMethod::execute(const fj::Scalar& timestep, fj::ParticleSystem* particlesystem)
 {
-    updateProperty(particleManager, neighborMap);
-    updateAccel(particleManager, neighborMap);
+    const fj::ParticleManager& kParticleManager = particlesystem->getParticleManager();
+    const fj::NeighborMap& kNeighborMap = particlesystem->getNeighborMap();
+    
+    updateProperty(kParticleManager, kNeighborMap);
+    updateAccel(kParticleManager, kNeighborMap);
 }
 
 void fj::SPHMethod::updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)

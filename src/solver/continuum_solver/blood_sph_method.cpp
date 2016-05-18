@@ -6,14 +6,15 @@
 //
 //
 
+#include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/solver/continuum_solver/blood_sph_method.hpp>
 
-void fj::BloodSPHMethod::compute(const fj::Scalar& timestep, const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
+void fj::BloodSPHMethod::execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
-    Super::compute(timestep, particleManager, neighborMap);
-    updateViscosityMap(timestep, particleManager);
+    Super::execute(timestep, particleSystem);
+    updateViscosityMap(timestep, particleSystem->getParticleManager());
 }
 
 void fj::BloodSPHMethod::updateViscosityMap(const fj::Scalar& timestep, const fj::ParticleManager &particleManager)

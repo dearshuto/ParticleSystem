@@ -31,7 +31,7 @@ public:
     /**
      * 時間変化する情報のシミュレーション
      */
-    void compute(const fj::Scalar& timestep, const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap) override;
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override;
 
     
     fj::Scalar getViscosity(const fj::ParticleID& ID)const override

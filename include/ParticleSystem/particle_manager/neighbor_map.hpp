@@ -19,6 +19,7 @@
 #include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Particle;
@@ -30,14 +31,34 @@ namespace fj {
 /**
  * 近傍の情報の監視役
  */
-class fj::NeighborMap
+class fj::NeighborMap : public fj::Solver
 {
     class NeighborInformation;
 public:
     typedef std::vector<NeighborInformation> NeighborInformations;
 public:
-    NeighborMap() = default;
+    NeighborMap()
+    : NeighborMap(0)
+    {
+        
+    }
     ~NeighborMap() = default;
+    
+    NeighborMap(const unsigned int priority)
+    : fj::Solver(priority)
+    {
+        
+    }
+    
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+    
+    /**
+     * ParticleSystemに登録されている全てのSolverのexecuteを呼び出したあとに呼ばれる関数. この関数も優先度に従って呼ばれる.
+     */
+    void postexecute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override
+    {
+        m_neighbors.clear();
+    }
     
     /**
      * 衝突判定対象となる粒子を登録する

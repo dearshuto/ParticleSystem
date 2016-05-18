@@ -13,9 +13,9 @@
 #include <ParticleSystem/solver/solver.hpp>
 #include <ParticleSystem/solver/bb_algorithm/mc_bounding_box.hpp>
 
-void fj::MCBoundingBox::execute(fj::ParticleSystem* particleSystem)
+void fj::MCBoundingBox::execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
-    Super::execute(particleSystem);
+    Super::execute(timestep, particleSystem);
     
     clearScalarMap(particleSystem->getParticleManager());
     updateScalarMap(particleSystem->getParticleManager(), particleSystem->getSolver());

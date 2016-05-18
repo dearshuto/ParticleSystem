@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     
     std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(bb));
+    fj::ParticleSystem particleSystem(std::move(solver));
 //    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
     
