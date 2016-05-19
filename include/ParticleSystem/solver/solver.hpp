@@ -23,7 +23,7 @@ namespace fj {
 }
 
 /**
- * 各粒子の加速度を求める. 
+ * 毎フレーム更新する優先順序付きの処理。
  */
 class fj::Solver
 {
@@ -58,19 +58,14 @@ public:
     {
         // デフォルトは空
     }
-     
-//    virtual void clearAccel() = 0;
-//    
-//    virtual const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const = 0;
-//    
-//    virtual void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel) = 0;
     
     /**
      * 粒子の物理量を返す. マーチングキューブ法などのスカラ値を必要とする処理で利用する. ソルバに起因するスカラならなんでもいい.
      */
     virtual const fj::Scalar calculateScalar(const fj::ParticleID& ID)const
     {
-        
+        // とりあえず
+        return 0;
     }
     
 public:
@@ -81,6 +76,9 @@ public:
     
 private:
     
+    /**
+     * 処理の優先度。
+     */
     const fj::Solver::Priority m_priority;
 };
 

@@ -15,6 +15,9 @@ namespace fj {
     class ContinuumSolver;
 }
 
+/**
+ * 連続体としての解法. 粒子の加速度を更新していき、ParticleIDをキーとしたハッシュマップで保管する.
+ */
 class fj::ContinuumSolver : public fj::Dynamics
 {
 public:

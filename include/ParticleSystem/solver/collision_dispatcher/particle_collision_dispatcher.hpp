@@ -86,7 +86,9 @@ private:
      */
     const Particles*const getSideCell(const HashValue_t& hash, const int x, const int y, const int z)const;
     
-    
+    /**
+     * 粒子の位置からハッシュマップを算出する
+     */
     HashValue_t computeHash(const fj::Particle& particle)const;
     
     /**
@@ -127,6 +129,9 @@ private:
     
     std::vector<Particles> m_cells;
     
+    /**
+     * 計算済みのハッシュ値を保管しておくためのマップ. 検索を毎フレーム行うので, 整列を自動でしてくれるstd::mapを採用する.
+     */
     std::map<fj::ParticleID, HashValue_t> m_hashTable;
 };
 

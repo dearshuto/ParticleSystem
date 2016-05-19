@@ -15,6 +15,9 @@ namespace fj {
     class Dynamics;
 }
 
+/**
+ * 力学の処理
+ */
 class fj::Dynamics : public fj::Solver
 {
 public:
@@ -29,6 +32,7 @@ public:
     
     void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override
     {
+        // Solverとして呼ばれる処理をDynamicsに変換する。継承が深くなるとわかりにくくなるので。
         executeDynamics(timestep, particleSystem);
     }
     

@@ -19,6 +19,9 @@ namespace fj {
     class GravityForce;
 }
 
+/**
+ * 一定の方向に力を与える場
+ */
 class fj::GravityForce : public fj::Dynamics
 {
 public:
