@@ -10,28 +10,45 @@
 #define gravity_force_hpp
 
 #include <functional>
+#include <memory>
 
 #include <FUJIMath/type/vector3.hpp>
-#include <ParticleSystem/solver/solver.hpp>
+#include <ParticleSystem/solver/dynamics.hpp>
 
 namespace fj {
     class GravityForce;
 }
 
-class fj::GravityForce : public fj::Solver
+class fj::GravityForce : public fj::Dynamics
 {
 public:
     GravityForce() = delete;
     ~GravityForce() = default;
     
-    GravityForce(const fj::Vector3& vector)
-    : fj::Solver( fj::Solver::Priority::kAdditionalSimulation )
+    GravityForce(std::unique_ptr<fj::Dynamics> dynamics, const fj::Vector3& vector)
+    : fj::Dynamics( fj::Solver::Priority::kSimulation )
     , m_gravity(vector)
+    , m_dynamics( std::move(dynamics) )
     {
         
     }
     
-    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override;
+    void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override;
+    
+    void clearAccel() override
+    {
+        m_dynamics->clearAccel();
+    }
+    
+    const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const override
+    {
+        return m_dynamics->getAccellAt(ID);
+    }
+    
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)override
+    {
+        m_dynamics->addAccelAt(ID, accel);
+    }
     
 public:
     
@@ -42,6 +59,8 @@ public:
     
 private:
     fj::Vector3 m_gravity;
+    
+    std::unique_ptr<fj::Dynamics> m_dynamics;
 };
 
 #endif /* gravity_force_hpp */

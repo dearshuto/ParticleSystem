@@ -41,7 +41,7 @@ public:
         
     }
     
-    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+    void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
     const fj::Scalar calculateScalar(const fj::ParticleID& ID)const override;
     

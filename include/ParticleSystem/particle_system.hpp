@@ -19,6 +19,7 @@
 #include "solver/collision_dispatcher/particle_collision_dispatcher.hpp"
 #include "solver/surface_construction/marching_cubes.hpp"
 #include "solver/solver.hpp"
+#include "solver/dynamics.hpp"
 #include "type/mesh.hpp"
 
 namespace fj {
@@ -38,10 +39,10 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver)
+    ParticleSystem(std::unique_ptr<fj::Dynamics> solver)
     {
-        m_solver = std::move(solver);
-        m_solvers.push_back(m_solver);
+        m_dynamics = std::move(solver);
+        m_solvers.push_back(m_dynamics);
     }
 
     
@@ -123,7 +124,7 @@ public:
      */
     const fj::Vector3& getAppliedAccel(const fj::ParticleID& ID)const
     {
-        return m_solver->getAccellAt(ID);
+        return getSolver().getAccellAt(ID);
     }
     
     /**
@@ -155,9 +156,9 @@ public:
         return std::cref(m_neighborMap);
     }
     
-    const fj::Solver& getSolver()const
+    const fj::Dynamics& getSolver()const
     {
-        return std::cref(*m_solver);
+        return std::cref(*m_dynamics);
     }
  
     const std::vector<fj::Mesh>& getMeshes()const
@@ -182,9 +183,9 @@ protected:
         return &m_neighborMap;
     }
     
-    std::shared_ptr<fj::Solver>& getSolverPtr()
+    std::shared_ptr<fj::Dynamics>& getSolverPtr()
     {
-        return m_solver;
+        return m_dynamics;
     }
         
 private:
@@ -197,7 +198,7 @@ private:
     /**
      * 粒子法アルゴリズム
      */
-    std::shared_ptr<fj::Solver> m_solver;
+    std::shared_ptr<fj::Dynamics> m_dynamics;
 
     std::vector<fj::Mesh> m_meshes;
     

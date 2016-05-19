@@ -32,15 +32,14 @@ void fj::ParticleSystem::addSolver(std::unique_ptr<fj::Solver> solver)
 
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
-    
     for (const auto& solver : m_solvers)
     {
-        solver->execute(timestep, this);
+        solver->postexecute(timestep, this);
     }
     
     for (const auto& solver : m_solvers)
     {
-        solver->postexecute(timestep, this);
+        solver->execute(timestep, this);
     }
     
     getNeighborMapPtr()->clear();

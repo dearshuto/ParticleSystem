@@ -24,18 +24,18 @@ int main(int argc, char** argv)
     const fj::Scalar kBLockSize = kParticleRadius * 5;
     
     fj::BoundingBox::Range kRange(0, 0.05, 0.001);
-    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
+//    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
 //    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
     
     std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    std::unique_ptr<fj::GravityForce> gravity(new fj::GravityForce(fj::Vector3(0, -9.8, 0)));
-    fj::ParticleSystem particleSystem(std::move(solver));
+    std::unique_ptr<fj::GravityForce> gravity(new fj::GravityForce(std::move(solver), fj::Vector3(0, -9.8, 0)));
+//    fj::ParticleSystem particleSystem(std::move(solver));
+    fj::ParticleSystem particleSystem(std::move(gravity));
 //    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
-    particleSystem.addSolver( std::move(collisionDispatcher) );
-    particleSystem.addSolver( std::move(bb) );
-    particleSystem.addSolver( std::move(gravity) );
+//    particleSystem.addSolver( std::move(collisionDispatcher) );
+//    particleSystem.addSolver( std::move(bb) );
     
     particleSystem.createIsosurface(150);
     particleSystem.createIsosurface(170);

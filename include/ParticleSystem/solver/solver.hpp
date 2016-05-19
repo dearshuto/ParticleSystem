@@ -9,6 +9,7 @@
 #ifndef solver_hpp
 #define solver_hpp
 
+#include <cassert>
 #include <unordered_map>
 
 #include <FUJIMath/type/vector3.hpp>
@@ -58,17 +59,11 @@ public:
         // デフォルトは空
     }
      
-    void clearAccel();
-    
-    const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
-    {
-        return m_accelMap.at(ID);
-    }
-    
-    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
-    {
-        m_accelMap[ID] += accel;
-    }
+//    virtual void clearAccel() = 0;
+//    
+//    virtual const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const = 0;
+//    
+//    virtual void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel) = 0;
     
     /**
      * 粒子の物理量を返す. マーチングキューブ法などのスカラ値を必要とする処理で利用する. ソルバに起因するスカラならなんでもいい.
@@ -78,12 +73,6 @@ public:
         
     }
     
-protected:
-    void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
-    {
-        m_accelMap[ID] = accel;
-    }
-    
 public:
     fj::Solver::Priority getPriority()const
     {
@@ -91,7 +80,6 @@ public:
     }
     
 private:
-    std::unordered_map<fj::ParticleID, fj::Vector3> m_accelMap;
     
     const fj::Solver::Priority m_priority;
 };

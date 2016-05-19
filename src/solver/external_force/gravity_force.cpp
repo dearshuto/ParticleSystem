@@ -11,8 +11,10 @@
 
 #include <ParticleSystem/solver/external_force/gravity_force.hpp>
 
-void fj::GravityForce::execute(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
+void fj::GravityForce::executeDynamics(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {
+    m_dynamics->executeDynamics(timestep, particleSystem);
+    
     const fj::ParticleManager& kParticleManager = particleSystem->getParticleManager();
     auto iterator = kParticleManager.iterator();
     
@@ -21,6 +23,6 @@ void fj::GravityForce::execute(const fj::Scalar &timestep, fj::ParticleSystem *p
         const fj::Particle& kParticle = iterator->next();
         const fj::ParticleID& kID = kParticle.getID();
         
-        addAccelAt(kID, getGravity());
+        m_dynamics->addAccelAt(kID, getGravity());
     }
 }
