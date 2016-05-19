@@ -9,6 +9,7 @@
 #ifndef particle_collision_dispatcher_hpp
 #define particle_collision_dispatcher_hpp
 
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -19,7 +20,7 @@
 namespace fj {
     class Particle;
     class ParticleManager;
-    
+    class ParticleSystem;
     class ParticleCollisionDispatcher;
 }
 
@@ -44,15 +45,39 @@ public:
         m_cells.resize(width * height * depth);
     }
         
-    void registerParticle(const fj::ParticleID& particle, const fj::ParticleManager& particleManager);
-    
     void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
-    
-    fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle, const fj::ParticleManager& particleManager)const;
     
 private:
     
-    void updated(const fj::ParticleManager& particleManager);
+    /**
+     * 全粒子において所属するセルを更新する
+     */
+    void update(const fj::ParticleManager& particleManager);
+    
+    /**
+     * ハッシュ値をもとに所属セルの更新作業を行う
+     */
+    void updateAt(const HashValue_t& currentHash, const fj::Particle& particle);
+    
+    /**
+     * セルの所属情報をもとに衝突関係を作る
+     */
+    void makeCollision(fj::ParticleSystem* particleSystem)const;
+    
+    /**
+     * 引数に渡された粒子が衝突判定の対象となっているかを確認する
+     */
+    bool has(const fj::Particle& particle)const
+    {
+        if(m_hashTable.find(particle.getID()) == std::end(m_hashTable))
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle, const fj::ParticleManager& particleManager)const;
     
     void setNeighbors(const fj::Particle& particle, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles, const fj::ParticleManager& particleManager)const;
     
@@ -61,7 +86,6 @@ private:
      */
     const Particles*const getSideCell(const HashValue_t& hash, const int x, const int y, const int z)const;
     
-    void updatedAt(const HashValue_t& currentHash, const fj::ParticleManager& particleManager);
     
     HashValue_t computeHash(const fj::Particle& particle)const;
     
@@ -102,6 +126,8 @@ private:
     const fj::Scalar m_blockSize;
     
     std::vector<Particles> m_cells;
+    
+    std::map<fj::ParticleID, HashValue_t> m_hashTable;
 };
 
 #endif /* particle_collision_dispatcher_hpp */

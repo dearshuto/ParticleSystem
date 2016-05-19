@@ -18,55 +18,71 @@
 
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 
-void fj::ParticleCollisionDispatcher::registerParticle(const fj::ParticleID& particleID, const fj::ParticleManager& particleManager)
-{
-    const fj::Particle& kParticle = particleManager.search(particleID);
-    const HashValue_t kHash = computeHash( kParticle );
-    
-    m_cells[kHash].push_back(particleID);
-}
 
 void fj::ParticleCollisionDispatcher::execute(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {
-    updated( particleSystem->getParticleManager() );
+    update( particleSystem->getParticleManager() );
+    makeCollision(particleSystem);
 }
 
-void fj::ParticleCollisionDispatcher::updated(const fj::ParticleManager& particleManager)
+void fj::ParticleCollisionDispatcher::update(const fj::ParticleManager& particleManager)
 {
-    const size_t kCellSize = m_cells.size();
+    auto iterator = particleManager.iterator();
     
-    for (int i = 0; i < kCellSize; i++)
+    while (iterator->hasNext())
     {
-        updatedAt(i, particleManager);
-    }
-    
-}
-
-void fj::ParticleCollisionDispatcher::updatedAt(const HashValue_t &currentHash, const fj::ParticleManager& particleManager)
-{
-    // 走査しながらハッシュ値を計算していく. 走査と削除を並行して実行するにはイテレータをもちいたトリッキーなアルゴリズムを使うので要注意
-    // ハッシュ値が変わっていたら削除してあらたなセルに追加する
-    
-    Particles& currentCell = m_cells[currentHash];
-    
-    for (Particles::iterator it = std::begin(currentCell); it != std::end(currentCell);)
-    {
-        const fj::ParticleID& kID = *it;
-        const fj::Particle& kParticle = particleManager.search(kID);
-        const HashValue_t kHash = computeHash( kParticle );
+        const fj::Particle& kParticle = iterator->next();
+        const fj::ParticleID& kID = kParticle.getID();
+        const HashValue_t kHash = computeHash(kParticle);
         
-        if (kHash != currentHash)
+        if( this->has(kParticle) )
         {
-            it = currentCell.erase(it);
-            m_cells[kHash].push_back(kID);
+            updateAt(kHash, kParticle);
         }
         else
         {
-            it++;
+            m_hashTable[kID] = kHash;
+            m_cells[kHash].push_back(kID);
+        }
+
+    }
+}
+
+void fj::ParticleCollisionDispatcher::updateAt(const HashValue_t &currentHash, const fj::Particle& particle)
+{
+    // ハッシュ値が変わっていたら、所属するセルを変更する
+    
+    const fj::ParticleID& kID = particle.getID();
+    const HashValue_t& kPreviousHash = m_hashTable[kID];
+    
+    if (kPreviousHash != currentHash)
+    {
+        const Particles& kPreviousCell = m_cells[kPreviousHash];
+        const auto& found = std::find(std::begin(kPreviousCell), std::end(kPreviousCell), kID);
+        
+        m_cells[kPreviousHash].erase(found);
+        m_cells[currentHash].push_back(kID);
+    }
+    
+}
+
+void fj::ParticleCollisionDispatcher::makeCollision(fj::ParticleSystem* particleSystem)const
+{
+    const fj::ParticleManager& kParticleManager = particleSystem->getParticleManager();
+    auto iterator = kParticleManager.iterator();
+    
+    while( iterator->hasNext() )
+    {
+        const fj::Particle& kParticle = iterator->next();
+        const fj::ParticleID& kID = kParticle.getID();
+        const auto kNeighbors = getNeighborParticlesAt(kParticle, kParticleManager);
+        
+        for (const auto& neighbor : kNeighbors)
+        {
+            particleSystem->makeCollision(kID, neighbor);
         }
         
     }
-
 }
 
 fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborParticlesAt(const fj::Particle &particle, const fj::ParticleManager& particleManager)const
