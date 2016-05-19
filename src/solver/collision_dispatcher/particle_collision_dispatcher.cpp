@@ -10,6 +10,7 @@
 #include <cmath>
 #include <functional>
 
+#include <ParticleSystem/particle_system.hpp>
 #include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
@@ -23,6 +24,11 @@ void fj::ParticleCollisionDispatcher::registerParticle(const fj::ParticleID& par
     const HashValue_t kHash = computeHash( kParticle );
     
     m_cells[kHash].push_back(particleID);
+}
+
+void fj::ParticleCollisionDispatcher::execute(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
+{
+    updated( particleSystem->getParticleManager() );
 }
 
 void fj::ParticleCollisionDispatcher::updated(const fj::ParticleManager& particleManager)

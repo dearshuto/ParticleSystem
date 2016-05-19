@@ -14,6 +14,7 @@
 
 #include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/particle/particle.hpp>
+#include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Particle;
@@ -25,7 +26,7 @@ namespace fj {
 /**
  * 空間分割法を利用した衝突判定器
  */
-class fj::ParticleCollisionDispatcher
+class fj::ParticleCollisionDispatcher : public fj::Solver
 {
     typedef unsigned int HashValue_t;
     typedef std::vector<fj::ParticleID> Particles;
@@ -33,8 +34,9 @@ public:
     ParticleCollisionDispatcher() = delete;
     ~ParticleCollisionDispatcher() = default;
     
-    ParticleCollisionDispatcher(const unsigned int width, const unsigned int height, const unsigned int depth, const fj::Scalar& blockSize)
-    : m_width(width)
+    ParticleCollisionDispatcher(const unsigned int width, const unsigned int height, const unsigned int depth, const fj::Scalar& blockSize, const unsigned int priority = 3)
+    : fj::Solver(priority)
+    , m_width(width)
     , m_height(height)
     , m_depth(depth)
     , m_blockSize(blockSize)
@@ -44,11 +46,13 @@ public:
         
     void registerParticle(const fj::ParticleID& particle, const fj::ParticleManager& particleManager);
     
-    void updated(const fj::ParticleManager& particleManager);
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
     fj::Particle::NeighborParticles getNeighborParticlesAt(const fj::Particle& particle, const fj::ParticleManager& particleManager)const;
     
 private:
+    
+    void updated(const fj::ParticleManager& particleManager);
     
     void setNeighbors(const fj::Particle& particle, const Particles& cell, fj::Particle::NeighborParticles* neighborParticles, const fj::ParticleManager& particleManager)const;
     
