@@ -14,21 +14,6 @@
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-void fj::NeighborMap::execute(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
-{
-    for (const auto neighborInfo : m_neighbors)
-    {
-        const fj::ParticleID& kID1 = neighborInfo.first;
-        for (const auto& neighbor : neighborInfo.second)
-        {
-            const fj::ParticleID& kID2 = neighbor.getParticleID();
-            
-            particleSystem->makeCollision(kID1, kID2, neighbor.getDistance());
-        }
-        
-    }
-}
-
 void fj::NeighborMap::registerParticle(const fj::ParticleID &particleID)
 {
     m_neighbors[particleID].clear();

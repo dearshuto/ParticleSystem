@@ -42,10 +42,7 @@ public:
     : m_enableGravity(false)
     , m_gravity( fj::Vector3(0, -9.8, 0) )
     {
-        m_neighborMap = std::make_shared<fj::NeighborMap>();
         m_solver = std::move(solver);
-        
-        m_solvers.push_back(m_neighborMap);
         m_solvers.push_back(m_solver);
     }
 
@@ -188,7 +185,7 @@ public:
     
     const fj::NeighborMap& getNeighborMap()const
     {
-        return std::cref(*m_neighborMap);
+        return std::cref(m_neighborMap);
     }
     
     const fj::Solver& getSolver()const
@@ -213,9 +210,9 @@ protected:
         return &m_particleManager;
     }
     
-    std::shared_ptr<fj::NeighborMap>& getNeighborMapPtr()
+    fj::NeighborMap*const getNeighborMapPtr()
     {
-        return m_neighborMap;
+        return &m_neighborMap;
     }
     
     std::shared_ptr<fj::Solver>& getSolverPtr()
@@ -245,7 +242,7 @@ private:
     /**
      * 近傍情報の管理
      */
-    std::shared_ptr<fj::NeighborMap> m_neighborMap;
+    fj::NeighborMap m_neighborMap;
     
 };
 

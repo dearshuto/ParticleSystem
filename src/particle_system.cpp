@@ -43,6 +43,7 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
         solver->postexecute(timestep, this);
     }
     
+    getNeighborMapPtr()->clear();
 }
 
 void fj::ParticleSystem::stepParticlePosition(const float timestep)

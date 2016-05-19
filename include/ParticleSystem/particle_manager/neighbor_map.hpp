@@ -31,34 +31,15 @@ namespace fj {
 /**
  * 近傍の情報の監視役
  */
-class fj::NeighborMap : public fj::Solver
+class fj::NeighborMap
 {
     class NeighborInformation;
 public:
     typedef std::vector<NeighborInformation> NeighborInformations;
 public:
-    NeighborMap()
-    : NeighborMap( fj::Solver::Priority::kNeighborMap )
-    {
-        
-    }
+    NeighborMap() = default;
     ~NeighborMap() = default;
     
-    NeighborMap(const fj::Solver::Priority priority)
-    : fj::Solver(priority)
-    {
-        
-    }
-    
-    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
-    
-    /**
-     * ParticleSystemに登録されている全てのSolverのexecuteを呼び出したあとに呼ばれる関数. この関数も優先度に従って呼ばれる.
-     */
-    void postexecute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override
-    {
-        m_neighbors.clear();
-    }
     
     /**
      * 衝突判定対象となる粒子を登録する
