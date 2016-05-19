@@ -6,4 +6,4 @@
 //
 //
 
-#include <ParticleSystem/solver/continuum_solver/continuum_solver.hpp>
+#include <ParticleSystem/solver/dynamics/continuum_solver/continuum_solver.hpp>

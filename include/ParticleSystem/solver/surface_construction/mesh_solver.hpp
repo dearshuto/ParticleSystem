@@ -16,7 +16,7 @@ namespace fj {
     class MeshSolver;
 }
 
-class fj::MeshSolver
+class fj::MeshSolver : fj::Solver
 {
 public:
     virtual~MeshSolver();

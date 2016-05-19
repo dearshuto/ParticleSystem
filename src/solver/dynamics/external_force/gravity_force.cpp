@@ -9,7 +9,7 @@
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-#include <ParticleSystem/solver/external_force/gravity_force.hpp>
+#include <ParticleSystem/solver/dynamics/external_force/gravity_force.hpp>
 
 void fj::GravityForce::executeDynamics(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {

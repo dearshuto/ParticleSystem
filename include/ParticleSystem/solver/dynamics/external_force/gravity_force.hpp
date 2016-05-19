@@ -13,7 +13,7 @@
 #include <memory>
 
 #include <FUJIMath/type/vector3.hpp>
-#include <ParticleSystem/solver/dynamics.hpp>
+#include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
 namespace fj {
     class GravityForce;

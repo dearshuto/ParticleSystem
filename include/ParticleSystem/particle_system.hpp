@@ -19,7 +19,7 @@
 #include "solver/collision_dispatcher/particle_collision_dispatcher.hpp"
 #include "solver/surface_construction/marching_cubes.hpp"
 #include "solver/solver.hpp"
-#include "solver/dynamics.hpp"
+#include "solver/dynamics/dynamics.hpp"
 #include "type/mesh.hpp"
 
 namespace fj {

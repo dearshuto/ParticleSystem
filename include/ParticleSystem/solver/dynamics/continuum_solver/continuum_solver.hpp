@@ -9,7 +9,7 @@
 #ifndef continuum_solver_hpp
 #define continuum_solver_hpp
 
-#include <ParticleSystem/solver/dynamics.hpp>
+#include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
 namespace fj {
     class ContinuumSolver;

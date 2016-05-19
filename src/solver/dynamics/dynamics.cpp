@@ -6,4 +6,4 @@
 //
 //
 
-#include "dynamics.hpp"
+#include <ParticleSystem/solver/dynamics/dynamics.hpp>

@@ -12,7 +12,7 @@
 #include <memory>
 
 #include "particle_system.hpp"
-#include "solver/continuum_solver/blood_sph_method.hpp"
+#include "solver/dynamics/continuum_solver/blood_sph_method.hpp"
 #include "solver/collision_dispatcher/particle_collision_dispatcher.hpp"
 
 namespace fj {
