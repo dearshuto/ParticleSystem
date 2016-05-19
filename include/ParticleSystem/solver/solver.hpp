@@ -27,10 +27,19 @@ namespace fj {
 class fj::Solver
 {
 public:
+    enum class Priority : unsigned int
+    {
+        kSurfaceTracking,
+        kAdditionalSimulation,
+        kSimulation,
+        kNeighborMap,
+        kCollisionDispatch,
+    };
+public:
     Solver() = delete;
     virtual~Solver() = default;
 
-    Solver(const unsigned int priority = 0)
+    Solver(const Priority priority = Priority::kSimulation)
     : m_priority(priority)
     {
         
@@ -76,7 +85,7 @@ protected:
     }
     
 public:
-    unsigned int getPriority()const
+    fj::Solver::Priority getPriority()const
     {
         return m_priority;
     }
@@ -84,7 +93,7 @@ public:
 private:
     std::unordered_map<fj::ParticleID, fj::Vector3> m_accelMap;
     
-    const unsigned int m_priority;
+    const fj::Solver::Priority m_priority;
 };
 
 #endif /* solver_hpp */

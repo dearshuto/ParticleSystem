@@ -29,13 +29,13 @@ class fj::SPHMethod : public fj::ContinuumSolver
     class SPHProperty;
 public:
     SPHMethod()
-    : SPHMethod(0)
+    : SPHMethod( fj::Solver::Priority::kSimulation )
     {
         
     }
     virtual~SPHMethod() = default;
     
-    SPHMethod(const unsigned int priority)
+    SPHMethod(const fj::Solver::Priority priority)
     : fj::ContinuumSolver(priority)
     {
         

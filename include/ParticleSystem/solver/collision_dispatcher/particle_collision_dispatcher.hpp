@@ -34,7 +34,7 @@ public:
     ParticleCollisionDispatcher() = delete;
     ~ParticleCollisionDispatcher() = default;
     
-    ParticleCollisionDispatcher(const unsigned int width, const unsigned int height, const unsigned int depth, const fj::Scalar& blockSize, const unsigned int priority = 3)
+    ParticleCollisionDispatcher(const unsigned int width, const unsigned int height, const unsigned int depth, const fj::Scalar& blockSize, const Priority priority = Priority::kCollisionDispatch)
     : fj::Solver(priority)
     , m_width(width)
     , m_height(height)

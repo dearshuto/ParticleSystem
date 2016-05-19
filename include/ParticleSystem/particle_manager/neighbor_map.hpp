@@ -38,13 +38,13 @@ public:
     typedef std::vector<NeighborInformation> NeighborInformations;
 public:
     NeighborMap()
-    : NeighborMap(0)
+    : NeighborMap( fj::Solver::Priority::kNeighborMap )
     {
         
     }
     ~NeighborMap() = default;
     
-    NeighborMap(const unsigned int priority)
+    NeighborMap(const fj::Solver::Priority priority)
     : fj::Solver(priority)
     {
         

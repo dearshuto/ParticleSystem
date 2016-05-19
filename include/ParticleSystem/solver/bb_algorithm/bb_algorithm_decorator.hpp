@@ -29,7 +29,7 @@ public:
     BBAlgorithmDecorator() = delete;
     virtual ~BBAlgorithmDecorator() = default;
     
-    BBAlgorithmDecorator(std::unique_ptr<fj::BBAlgorithm> bb, const unsigned int priority = 0)
+    BBAlgorithmDecorator(std::unique_ptr<fj::BBAlgorithm> bb, const Priority priority = Priority::kAdditionalSimulation)
     : fj::BBAlgorithm(priority)
     , m_bbAlgorithm( std::move(bb) )
     , m_tickSkipCount(0)

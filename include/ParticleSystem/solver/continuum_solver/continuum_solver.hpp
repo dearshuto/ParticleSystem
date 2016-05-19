@@ -21,7 +21,7 @@ public:
     ContinuumSolver() = delete;
     virtual~ContinuumSolver() = default;
     
-    ContinuumSolver(const unsigned int priority = 0)
+    ContinuumSolver(const fj::Solver::Priority priority = fj::Solver::Priority::kSimulation)
     : fj::Solver(priority)
     {
         

@@ -26,7 +26,7 @@ public:
     BBAlgorithm() = delete;
     virtual ~BBAlgorithm() = default;
     
-    BBAlgorithm(const unsigned int priority)
+    BBAlgorithm(const fj::Solver::Priority priority = fj::Solver::Priority::kAdditionalSimulation)
     : fj::Solver(priority)
     {
         

@@ -75,7 +75,7 @@ public:
     BoundingBox() = delete;
     ~BoundingBox() = default;
     
-    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange, const unsigned int priority = 0)
+    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange, const Priority priority = Priority::kAdditionalSimulation)
     : fj::BBAlgorithm(priority)
     , m_xRange(xRange)
     , m_yRange(yRange)
