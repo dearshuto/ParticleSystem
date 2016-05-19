@@ -61,27 +61,6 @@ void fj::ParticleSystem::stepParticlePosition(const float timestep)
     getSolverPtr()->clearAccel();
 }
 
-void fj::ParticleSystem::simulateParticleBehavior(const fj::Scalar& timestep)
-{    
-    if (m_enableGravity)
-    {
-        applyGravity();
-    }
-}
-
-void fj::ParticleSystem::applyGravity()
-{
-    const fj::Vector3& kGravity = getGravity();
-    auto iterator = getParticleManager().iterator();
-
-    while ( iterator->hasNext() )
-    {
-        const fj::ParticleID& kID = (iterator->next()).getID();
-        
-        getSolverPtr()->addAccelAt(kID, kGravity);
-    }
-}
-
 const fj::ParticleID& fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
 {
     // 生成した粒子の管理はできるだけfj::ParticleManagerに任せたいので, fj::ParticleManager::registerParticleを最初に呼ぶ.

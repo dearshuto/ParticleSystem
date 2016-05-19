@@ -13,6 +13,7 @@
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/solver/continuum_solver/sph_method.hpp>
+#include <ParticleSystem/solver/external_force/gravity_force.hpp>
 #include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/type/simulation_constant.hpp>
 
@@ -28,14 +29,16 @@ int main(int argc, char** argv)
     
     std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
+    std::unique_ptr<fj::GravityForce> gravity(new fj::GravityForce(fj::Vector3(0, -9.8, 0)));
     fj::ParticleSystem particleSystem(std::move(solver));
 //    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
     
+    particleSystem.addSolver( std::move(collisionDispatcher) );
+    particleSystem.addSolver( std::move(bb) );
+    particleSystem.addSolver( std::move(gravity) );
     
     particleSystem.createIsosurface(150);
     particleSystem.createIsosurface(170);
-    particleSystem.enableGravity();
-    particleSystem.setGravity(fj::Vector3(0, 100000, 0));
     
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
