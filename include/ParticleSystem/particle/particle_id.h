@@ -64,6 +64,11 @@ public:
         return !this->operator==(other);
     }
     
+    bool operator<(const fj::ParticleID& other)const
+    {
+        return (this->getData() < other.getData());
+    }
+    
     unsigned int getData()const
     {
         return m_ID;

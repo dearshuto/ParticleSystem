@@ -9,12 +9,13 @@
 #include <iostream>
 #include <fstream>
 
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
+#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/dynamics/continuum_solver/sph_method.hpp>
+#include <ParticleSystem/solver/dynamics/external_force/gravity_force.hpp>
+#include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/type/simulation_constant.hpp>
-#include <ParticleSystem/solver/sph_method.hpp>
 
 int main(int argc, char** argv)
 {
@@ -23,16 +24,21 @@ int main(int argc, char** argv)
     const fj::Scalar kBLockSize = kParticleRadius * 5;
     
     fj::BoundingBox::Range kRange(0, 0.05, 0.001);
-    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
-    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
+//    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
+//    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
     
     std::unique_ptr<fj::SPHMethod> solver(new fj::SPHMethod);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
+    std::unique_ptr<fj::GravityForce> gravity(new fj::GravityForce(std::move(solver), fj::Vector3(0, -9.8, 0)));
+//    fj::ParticleSystem particleSystem(std::move(solver));
+    fj::ParticleSystem particleSystem(std::move(gravity));
+//    fj::ParticleSystem particleSystem(std::move(solver), std::move(collisionDispatcher), std::move(mc));
+    
+//    particleSystem.addSolver( std::move(collisionDispatcher) );
+//    particleSystem.addSolver( std::move(bb) );
     
     particleSystem.createIsosurface(150);
     particleSystem.createIsosurface(170);
-    
     
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 1; j++) {
@@ -42,7 +48,7 @@ int main(int argc, char** argv)
         }
     }
     
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 100; i++)
     {
         auto iterator = particleSystem.getParticleManager().iterator();
         

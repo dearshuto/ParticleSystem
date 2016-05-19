@@ -8,6 +8,7 @@
 
 #include <cmath>
 
+#include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>

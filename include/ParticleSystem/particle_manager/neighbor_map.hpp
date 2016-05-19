@@ -19,6 +19,7 @@
 #include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Particle;
@@ -38,6 +39,7 @@ public:
 public:
     NeighborMap() = default;
     ~NeighborMap() = default;
+    
     
     /**
      * 衝突判定対象となる粒子を登録する

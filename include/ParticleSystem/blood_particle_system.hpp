@@ -11,9 +11,9 @@
 
 #include <memory>
 
-#include <ParticleSystem/solver/blood_sph_method.hpp>
-#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include "particle_system.hpp"
+#include "solver/dynamics/continuum_solver/blood_sph_method.hpp"
+#include "solver/collision_dispatcher/particle_collision_dispatcher.hpp"
 
 namespace fj {
     class Solver;
@@ -30,8 +30,8 @@ public:
     BloodParticleSystem() = delete;
     ~BloodParticleSystem() = default;
     
-    BloodParticleSystem(std::unique_ptr<fj::BloodSPHMethod> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BoundingBox> bb = nullptr)
-    : ParticleSystem(std::move(solver), std::move(collisionDispatcher), std::move(bb))
+    BloodParticleSystem(std::unique_ptr<fj::BloodSPHMethod> solver)
+    : ParticleSystem(std::move(solver))
     {
         
     }
