@@ -45,16 +45,21 @@ FILE(GLOB_RECURSE collision_dispatchers
 	${CMAKE_SOURCE_DIR}/src/solver/collision_dispatcher/*.cpp
 )
 
+FILE(GLOB_RECURSE dynamics_
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/dynamics/dynamics.hpp
+	${CMAKE_SOURCE_DIR}/src/solver/dynamics/dynamics.cpp
+)
+
 FILE(GLOB_RECURSE continuum_solvers
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/continuum_solver/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/continuum_solver/*.h
-	${CMAKE_SOURCE_DIR}/src/solver/continuum_solver/*.cpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/dynamics/continuum_solver/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/dynamics/continuum_solver/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/dynamics/continuum_solver/*.cpp
 )
 
 FILE(GLOB_RECURSE external_forces
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/external_force/*.hpp
-	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/external_force/*.h
-	${CMAKE_SOURCE_DIR}/src/solver/external_force/*.cpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/dynamics/external_force/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/dynamics/external_force/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/dynamics/external_force/*.cpp
 )
 
 FILE(GLOB_RECURSE surface_constructions
@@ -80,8 +85,9 @@ SOURCE_GROUP(particle_manager FILES ${particle_managers})
 SOURCE_GROUP(solver FILES ${solvers})
 SOURCE_GROUP(solver\\bb_algorithm FILES ${bb_algorithms})
 SOURCE_GROUP(solver\\collision_dispatcher FILES ${collision_dispatchers})
-SOURCE_GROUP(solver\\continuum_solver FILES ${continuum_solvers})
-SOURCE_GROUP(solver\\external_force FILES ${external_forces})
+SOURCE_GROUP(solver\\dynamics FILES ${dynamics_})
+SOURCE_GROUP(solver\\dynamics\\continuum_solver FILES ${continuum_solvers})
+SOURCE_GROUP(solver\\dynamics\\external_force FILES ${external_forces})
 SOURCE_GROUP(solver\\surface_construction FILES ${surface_constructions})
 SOURCE_GROUP(type FILES ${types})
 
@@ -92,12 +98,7 @@ add_library(particle_system STATIC
 	${particles}
 	${particle_managers}
 	${solvers}
-	${surface_constructions}
-	${collision_dispatchers}
-	${continuum_solvers}
-	${external_forces}
 	${types}
-	${bb_algorithms}
 	${external_math_sources}
 )
 
