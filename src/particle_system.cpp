@@ -14,11 +14,23 @@
 
 #include <FUJIMath/type/vector3.hpp>
 
+#include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
+#include <ParticleSystem/solver/surface_construction/mesh_solver.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
 #include <ParticleSystem/particle_system.hpp>
+
+void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
+{
+    m_solverManager.addSolver( std::move(collisionDispatcher) );
+}
+
+void fj::ParticleSystem::addSolver(std::unique_ptr<fj::MeshSolver> solver)
+{
+    m_solverManager.addSolver(std::move(solver));
+}
 
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {

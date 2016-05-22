@@ -113,7 +113,6 @@ public:
      */
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3& collisionPoint);
     
-
     /**
      *現在は未実装
      */
