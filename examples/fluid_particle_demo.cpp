@@ -12,6 +12,7 @@
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_method.hpp>
 #include <ParticleSystem/solver/dynamics/external_force/gravity_force.hpp>
 #include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>

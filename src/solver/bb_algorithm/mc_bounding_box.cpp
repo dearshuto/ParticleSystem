@@ -18,7 +18,7 @@ void fj::MCBoundingBox::execute(const fj::Scalar& timestep, fj::ParticleSystem* 
     Super::execute(timestep, particleSystem);
     
     clearScalarMap(particleSystem->getParticleManager());
-    updateScalarMap(particleSystem->getParticleManager(), particleSystem->getSolver());
+    updateScalarMap(particleSystem->getParticleManager(), particleSystem->getDynamics());
 }
 
 void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManager)
