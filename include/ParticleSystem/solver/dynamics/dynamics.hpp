@@ -43,6 +43,8 @@ public:
     virtual void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel) = 0;
     
     virtual void clearAccel() = 0;
+    
+    virtual fj::Scalar calculateScalar(const fj::ParticleID& ID)const = 0;
 };
 
 #endif /* dynamics_hpp */

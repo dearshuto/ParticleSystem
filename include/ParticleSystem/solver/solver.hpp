@@ -58,16 +58,7 @@ public:
     {
         // デフォルトは空
     }
-    
-    /**
-     * 粒子の物理量を返す. マーチングキューブ法などのスカラ値を必要とする処理で利用する. ソルバに起因するスカラならなんでもいい.
-     */
-    virtual const fj::Scalar calculateScalar(const fj::ParticleID& ID)const
-    {
-        // とりあえず
-        return 0;
-    }
-    
+        
 public:
     fj::Solver::Priority getPriority()const
     {

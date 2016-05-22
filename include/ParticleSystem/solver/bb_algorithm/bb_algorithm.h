@@ -31,12 +31,7 @@ public:
     {
         
     }
-    
-    const fj::Scalar calculateScalar(const fj::ParticleID& ID)const override
-    {
         
-    }
-    
     virtual const fj::BoundingBox& getBoundingBox()const = 0;
 };
 

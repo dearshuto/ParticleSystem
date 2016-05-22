@@ -15,7 +15,7 @@
 #include <ParticleSystem/solver/surface_construction/marching_cubes_interface.h>
 
 namespace fj {
-    class SPHMethod;
+    class Dynamics;
     class ParticleSystem;
     class MCBoundingBox;
 }
@@ -37,7 +37,7 @@ public:
 protected:
     void clearScalarMap(const fj::ParticleManager& particleManager);
     
-    void updateScalarMap(const fj::ParticleManager& particleManager, const fj::Solver& solver);
+    void updateScalarMap(const fj::ParticleManager& particleManager, const fj::Dynamics& dynamics);
     
     void setNDInterpolateValue(const int index, const int n, const fj::Scalar& scalar);
     
