@@ -81,15 +81,15 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
         {
             const fj::Particle& kNeighborParticle = particleManager.search(neighbor.getParticleID());
             const fj::SPHMethod::SPHProperty& kNeighborProperty = std::cref( *m_propertyMap.at(kNeighborParticle.getID()) );
-            
+
             const fj::Vector3 kDirection = neighbor.getDirection();
             const fj::Scalar kDistance = neighbor.getDistance();
-            
+
             const fj::Scalar kC = H - kDistance;
             const fj::Vector3 kVelocityKernelTerm = getViscosity(kID) * (kNeighborParticle.getVelocity() - kParticle.getVelocity()) * LaplacianKernel;
             const fj::Vector3 kPressureKernelterm = -fj::Scalar(0.5 * (kParticleProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * kC) * kDirection;
             const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm;
-            
+
             F += PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * kKernelTerm;
         }
         

@@ -7,6 +7,7 @@
 //
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <functional>
 
@@ -34,10 +35,11 @@ void fj::ParticleCollisionDispatcher::update(const fj::ParticleManager& particle
         const fj::Particle& kParticle = iterator->next();
         const fj::ParticleID& kID = kParticle.getID();
         const HashValue_t kHash = computeHash(kParticle);
-        
-        if( this->has(kParticle) )
+        auto found = m_hashTable.find(kParticle.getID());
+
+        if( found != std::end(m_hashTable) )
         {
-            updateAt(kHash, kParticle);
+            updateAt(kHash, found->second, kID);
         }
         else
         {
@@ -48,20 +50,20 @@ void fj::ParticleCollisionDispatcher::update(const fj::ParticleManager& particle
     }
 }
 
-void fj::ParticleCollisionDispatcher::updateAt(const HashValue_t &currentHash, const fj::Particle& particle)
+void fj::ParticleCollisionDispatcher::updateAt(const HashValue_t &currentHash, const HashValue_t& previousHash,  const fj::ParticleID& ID)
 {
     // ハッシュ値が変わっていたら、所属するセルを変更する
+    // ハッシュテーブルの値も更新する
     
-    const fj::ParticleID& kID = particle.getID();
-    const HashValue_t& kPreviousHash = m_hashTable[kID];
-    
-    if (kPreviousHash != currentHash)
+    if (previousHash != currentHash)
     {
-        const Particles& kPreviousCell = m_cells[kPreviousHash];
-        const auto& found = std::find(std::begin(kPreviousCell), std::end(kPreviousCell), kID);
+        const Particles& kPreviousCell = m_cells[previousHash];
+        const auto& found = std::find(std::begin(kPreviousCell), std::end(kPreviousCell), ID);
+        assert(found != std::end(kPreviousCell));
         
-        m_cells[kPreviousHash].erase(found);
-        m_cells[currentHash].push_back(kID);
+        m_cells[previousHash].erase(found);
+        m_cells[currentHash].push_back(ID);
+        m_hashTable[ID] = currentHash;
     }
     
 }
@@ -148,8 +150,12 @@ fj::ParticleCollisionDispatcher::HashValue_t fj::ParticleCollisionDispatcher::co
     const fj::Scalar& kX = clamp( kPosition.x() );
     const fj::Scalar& kY = clamp( kPosition.y() );
     const fj::Scalar& kZ = clamp( kPosition.z() );
+    const HashValue_t kHash = kX + getWidth() * kY + getWidth() * getHeight() * kZ;
     
-    return kX + getWidth() * kY + getWidth() * getHeight() * kZ;
+    assert(0 <= kHash);
+    assert(kHash < m_cells.size());
+    
+    return kHash;
 }
 
 unsigned int fj::ParticleCollisionDispatcher::clamp(const fj::Scalar &num)const

@@ -9,6 +9,7 @@
 #ifndef particle_manager_hpp
 #define particle_manager_hpp
 
+#include <cassert>
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -44,6 +45,7 @@ public:
      */
     std::shared_ptr<fj::Particle>& search(const fj::ParticleID& ID)
     {
+        assert(m_hashMap.find(ID) != std::end(m_hashMap));
         return std::ref(m_hashMap.at(ID));
     }
 
@@ -52,6 +54,7 @@ public:
      */
     const fj::Particle& search(const fj::ParticleID& ID)const
     {
+        assert(m_hashMap.find(ID) != std::end(m_hashMap));
         return std::cref( *m_hashMap.at(ID) );
     }
     
