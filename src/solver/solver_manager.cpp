@@ -28,7 +28,7 @@ void fj::SolverManager::addSolver(std::unique_ptr<fj::Dynamics> dynamics)
 
 void fj::SolverManager::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer)
 {
-    addSolver( std::move(collisionDispathcer) );
+    stackSolver( std::move(collisionDispathcer) );
 }
 
 void fj::SolverManager::addSolver(std::unique_ptr<fj::MeshSolver> meshSolver)
@@ -45,7 +45,7 @@ void fj::SolverManager::removeCurrentDynamics()
     }
 }
 
-void fj::SolverManager::addSolver(std::shared_ptr<fj::Solver> solver)
+void fj::SolverManager::stackSolver(std::shared_ptr<fj::Solver> solver)
 {
     m_solvers.push_back( std::move(solver) );
     std::sort(std::begin(m_solvers), std::end(m_solvers)
