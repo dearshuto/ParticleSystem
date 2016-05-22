@@ -21,6 +21,7 @@ void fj::SolverManager::addSolver(std::unique_ptr<fj::Dynamics> dynamics)
     removeCurrentDynamics();
     
     m_dynamics = sharedDynamics;
+    m_solvers.push_back(sharedDynamics);
 }
 
 void fj::SolverManager::removeCurrentDynamics()
