@@ -11,6 +11,7 @@
 
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/solver/solver.hpp>
+#include <ParticleSystem/solver/dynamics/dynamics.hpp>
 #include <ParticleSystem/solver/bb_algorithm/mc_bounding_box.hpp>
 
 void fj::MCBoundingBox::execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
@@ -36,14 +37,14 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
 
 }
 
-void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManager, const fj::Solver &solver)
+void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManager, const fj::Dynamics& dynamics)
 {
     
     for (const auto& ID : getInBoxParticle())
     {
         const fj::Particle& kParticle = particleManager.search(ID);
         const int kIndex = convertPositionToIndex(kParticle.getPosition());
-        const fj::Scalar kScalar = solver.calculateScalar(ID);
+        const fj::Scalar kScalar = dynamics.calculateScalar(ID);
         
         setNDInterpolateValue(kIndex, 3, kScalar);
     }

@@ -34,17 +34,22 @@ public:
 
     void clearAccel() override
     {
-        m_dynamics->clearAccel();
+        getDynamicsPtr()->clearAccel();
     }
     
     const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const override
     {
-        return m_dynamics->getAccellAt(ID);
+        return getDynamics().getAccellAt(ID);
     }
     
     void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)override
     {
-        m_dynamics->addAccelAt(ID, accel);
+        getDynamicsPtr()->addAccelAt(ID, accel);
+    }
+    
+    fj::Scalar calculateScalar(const fj::ParticleID& ID)const override
+    {
+        return getDynamics().calculateScalar(ID);
     }
     
 public:

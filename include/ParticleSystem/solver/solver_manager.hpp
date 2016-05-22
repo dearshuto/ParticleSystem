@@ -48,7 +48,7 @@ private:
     /**
      * 毎フレーム実行するスタックにSolverを保存していく. この関数の中でSplverの優先順序による並替えも行う.
      */
-    void addSolver(std::shared_ptr<fj::Solver> solver);
+    void stackSolver(std::shared_ptr<fj::Solver> solver);
     
     void removeCurrentDynamics();
     

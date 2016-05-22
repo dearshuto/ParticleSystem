@@ -9,6 +9,7 @@
 #ifndef neighbor_map_hpp
 #define neighbor_map_hpp
 
+#include <cassert>
 #include <iostream>
 #include <functional>
 #include <tuple>
@@ -67,6 +68,7 @@ public:
     
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
+        assert(m_neighbors.find(ID) != std::end(m_neighbors));
         return std::cref( m_neighbors.at(ID) );
     }
     

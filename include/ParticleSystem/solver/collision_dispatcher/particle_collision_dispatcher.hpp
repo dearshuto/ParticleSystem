@@ -57,7 +57,7 @@ private:
     /**
      * ハッシュ値をもとに所属セルの更新作業を行う
      */
-    void updateAt(const HashValue_t& currentHash, const fj::Particle& particle);
+    void updateAt(const HashValue_t& currentHash, const HashValue_t& previousHash,  const fj::ParticleID& ID);
     
     /**
      * セルの所属情報をもとに衝突関係を作る
