@@ -24,12 +24,12 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
 {
     for (const auto& solver : m_solverManager)
     {
-        solver->postexecute(timestep, this);
+        solver->execute(timestep, this);
     }
-    
+
     for (const auto& solver : m_solverManager)
     {
-        solver->execute(timestep, this);
+        solver->postexecute(timestep, this);
     }
     
     getNeighborMapPtr()->clear();
