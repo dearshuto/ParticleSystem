@@ -16,28 +16,18 @@
 
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
 #include <ParticleSystem/particle_system.hpp>
 
-void fj::ParticleSystem::addSolver(std::unique_ptr<fj::Solver> solver)
-{
-    m_solvers.push_back( std::move(solver) );
-    std::sort(std::begin(m_solvers), std::end(m_solvers)
-              , [](std::shared_ptr<fj::Solver> s1, std::shared_ptr<fj::Solver> s2)
-              {
-                  return  (s2->getPriority() < s1->getPriority() );
-              }
-              );
-}
-
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
-    for (const auto& solver : m_solvers)
+    for (const auto& solver : m_solverManager)
     {
         solver->postexecute(timestep, this);
     }
     
-    for (const auto& solver : m_solvers)
+    for (const auto& solver : m_solverManager)
     {
         solver->execute(timestep, this);
     }
@@ -51,13 +41,13 @@ void fj::ParticleSystem::stepParticlePosition(const float timestep)
     for (auto& particle : *getParticleManagerPtr())
     {
         const fj::ParticleID& kID = particle->getID();
-        const fj::Vector3& kAccel = getSolverPtr()->getAccellAt(kID);
+        const fj::Vector3& kAccel = getDynamicsPtr()->getAccellAt(kID);
         
         particle->addVelocity(kAccel * timestep);
         particle->stepSimulation(timestep);
     }
     
-    getSolverPtr()->clearAccel();
+    getDynamicsPtr()->clearAccel();
 }
 
 const fj::ParticleID& fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
@@ -109,7 +99,12 @@ void fj::ParticleSystem::setParticleVelocityAt(const fj::ParticleID& ID, const f
     particle->setVelocity(velocity);
 }
 
+const fj::Vector3& fj::ParticleSystem::getAppliedAccel(const fj::ParticleID &ID)const
+{
+    return m_solverManager.getDynamics().getAccellAt(ID);
+}
+
 void fj::ParticleSystem::addAccelAt(const fj::ParticleID &ID, const fj::Vector3 &accel)
 {
-    getSolverPtr()->addAccelAt(ID, accel);
+    getDynamicsPtr()->addAccelAt(ID, accel);
 }

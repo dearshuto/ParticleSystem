@@ -15,16 +15,16 @@
 
 #include "particle_manager/particle_manager.hpp"
 #include "particle_manager/neighbor_map.hpp"
-#include "solver/bb_algorithm/bounding_box.hpp"
-#include "solver/collision_dispatcher/particle_collision_dispatcher.hpp"
-#include "solver/surface_construction/marching_cubes.hpp"
-#include "solver/solver.hpp"
-#include "solver/dynamics/dynamics.hpp"
+#include "solver/solver_manager.hpp"
+#include "solver/dynamics/dynamics.hpp" //コンストラクタで必要
 #include "type/mesh.hpp"
 
 namespace fj {
+    class MeshSolver;
     class Particle;
+    class ParticleCollisionDispatcher;
     class ParticleID;
+    class Solver;
     class ParticleSystem;
 }
 
@@ -41,8 +41,7 @@ public:
     
     ParticleSystem(std::unique_ptr<fj::Dynamics> solver)
     {
-        m_dynamics = std::move(solver);
-        m_solvers.push_back(m_dynamics);
+        m_solverManager.addSolver( std::move(solver) );
     }
 
     
@@ -51,7 +50,8 @@ public:
     /**
      * 毎フレーム更新する処理を登録する
      */
-    void addSolver(std::unique_ptr<fj::Solver> solver);
+    void addSolver(std::unique_ptr<fj::MeshSolver> solver);
+    void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
     
     /**
      * シミュレーションをタイムステップ分進める
@@ -122,10 +122,7 @@ public:
     /**
      * 粒子の加速度を取得する
      */
-    const fj::Vector3& getAppliedAccel(const fj::ParticleID& ID)const
-    {
-        return getSolver().getAccellAt(ID);
-    }
+    const fj::Vector3& getAppliedAccel(const fj::ParticleID& ID)const;
     
     /**
      * 粒子に加速度を追加する
@@ -156,11 +153,6 @@ public:
         return std::cref(m_neighborMap);
     }
     
-    const fj::Dynamics& getSolver()const
-    {
-        return std::cref(*m_dynamics);
-    }
- 
     const std::vector<fj::Mesh>& getMeshes()const
     {
         return std::cref(m_meshes);
@@ -169,6 +161,11 @@ public:
     std::vector<fj::Mesh>* getMeshesPtr()
     {
         return &m_meshes;
+    }
+    
+    const fj::Dynamics& getDynamics()const
+    {
+        return m_solverManager.getDynamics();
     }
     
 protected:
@@ -183,11 +180,11 @@ protected:
         return &m_neighborMap;
     }
     
-    std::shared_ptr<fj::Dynamics>& getSolverPtr()
+    std::shared_ptr<fj::Dynamics>& getDynamicsPtr()
     {
-        return m_dynamics;
+        return m_solverManager.getDynamicsPtr();
     }
-        
+    
 private:
     
     /**
@@ -196,19 +193,16 @@ private:
     fj::ParticleManager m_particleManager;
     
     /**
-     * 粒子法アルゴリズム
+     * 毎フレーム更新する処理の管理
      */
-    std::shared_ptr<fj::Dynamics> m_dynamics;
-
-    std::vector<fj::Mesh> m_meshes;
-    
-    std::vector<std::shared_ptr<fj::Solver>> m_solvers;
+    fj::SolverManager m_solverManager;
     
     /**
      * 近傍情報の管理
      */
     fj::NeighborMap m_neighborMap;
     
+    std::vector<fj::Mesh> m_meshes;
 };
 
 #endif /* particle_system_hpp */

@@ -2,6 +2,7 @@ PROJECT(ParticleSystem)
 
 cmake_minimum_required(VERSION 3.0)
 add_definitions("-Wall -std=c++11")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
@@ -31,6 +32,8 @@ FILE(GLOB_RECURSE particle_managers
 FILE(GLOB_RECURSE solvers
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/solver.hpp
 	${CMAKE_SOURCE_DIR}/src/solver/solver.cpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/solver_manager.hpp
+	${CMAKE_SOURCE_DIR}/src/solver/solver_manager.cpp
 )
 
 FILE(GLOB_RECURSE bb_algorithms
