@@ -12,6 +12,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>
+#include <functional>
 #include <memory>
 #include <unordered_map>
 
@@ -27,6 +28,7 @@ namespace fj {
 class fj::SPHMethod : public fj::ContinuumSolver
 {
     class SPHProperty;
+    class SPHInformation;
 public:
     SPHMethod() = default;
     virtual~SPHMethod() = default;
@@ -37,16 +39,46 @@ public:
     
 protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
-    std::unique_ptr<SPHProperty> computePropertyAt(const fj::Particle& particle, const fj::NeighborMap& neighborMap);
-    
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
+    /**
+     * 離散化された粒子の密度と圧力を求める
+     */
+    virtual std::unique_ptr<SPHProperty> computePropertyAt(const fj::Particle& particle, const fj::NeighborMap& neighborMap);
+
+    fj::Vector3 computeForce(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    
+    /**
+     * ナビエストークス方程式の右辺をもとめる
+     */
+    virtual fj::Vector3 computeKernelTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+
+    /**
+     * ナビエストークス方程式の右辺のにある圧力項を求める
+     */
+    virtual fj::Vector3 computePressureTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+
+    /**
+     * ナビエストークス方程式の右辺にある粘性項を求める
+     */
+    virtual fj::Vector3 computeVelocityTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+
+    /**
+     *  ナビエストークス方程式の右辺にあるその他の力を求める. 
+     * ここで求めるのは各粒子ごとに異なる力であり、重力のようにすべての粒子に一様にかかる力はここで計算するべきではない. See the ExternalForce class
+     */
+    virtual fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    
+public:
+    const SPHProperty& getPropertyAt(const fj::ParticleID& ID)const
+    {
+        return std::cref( *m_propertyMap.at(ID) );
+    }
     
     virtual fj::Scalar getViscosity(const fj::ParticleID& ID)const // 可変粘性をサポートするためにvirtualで実装しておく
     {
         return VISCOSITY;
     }
-    
-    
 private:
     std::unordered_map<fj::ParticleID, std::unique_ptr<SPHProperty>> m_propertyMap;
     
@@ -64,7 +96,9 @@ private:
     static const fj::Scalar LaplacianKernel;
 };
 
-
+/**
+ * SPH法で計算された値.
+ */
 class fj::SPHMethod::SPHProperty
 {
 public:
