@@ -111,7 +111,7 @@ fj::Particle::NeighborParticles fj::ParticleCollisionDispatcher::getNeighborPart
 
 void fj::ParticleCollisionDispatcher::setNeighbors(const fj::Particle &particle, const Particles &cell, fj::Particle::NeighborParticles *neighborParticles, const fj::ParticleManager& particleManager)const
 {
-    constexpr fj::Scalar kH2 = fj::SimulationConstant::SQUARED_H;
+    constexpr fj::Scalar kH2 = 0.01 * 0.01;
     
     for (const auto& neighbor : cell)
     {
