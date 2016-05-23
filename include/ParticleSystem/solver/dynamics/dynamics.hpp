@@ -21,14 +21,13 @@ namespace fj {
 class fj::Dynamics : public fj::Solver
 {
 public:
-    Dynamics() = delete;
-    virtual~Dynamics() = default;
-
-    Dynamics(const fj::Solver::Priority priority)
-    : fj::Solver(priority)
+    Dynamics()
+    : fj::Solver( fj::Solver::Priority::kSimulation )
     {
         
     }
+    
+    virtual~Dynamics() = default;
     
     void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override
     {

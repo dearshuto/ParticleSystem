@@ -26,8 +26,7 @@ public:
     virtual~ExternalForce() = default;
     
     ExternalForce(std::unique_ptr<fj::Dynamics> dynamics)
-    : fj::Dynamics(fj::Solver::Priority::kSimulation)
-    , m_dynamics( std::move(dynamics) )
+    : m_dynamics( std::move(dynamics) )
     {
         
     }

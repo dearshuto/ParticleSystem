@@ -28,18 +28,8 @@ class fj::SPHMethod : public fj::ContinuumSolver
 {
     class SPHProperty;
 public:
-    SPHMethod()
-    : SPHMethod( fj::Solver::Priority::kSimulation )
-    {
-        
-    }
+    SPHMethod() = default;
     virtual~SPHMethod() = default;
-    
-    SPHMethod(const fj::Solver::Priority priority)
-    : fj::ContinuumSolver(priority)
-    {
-        
-    }
     
     void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
