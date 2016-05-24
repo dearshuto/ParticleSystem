@@ -21,15 +21,9 @@ namespace fj {
 class fj::ContinuumSolver : public fj::Dynamics
 {
 public:
-    ContinuumSolver() = delete;
+    ContinuumSolver() = default;
     virtual~ContinuumSolver() = default;
     
-    ContinuumSolver(const fj::Solver::Priority priority = fj::Solver::Priority::kSimulation)
-    : fj::Dynamics(priority)
-    {
-        
-    }
-
     const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
     {
         assert(m_accelMap.find(ID) != std::end(m_accelMap));
