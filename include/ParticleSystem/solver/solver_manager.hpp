@@ -17,7 +17,6 @@ namespace fj {
     class BBAlgorithm;
     class Dynamics;
     class ParticleCollisionDispatcher;
-    class MeshSolver;
     class Solver;
     class SolverManager;
 }
@@ -34,7 +33,6 @@ public:
     void addSolver(std::unique_ptr<fj::Dynamics> dynamics);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
-    void addSolver(std::unique_ptr<fj::MeshSolver> meshSolver);
     
     std::vector<std::shared_ptr<fj::Solver>>::iterator begin()
     {

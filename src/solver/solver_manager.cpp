@@ -12,7 +12,6 @@
 #include <ParticleSystem/solver/solver.hpp>
 #include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
-#include <ParticleSystem/solver/surface_construction/mesh_solver.hpp>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
 #include <ParticleSystem/solver/solver_manager.hpp>
@@ -35,11 +34,6 @@ void fj::SolverManager::addSolver(std::unique_ptr<fj::ParticleCollisionDispatche
 void fj::SolverManager::addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
 {
     stackSolver( std::move(bbAlgorithm) );
-}
-
-void fj::SolverManager::addSolver(std::unique_ptr<fj::MeshSolver> meshSolver)
-{
-    addSolver(std::move(meshSolver));
 }
 
 void fj::SolverManager::removeCurrentDynamics()

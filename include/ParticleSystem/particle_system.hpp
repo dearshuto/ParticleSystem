@@ -21,7 +21,6 @@
 
 namespace fj {
     class BBAlgorithm;
-    class MeshSolver;
     class Particle;
     class ParticleCollisionDispatcher;
     class ParticleID;
@@ -51,7 +50,6 @@ public:
     /**
      * 毎フレーム更新する処理を登録する
      */
-    void addSolver(std::unique_ptr<fj::MeshSolver> solver);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
     
