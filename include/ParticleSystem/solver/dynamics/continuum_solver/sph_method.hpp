@@ -46,13 +46,11 @@ protected:
      */
     virtual std::unique_ptr<SPHProperty> computePropertyAt(const fj::Particle& particle, const fj::NeighborMap& neighborMap);
 
+    /**
+     * ナビエストークス方程式の右辺を求める
+     */
     fj::Vector3 computeForce(const fj::SPHMethod::SPHInformation& sphInfo)const;
     
-    /**
-     * ナビエストークス方程式の右辺をもとめる
-     */
-    virtual fj::Vector3 computeKernelTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
-
     /**
      * ナビエストークス方程式の右辺のにある圧力項を求める
      */
