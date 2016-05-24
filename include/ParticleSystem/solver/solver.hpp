@@ -30,7 +30,7 @@ class fj::Solver
 public:
     enum class Priority : unsigned int
     {
-        kSurfaceTracking,
+        kSurfaceCunstruction,
         kAdditionalSimulation,
         kSimulation,
         kNeighborMap,

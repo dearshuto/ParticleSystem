@@ -9,14 +9,3 @@
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/solver/surface_construction/surface_construction.hpp>
 #include <ParticleSystem/type/mesh.hpp>
-
-void fj::SurfaceConstruction::executeBBAlgorithm(fj::ParticleSystem *particleSystem)
-{
-    particleSystem->clearMesh();
-    
-    for (auto& mesh : *particleSystem->getMeshesPtr())
-    {
-        mesh = std::move( createMesh(mesh.getLevel()) );
-    }
-    
-}

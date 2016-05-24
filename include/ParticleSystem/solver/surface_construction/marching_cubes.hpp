@@ -52,16 +52,17 @@ class fj::MarchingCubes : public fj::SurfaceConstruction
 public:
     MarchingCubes() = delete;
     virtual~MarchingCubes() = default;
-
-    MarchingCubes(std::unique_ptr<fj::MCBoundingBox> bbAlgorithm)
-    : SurfaceConstruction(std::move(bbAlgorithm))
+    
+    MarchingCubes(std::unique_ptr<fj::BoundingBox> bb)
+    : m_bb( std::move(bb) )
     {
         
     }
     
 private:
     
-
+    void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+    
     virtual fj::Mesh createMesh(const fj::Scalar& level)const override;
     
     void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
@@ -76,14 +77,16 @@ public:
 
     const fj::MarchingCubesInterface& getMCInterface()const
     {
-        return getMCBB();
+        
     }
     
-    const fj::MCBoundingBox& getMCBB()const
+    const fj::BoundingBox& getMCBB()const
     {
-        return  static_cast<const fj::MCBoundingBox&>( const_cast<fj::BBAlgorithm&>( getBBAlgorithm()) );
+        return  std::cref(*m_bb);
     }
     
+private:
+    std::unique_ptr<fj::BoundingBox> m_bb;
 };
 
 #endif /* marching_cubes_hpp */

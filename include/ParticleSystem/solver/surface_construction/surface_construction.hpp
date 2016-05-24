@@ -12,7 +12,7 @@
 #include <memory>
 
 #include <FUJIMath/type/scalar.h>
-#include <ParticleSystem/solver/bb_algorithm/bb_algorithm_decorator.hpp>
+#include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Mesh;
@@ -22,21 +22,30 @@ namespace fj {
 /**
  * 表面抽出
  */
-class fj::SurfaceConstruction : public fj::BBAlgorithmDecorator
+class fj::SurfaceConstruction : public fj::Solver
 {
 public:
-    SurfaceConstruction() = delete;
-    ~SurfaceConstruction() = default;
-    
-    SurfaceConstruction(std::unique_ptr<fj::BBAlgorithm> bb)
-    : BBAlgorithmDecorator( std::move(bb) )
+    SurfaceConstruction()
+    : fj::Solver(fj::Solver::Priority::kSurfaceCunstruction)
     {
         
     }
+    virtual~SurfaceConstruction() = default;
+    
+    SurfaceConstruction(const fj::SurfaceConstruction& other) = delete;
+    SurfaceConstruction& operator=(const fj::SurfaceConstruction& other) = delete;
+    
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override
+    {// 表面抽出の機能だと明示するために、あえて別の関数として継承させる
+        executeSurfaceConstruction(timestep, particleSystem);
+    }
     
 private:
-    void executeBBAlgorithm(fj::ParticleSystem* particleSystem)override;
 
+    /**
+     * fj::Solver::executeを通じて呼ばれる関数.
+     */
+    virtual void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;
     
     /**
      * Levelを閾値として内部と外部を定義したメッシュを作成する
