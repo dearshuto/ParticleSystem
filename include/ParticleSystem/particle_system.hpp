@@ -201,6 +201,7 @@ private:
      */
     fj::NeighborMap m_neighborMap;
     
+public:
     std::vector<fj::Mesh> m_meshes;
 };
 

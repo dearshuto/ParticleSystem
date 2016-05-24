@@ -63,7 +63,10 @@ private:
     
     void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
-    virtual fj::Mesh createMesh(const fj::Scalar& level)const override;
+    /**
+     * Levelを閾値として内部と外部を定義したメッシュを作成する
+     */
+    virtual fj::Mesh createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const;
     
     void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
@@ -73,12 +76,9 @@ private:
 
     fj::Vector3 computeInteractionPoint(const fj::Scalar& level, const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
     
+    const fj::ParticleID& convertVolumePosition(const int x, const int y, const int z)const;
+    
 public:
-
-    const fj::MarchingCubesInterface& getMCInterface()const
-    {
-        
-    }
     
     const fj::BoundingBox& getMCBB()const
     {

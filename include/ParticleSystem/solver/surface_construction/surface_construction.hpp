@@ -45,12 +45,7 @@ private:
     /**
      * fj::Solver::executeを通じて呼ばれる関数.
      */
-    virtual void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;
-    
-    /**
-     * Levelを閾値として内部と外部を定義したメッシュを作成する
-     */
-    virtual fj::Mesh createMesh(const fj::Scalar& level)const = 0;
+    virtual void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;    
 };
 
 #endif /* surface_construction_h */
