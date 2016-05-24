@@ -24,7 +24,7 @@ public:
     PenaltyForce() = delete;
     ~PenaltyForce() = default;
     
-    PenaltyForce(std::unique_ptr<fj::BBAlgorithm> bb, const fj::Scalar& K, const fj::Scalar offset)
+    PenaltyForce(std::unique_ptr<fj::BBAlgorithm> bb, const fj::Scalar& K, const fj::Scalar offset = -0.1)
     : BBAlgorithmDecorator( std::move(bb) )
     , m_K(K)
     , m_offset(offset)
