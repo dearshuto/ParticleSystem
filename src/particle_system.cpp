@@ -14,25 +14,37 @@
 
 #include <FUJIMath/type/vector3.hpp>
 
+#include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
+#include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
 #include <ParticleSystem/particle_system.hpp>
 
+void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
+{
+    m_solverManager.addSolver( std::move(collisionDispatcher) );
+}
+
+void fj::ParticleSystem::addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
+{
+    m_solverManager.addSolver(std::move(bbAlgorithm));
+}
+
 void fj::ParticleSystem::stepSimulation(const float timestep)
 {
-    if (getCollisionDispatcherPtr())
+    for (const auto& solver : m_solverManager)
     {
-        updateParticleNeighbor();
+        solver->execute(timestep, this);
+    }
+
+    for (const auto& solver : m_solverManager)
+    {
+        solver->postexecute(timestep, this);
     }
     
-    simulateParticleBehavior(timestep);    
-    clearParticleNeighbors();
-    
-    if (m_bbAlgorithm)
-    {
-        m_bbAlgorithm->execute( this );
-    }
+    getNeighborMapPtr()->clear();
 }
 
 void fj::ParticleSystem::stepParticlePosition(const float timestep)
@@ -41,90 +53,35 @@ void fj::ParticleSystem::stepParticlePosition(const float timestep)
     for (auto& particle : *getParticleManagerPtr())
     {
         const fj::ParticleID& kID = particle->getID();
-        const fj::Vector3& kAccel = getSolverPtr()->getAccellAt(kID);
+        const fj::Vector3& kAccel = getDynamicsPtr()->getAccellAt(kID);
         
         particle->addVelocity(kAccel * timestep);
         particle->stepSimulation(timestep);
     }
     
+    getDynamicsPtr()->clearAccel();
 }
 
-void fj::ParticleSystem::updateParticleNeighbor()
-{
-    getCollisionDispatcherPtr()->updated();
-    
-    for (auto& particle : *getParticleManagerPtr())
-    {
-        auto neighbors = getCollisionDispatcherPtr()->getNeighborParticlesAt(std::ref(*particle));
-        
-        for (const auto& neighbor : neighbors)
-        {
-            makeCollision(particle->getID(), (neighbor.lock())->getID());
-        }
-        
-    }
-    
-}
-
-void fj::ParticleSystem::simulateParticleBehavior(const fj::Scalar& timestep)
-{
-    getSolverPtr()->compute(timestep, getParticleManager(), getNeighborMap());
-    
-    if (m_enableGravity)
-    {
-        applyGravity();
-    }
-}
-
-void fj::ParticleSystem::applyGravity()
-{
-    const fj::Vector3& kGravity = getGravity();
-    auto iterator = getParticleManager().iterator();
-
-    while ( iterator->hasNext() )
-    {
-        const fj::ParticleID& kID = (iterator->next()).getID();
-        
-        getSolverPtr()->addAccelAt(kID, kGravity);
-    }
-}
-
-void fj::ParticleSystem::clearParticleNeighbors()
-{
-    m_neighborMap.clear();
-}
-
-fj::ParticleID fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
+const fj::ParticleID& fj::ParticleSystem::createParticle(const fj::Vector3& position, const bool movable)
 {
     // 生成した粒子の管理はできるだけfj::ParticleManagerに任せたいので, fj::ParticleManager::registerParticleを最初に呼ぶ.
-    const fj::ParticleID kID = getParticleManagerPtr()->getUnusedID();
+    const fj::ParticleID& kID = getParticleManagerPtr()->getUnusedID();
     std::unique_ptr<fj::Particle> particle(new fj::Particle(kID, position));
-    const std::shared_ptr<fj::Particle> sharedParticle = getParticleManagerPtr()->registerParticle( std::move(particle), movable );
+    const fj::Particle& kRegisteredParticle = getParticleManagerPtr()->registerParticle( std::move(particle), movable );
     
-    getNeighborMapPtr()->registerParticle( std::cref(*sharedParticle) );
-    
-    if (getCollisionDispatcherPtr())
-    {
-        getCollisionDispatcherPtr()->registerParticle(sharedParticle);
-    }
-    
-    return kID;
+    getNeighborMapPtr()->registerParticle( kID );
+        
+    return kRegisteredParticle.getID();
 }
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
-    const fj::Particle& particle1 = getParticleManager().search(ID1);
-    const fj::Particle& particle2 = getParticleManager().search(ID2);
-    
-    getNeighborMapPtr()->addNeighborInformation(particle1, particle2, distance);
+    getNeighborMapPtr()->addNeighborInformation(ID1, ID2, distance, getParticleManager());
 }
 
 void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::ParticleID &ID2)
 {
-    const fj::Particle& particle1 = getParticleManager().search(ID1);
-    const fj::Particle& particle2 = getParticleManager().search(ID2);
-    
-    getNeighborMapPtr()->addNeighborInformation(particle1, particle2);
+    getNeighborMapPtr()->addNeighborInformation(ID1, ID2, getParticleManager());
 }
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)
@@ -154,7 +111,12 @@ void fj::ParticleSystem::setParticleVelocityAt(const fj::ParticleID& ID, const f
     particle->setVelocity(velocity);
 }
 
+const fj::Vector3& fj::ParticleSystem::getAppliedAccel(const fj::ParticleID &ID)const
+{
+    return m_solverManager.getDynamics().getAccellAt(ID);
+}
+
 void fj::ParticleSystem::addAccelAt(const fj::ParticleID &ID, const fj::Vector3 &accel)
 {
-    getSolverPtr()->addAccelAt(ID, accel);
+    getDynamicsPtr()->addAccelAt(ID, accel);
 }

@@ -30,11 +30,13 @@ public:
     
     ~ParticleID() = default;
     
-    ParticleID(const ParticleID& other)
+    explicit ParticleID(const ParticleID& other)
     : m_ID(other.getData())
     {
         
     }
+    
+    ParticleID(fj::ParticleID&& other) = default;
     
     explicit ParticleID(const unsigned int num)
     : m_ID(num)
@@ -62,6 +64,11 @@ public:
         return !this->operator==(other);
     }
     
+    bool operator<(const fj::ParticleID& other)const
+    {
+        return (this->getData() < other.getData());
+    }
+    
     unsigned int getData()const
     {
         return m_ID;
@@ -74,7 +81,7 @@ private:
 
 namespace std {
     template<>
-    class hash<fj::ParticleID>
+    struct hash<fj::ParticleID>
     {
     public:
         size_t operator()(const fj::ParticleID& x) const{

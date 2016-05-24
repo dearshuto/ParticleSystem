@@ -34,8 +34,6 @@ public:
     constexpr static const fj::Scalar PARTICLE_RADIUS = 0.005;//[m]
     constexpr static const fj::Scalar PARTICLE_VOLUME = (4 / 3) * M_PI * PARTICLE_RADIUS * PARTICLE_RADIUS * PARTICLE_RADIUS;//[m^3]
     constexpr static const fj::Scalar PARTICLE_MASS = RESTDENSITY * PARTICLE_VOLUME;//[kg]
-    constexpr static const fj::Scalar H = 0.01;//m
-    constexpr static const fj::Scalar SQUARED_H = H * H;
 
     constexpr static const fj::Scalar SPH_SIGMA = 300;
     constexpr static const fj::Scalar SPH_INTSTIFF = 3.0f;
@@ -50,10 +48,6 @@ public:
     static const int D_TIMESTEP = 100;
 
     constexpr static fj::Scalar DIS_PLUS_AT = 0.4f;
-
-    static const fj::Scalar Poly6Kernel;
-    static const fj::Scalar SpikyKernel;
-    static const fj::Scalar LaplacianKernel;
 };
 
 namespace fj {

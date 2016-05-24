@@ -9,6 +9,7 @@
 #ifndef neighbor_map_hpp
 #define neighbor_map_hpp
 
+#include <cassert>
 #include <iostream>
 #include <functional>
 #include <tuple>
@@ -19,6 +20,7 @@
 #include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
+#include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
     class Particle;
@@ -32,31 +34,33 @@ namespace fj {
  */
 class fj::NeighborMap
 {
-    class NeighborInformation;
 public:
+    class NeighborInformation;
+private:
     typedef std::vector<NeighborInformation> NeighborInformations;
 public:
     NeighborMap() = default;
     ~NeighborMap() = default;
     
+    
     /**
      * 衝突判定対象となる粒子を登録する
      */
-    void registerParticle(const fj::Particle& particle);
+    void registerParticle(const fj::ParticleID& particle);
     
     /**
      * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!
      * @param ID 注目粒子
      * @param neighborID 注目粒子の近傍に入ってきた粒子
      */
-    void addNeighborInformation(const fj::Particle& particle, const fj::Particle& neighborParticle);
+    void addNeighborInformation(const fj::ParticleID& particle, const fj::ParticleID& neighborParticle, const fj::ParticleManager& particleManager);
     
     /**
      * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!
      * @param ID 注目粒子
      * @param neighborID 注目粒子の近傍に入ってきた粒子
      */
-    void addNeighborInformation(const fj::Particle& particle, const fj::Particle& neighborParticle, const fj::Scalar& distance);
+    void addNeighborInformation(const fj::ParticleID& particle, const fj::ParticleID& neighborParticle, const fj::Scalar& distance, const fj::ParticleManager& particleManager);
 
     /**
      * マップ内の情報を初期化する. 登録されている登録されている粒子自体が消去されるわけではない.
@@ -65,6 +69,7 @@ public:
     
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
+        assert(m_neighbors.find(ID) != std::end(m_neighbors));
         return std::cref( m_neighbors.at(ID) );
     }
     
@@ -79,7 +84,7 @@ public:
     ~NeighborInformation() = default;
     
     NeighborInformation(const fj::ParticleID& ID, const fj::Vector3& direction, const fj::Scalar& kSquaredDistance, const fj::Scalar& distance)
-    : m_ID(ID)
+    : m_ID( ID.getData() )
     , m_direction(direction)
     , m_squaredDistance(kSquaredDistance)
     , m_distance(distance)

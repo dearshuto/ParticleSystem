@@ -13,17 +13,18 @@
 #include <tuple>
 #include <vector>
 
-#include <ParticleSystem/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/collision_dispatcher/particle_collision_dispatcher.hpp>
-#include <ParticleSystem/particle_manager/particle_manager.hpp>
-#include <ParticleSystem/particle_manager/neighbor_map.hpp>
-#include <ParticleSystem/surface_construction/marching_cubes.hpp>
-#include <ParticleSystem/solver/solver.hpp>
-#include <ParticleSystem/type/mesh.hpp>
+#include "particle_manager/particle_manager.hpp"
+#include "particle_manager/neighbor_map.hpp"
+#include "solver/solver_manager.hpp"
+#include "solver/dynamics/dynamics.hpp" //コンストラクタで必要
+#include "type/mesh.hpp"
 
 namespace fj {
+    class BBAlgorithm;
     class Particle;
+    class ParticleCollisionDispatcher;
     class ParticleID;
+    class Solver;
     class ParticleSystem;
 }
 
@@ -38,33 +39,19 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher = nullptr, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
-    : m_enableGravity(false)
-    , m_gravity( fj::Vector3(0, -9.8, 0) )
+    ParticleSystem(std::unique_ptr<fj::Dynamics> solver)
     {
-        m_solver = std::move(solver);
-        m_collisionDispatcher =  std::move(collisionDispatcher);
-        m_bbAlgorithm = std::move(bb);
-    }
-    
-    
-    ParticleSystem(std::unique_ptr<fj::Solver> solver, std::unique_ptr<fj::BBAlgorithm> bb = nullptr)
-    : ParticleSystem(std::move(solver), nullptr, std::move(bb))
-    {
+        m_solverManager.addSolver( std::move(solver) );
     }
 
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
     
-    void enableGravity()
-    {
-        m_enableGravity = true;
-    }
-    
-    void disableGravity()
-    {
-        m_enableGravity = false;
-    }
+    /**
+     * 毎フレーム更新する処理を登録する
+     */
+    void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
+    void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
     
     /**
      * シミュレーションをタイムステップ分進める
@@ -87,12 +74,17 @@ public:
         }
     }
     
+    const fj::Mesh& getMesh(const unsigned int index)
+    {
+        return m_solverManager.getMesh(index);
+    }
+    
     /**
      * 指定された位置に粒子を生成する
      * @param position 粒子の位置
      * @param movable 移動可能の判断
      */
-    fj::ParticleID createParticle(const fj::Vector3& position, const bool movable = true);
+    const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
 
     /**
      * 等置面を定義する.
@@ -101,6 +93,8 @@ public:
     {
         m_meshes.emplace_back(level);
     }
+    
+    bool hasNextSurfaceTriangle()const;
     
     /**
      * 粒子間の衝突を作る
@@ -124,7 +118,6 @@ public:
      */
     void applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3& collisionPoint);
     
-
     /**
      *現在は未実装
      */
@@ -133,10 +126,7 @@ public:
     /**
      * 粒子の加速度を取得する
      */
-    const fj::Vector3& getAppliedAccel(const fj::ParticleID& ID)const
-    {
-        return m_solver->getAccellAt(ID);
-    }
+    const fj::Vector3& getAppliedAccel(const fj::ParticleID& ID)const;
     
     /**
      * 粒子に加速度を追加する
@@ -153,56 +143,20 @@ public:
      * 強制的に粒子の速度を変更する
      */
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
-
-protected:
-    virtual void simulateParticleBehavior(const fj::Scalar& timestep);
     
-    void applyGravity();
-    
-private:
-    /**
-     * ParticleCollisionDispatcherを利用して近傍粒子探索を行う. ParticleCollisionDispatcherがnullptrのときは何も起きない.
-     */
-    void updateParticleNeighbor();
-
-    /**
-     * NeighborMapに登録されている近傍情報をすべて消去する
-     */
-    void clearParticleNeighbors();
-
 //getters & setters
 public:
-
-    const fj::Vector3& getGravity()const
-    {
-        return m_gravity;
-    }
-    
-    void setGravity(const fj::Vector3& gravity)
-    {
-        m_gravity = gravity;
-    }
     
     const fj::ParticleManager& getParticleManager()const
     {
         return m_particleManager;
     }
     
-    const fj::ParticleCollisionDispatcher& getCollisionDispatcher()const
-    {
-        return *m_collisionDispatcher;
-    }
-    
     const fj::NeighborMap& getNeighborMap()const
     {
-        return m_neighborMap;
+        return std::cref(m_neighborMap);
     }
     
-    const fj::Solver& getSolver()const
-    {
-        return std::cref(*m_solver);
-    }
- 
     const std::vector<fj::Mesh>& getMeshes()const
     {
         return std::cref(m_meshes);
@@ -213,13 +167,13 @@ public:
         return &m_meshes;
     }
     
+    const fj::Dynamics& getDynamics()const
+    {
+        return m_solverManager.getDynamics();
+    }
+    
 protected:
     
-    std::unique_ptr<fj::ParticleCollisionDispatcher>& getCollisionDispatcherPtr()
-    {
-        return m_collisionDispatcher;
-    }
-
     fj::ParticleManager* getParticleManagerPtr()
     {
         return &m_particleManager;
@@ -230,15 +184,12 @@ protected:
         return &m_neighborMap;
     }
     
-    std::unique_ptr<fj::Solver>& getSolverPtr()
+    std::shared_ptr<fj::Dynamics>& getDynamicsPtr()
     {
-        return m_solver;
+        return m_solverManager.getDynamicsPtr();
     }
-        
-private:
-    bool m_enableGravity;
     
-    fj::Vector3 m_gravity;
+private:
     
     /**
      * 走査とID検索とを可能な状態で粒子を管理する
@@ -246,23 +197,16 @@ private:
     fj::ParticleManager m_particleManager;
     
     /**
-     * 粒子法アルゴリズム
+     * 毎フレーム更新する処理の管理
      */
-    std::unique_ptr<fj::Solver> m_solver;
+    fj::SolverManager m_solverManager;
     
     /**
      * 近傍情報の管理
      */
     fj::NeighborMap m_neighborMap;
     
-    /**
-     * 独自実装の近傍探索アルゴリズム
-     * 近傍粒子探索を外部にいたくするときは必要ない
-     */
-    std::unique_ptr<fj::ParticleCollisionDispatcher> m_collisionDispatcher;
-    
-    std::unique_ptr<fj::BBAlgorithm> m_bbAlgorithm;
-
+public:
     std::vector<fj::Mesh> m_meshes;
 };
 

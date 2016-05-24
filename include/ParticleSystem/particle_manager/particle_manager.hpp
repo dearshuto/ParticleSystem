@@ -9,6 +9,7 @@
 #ifndef particle_manager_hpp
 #define particle_manager_hpp
 
+#include <cassert>
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -37,13 +38,14 @@ public:
     ParticleManager(const fj::ParticleManager& other) = delete;
     ParticleManager& operator=(const fj::ParticleManager& other) = delete;
     
-    const std::shared_ptr<fj::Particle> registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
+    const fj::Particle& registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
 
     /**
      * 指定されたIDをもつ粒子を返す.
      */
     std::shared_ptr<fj::Particle>& search(const fj::ParticleID& ID)
     {
+        assert(m_hashMap.find(ID) != std::end(m_hashMap));
         return std::ref(m_hashMap.at(ID));
     }
 
@@ -52,6 +54,7 @@ public:
      */
     const fj::Particle& search(const fj::ParticleID& ID)const
     {
+        assert(m_hashMap.find(ID) != std::end(m_hashMap));
         return std::cref( *m_hashMap.at(ID) );
     }
     
@@ -66,6 +69,12 @@ public:
     }
     
     std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
+    
+private:
+    const fj::Particle& getLastRegisteredParticle()const
+    {
+        return std::cref( *m_particles[m_particles.size() - 1] );
+    }
     
 public:
     
@@ -87,11 +96,12 @@ public:
     /**
      * ParticleManagerで使用されていないIDを返す.
      */
-    const fj::ParticleID getUnusedID()
+    fj::ParticleID getUnusedID()
     {
         // 返す値が絶対にダブらないように死守すること
         static unsigned int i = 0;
-        return fj::ParticleID(i++);
+        fj::ParticleID id(i++);
+        return id;
     }
     
 private:
