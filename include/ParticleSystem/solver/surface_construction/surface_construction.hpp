@@ -12,6 +12,8 @@
 #include <memory>
 
 #include <FUJIMath/type/scalar.h>
+
+#include <ParticleSystem/type/mesh.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 
 namespace fj {
@@ -47,10 +49,15 @@ private:
      */
     virtual void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;
     
-    /**
-     * Levelを閾値として内部と外部を定義したメッシュを作成する
-     */
-    virtual fj::Mesh createMesh(const fj::Scalar& level)const = 0;
+public:
+    
+    const fj::Mesh& getMesh(const unsigned int index)
+    {
+        return std::cref(m_mesh[index]);
+    }
+    
+private:
+    std::vector<fj::Mesh> m_mesh;
 };
 
 #endif /* surface_construction_h */

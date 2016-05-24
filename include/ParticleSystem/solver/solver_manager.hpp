@@ -16,8 +16,10 @@
 namespace fj {
     class BBAlgorithm;
     class Dynamics;
+    class Mesh;
     class ParticleCollisionDispatcher;
     class Solver;
+    class SurfaceConstruction;
     class SolverManager;
 }
 
@@ -33,6 +35,7 @@ public:
     void addSolver(std::unique_ptr<fj::Dynamics> dynamics);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
+    void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
     
     std::vector<std::shared_ptr<fj::Solver>>::iterator begin()
     {
@@ -51,6 +54,7 @@ private:
     void stackSolver(std::shared_ptr<fj::Solver> solver);
     
     void removeCurrentDynamics();
+    void removeCurrentSurfaceConstruction();
     
 public:
     const fj::Dynamics& getDynamics()const
@@ -63,6 +67,8 @@ public:
         return std::ref(m_dynamics);
     }
     
+    const fj::Mesh& getMesh(const unsigned int index)const;
+
 private:
     std::vector<std::shared_ptr<fj::Solver>>& getSolversPtr()
     {
@@ -80,6 +86,8 @@ private:
      * ひとつしか必要ないDynamicsの管理. m_solverの中に格納されると区別できなくなるので別個に保存しておく.
      */
     std::shared_ptr<fj::Dynamics> m_dynamics;
+    
+    std::shared_ptr<fj::SurfaceConstruction> m_surfaceConstrucsion;
 };
 
 #endif /* solver_manager_hpp */

@@ -340,34 +340,40 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level)const
+void fj::MarchingCubes::executeSurfaceConstruction(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {
-    const fj::MarchingCubesInterface& mcInterface = getMCInterface();
+    const fj::Dynamics& kDynamics = particleSystem->getDynamics();
+    
+    particleSystem->m_meshes[0] = createMesh(1, kDynamics);
+}
+
+fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const
+{
     const int kResolusionX = getMCBB().getRangeX().getResolusion();
     const int kResolusionY = getMCBB().getRangeY().getResolusion();
     const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
     
     fj::Mesh mesh(level);
-    
     CubeValue_t cubeValue;
     
     for (int i = 0; i < kResolusionX - 1; i++) {
         for (int j = 0; j < kResolusionY - 1; j++) {
             for (int k = 0; k < kResolusionZ - 1; k++) {
                 
-                cubeValue[0] = mcInterface.getScalar(i, j, k);
-                cubeValue[1] = mcInterface.getScalar(i+1, j, k);
-                cubeValue[2] = mcInterface.getScalar(i+1, j+1, k);
-                cubeValue[3] = mcInterface.getScalar(i, j+1, k);
-                cubeValue[4] = mcInterface.getScalar(i, j, k+1);
-                cubeValue[5] = mcInterface.getScalar(i+1, j, k+1);
-                cubeValue[6] = mcInterface.getScalar(i+1, j+1, k+1);
-                cubeValue[7] = mcInterface.getScalar(i, j+1, k+1);
+                cubeValue[0] = dynamics.calculateScalar(convertVolumePosition(i, j, k));
+                cubeValue[1] = dynamics.calculateScalar(convertVolumePosition(i+1, j, k));
+                cubeValue[2] = dynamics.calculateScalar(convertVolumePosition(i+1, j+1, k));
+                cubeValue[3] = dynamics.calculateScalar(convertVolumePosition(i, j+1, k));
+                cubeValue[4] = dynamics.calculateScalar(convertVolumePosition(i, j, k+1));
+                cubeValue[5] = dynamics.calculateScalar(convertVolumePosition(i+1, j, k+1));
+                cubeValue[6] = dynamics.calculateScalar(convertVolumePosition(i+1, j+1, k+1));
+                cubeValue[7] = dynamics.calculateScalar(convertVolumePosition(i, j+1, k+1));
                 
                 addMesh(&mesh, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
+    
     return std::move(mesh);
 }
 

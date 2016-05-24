@@ -74,6 +74,11 @@ public:
         }
     }
     
+    const fj::Mesh& getMesh(const unsigned int index)
+    {
+        return m_solverManager.getMesh(index);
+    }
+    
     /**
      * 指定された位置に粒子を生成する
      * @param position 粒子の位置
@@ -201,6 +206,7 @@ private:
      */
     fj::NeighborMap m_neighborMap;
     
+public:
     std::vector<fj::Mesh> m_meshes;
 };
 
