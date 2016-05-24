@@ -12,6 +12,7 @@
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/bb_algorithm/penalty_force.hpp>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_method.hpp>
 #include <ParticleSystem/solver/dynamics/external_force/gravity_force.hpp>
@@ -25,8 +26,9 @@ int main(int argc, char** argv)
     const fj::Scalar kBLockSize = kParticleRadius * 5;
     
     fj::BoundingBox::Range kRange(0, 0.05, 0.001);
-    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange) );
-    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
+    std::unique_ptr<fj::BoundingBox> bb(new fj::BoundingBox(kRange, kRange, kRange) );
+    std::unique_ptr<fj::PenaltyForce> pf( new fj::PenaltyForce( std::move(bb), 1000) );
+//    std::unique_ptr<fj::MarchingCubes> mc( new fj::MarchingCubes(std::move(bb)) );
     
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
     
@@ -35,7 +37,7 @@ int main(int argc, char** argv)
     fj::ParticleSystem particleSystem(std::move(gravity));
     
     particleSystem.addSolver( std::move(collisionDispatcher) );
-//    particleSystem.addSolver( std::move(bb) );
+    particleSystem.addSolver( std::move(pf) );
     
     particleSystem.createIsosurface(150);
     particleSystem.createIsosurface(170);
