@@ -27,6 +27,7 @@ namespace fj {
 
 class fj::SPHMethod : public fj::ContinuumSolver
 {
+protected:
     class SPHProperty;
     class SPHInformation;
 public:
