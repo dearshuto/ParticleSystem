@@ -92,6 +92,7 @@ private:
     constexpr static const fj::Scalar INSTIFF = 3.f;
     constexpr static const fj::Scalar VISCOSITY = 10.8;
     
+protected:
     static const fj::Scalar Poly6Kernel;
     static const fj::Scalar SpikyKernel;
     static const fj::Scalar LaplacianKernel;

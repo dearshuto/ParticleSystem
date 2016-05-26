@@ -21,9 +21,10 @@ namespace fj {
 
 class fj::SPHDEM : public fj::SPHMethod
 {
+    typedef fj::SPHMethod Super;
 public:
     SPHDEM()
-    : m_angleOfRepose( fj::Scalar(45) )
+    : m_angleOfRepose( fj::Scalar(30) )
     {
         computeFrictionCoefficient();
     }
@@ -32,7 +33,9 @@ public:
     
     SPHDEM(const fj::SPHDEM& other) = delete;
     SPHDEM& operator=(const fj::SPHDEM& other) = delete;
-    
+
+    fj::Vector3 computeVelocityTerm(const fj::SPHMethod::SPHInformation& sphInfo)const override;
+
     fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo)const override;
 
 private:
