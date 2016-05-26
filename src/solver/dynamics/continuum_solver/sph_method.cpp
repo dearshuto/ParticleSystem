@@ -20,42 +20,6 @@ const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64)
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 const fj::Scalar fj::SPHMethod::LaplacianKernel = fj::Scalar(45) / (fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 
-/**
- * SPHの計算で必要なインスタンスの運搬.
- */
-class fj::SPHMethod::SPHInformation
-{
-public:
-    SPHInformation() = delete;
-    ~SPHInformation() = default;
-    
-    SPHInformation(
-                   const fj::Particle& targetParticle
-                   , const SPHProperty& property
-                   , const fj::Particle& neighbor
-                   , const SPHProperty& neighborProperty
-                   , const fj::NeighborMap::NeighborInformation& neighborInfo
-                   , const fj::Scalar& weight
-    )
-    : TargetParticle(targetParticle)
-    , Property(property)
-    , NeighborParticle(neighbor)
-    , NeighborProperty(neighborProperty)
-    , NeighborInformation( neighborInfo )
-    , Weight(weight)
-    {
-        
-    }
-    
-public:
-    const fj::Particle& TargetParticle;
-    const SPHProperty& Property;
-    const fj::Particle& NeighborParticle;
-    const SPHProperty& NeighborProperty;
-    const fj::NeighborMap::NeighborInformation& NeighborInformation;
-    const fj::Scalar Weight;
-};
-
 void fj::SPHMethod::executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particlesystem)
 {
     const fj::ParticleManager& kParticleManager = particlesystem->getParticleManager();

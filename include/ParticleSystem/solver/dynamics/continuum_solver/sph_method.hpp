@@ -17,6 +17,8 @@
 #include <unordered_map>
 
 #include <ParticleSystem/solver/solver.hpp>
+#include <ParticleSystem/particle_manager/neighbor_map.hpp>
+
 #include "continuum_solver.hpp"
 
 namespace fj {
@@ -132,4 +134,40 @@ private:
     fj::Scalar m_pressure;
 };
 
+
+/**
+ * SPHの計算で必要なインスタンスの運搬.
+ */
+class fj::SPHMethod::SPHInformation
+{
+public:
+    SPHInformation() = delete;
+    ~SPHInformation() = default;
+    
+    SPHInformation(
+                   const fj::Particle& targetParticle
+                   , const SPHProperty& property
+                   , const fj::Particle& neighbor
+                   , const SPHProperty& neighborProperty
+                   , const fj::NeighborMap::NeighborInformation& neighborInfo
+                   , const fj::Scalar& weight
+                   )
+    : TargetParticle(targetParticle)
+    , Property(property)
+    , NeighborParticle(neighbor)
+    , NeighborProperty(neighborProperty)
+    , NeighborInformation( neighborInfo )
+    , Weight(weight)
+    {
+        
+    }
+    
+public:
+    const fj::Particle& TargetParticle;
+    const SPHProperty& Property;
+    const fj::Particle& NeighborParticle;
+    const SPHProperty& NeighborProperty;
+    const fj::NeighborMap::NeighborInformation& NeighborInformation;
+    const fj::Scalar Weight;
+};
 #endif /* sph_method_hpp */
