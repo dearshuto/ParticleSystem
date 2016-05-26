@@ -67,7 +67,6 @@ void fj::SPHMethod::executeDynamics(const fj::Scalar& timestep, fj::ParticleSyst
 
 void fj::SPHMethod::updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)
 {
-    
     auto iterator = particleManager.iterator();
     
     while (iterator->hasNext())
@@ -139,10 +138,10 @@ fj::Vector3 fj::SPHMethod::computeForce(const fj::SPHMethod::SPHInformation &sph
     const fj::Vector3 kPressureKernelterm = computePressureTerm(sphInfo);
     const fj::Vector3 kExtraTerm = computeExtraTerm(sphInfo);
     
+    const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm + kExtraTerm;
     const SPHProperty& kNeighborProperty = sphInfo.NeighborProperty;
-    const fj::Scalar kC = sphInfo.Weight;
     
-    return PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kC * (kVelocityKernelTerm + kPressureKernelterm) + kExtraTerm;
+    return PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kKernelTerm;
 }
 
 fj::Vector3 fj::SPHMethod::computePressureTerm(const fj::SPHMethod::SPHInformation& sphInfo)const
@@ -152,7 +151,7 @@ fj::Vector3 fj::SPHMethod::computePressureTerm(const fj::SPHMethod::SPHInformati
     const fj::Vector3& kDirection = sphInfo.NeighborInformation.getDirection();
     const fj::Scalar kC = sphInfo.Weight;
     
-    return -fj::Scalar(0.5 * (kProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * kC) * kDirection;
+    return -fj::Scalar(0.5 * (kProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * std::pow(kC, 2)) * kDirection;
 }
 
 fj::Vector3 fj::SPHMethod::computeVelocityTerm(const fj::SPHMethod::SPHInformation &sphInfo)const
@@ -160,8 +159,9 @@ fj::Vector3 fj::SPHMethod::computeVelocityTerm(const fj::SPHMethod::SPHInformati
     const fj::Particle& kTargetParticle = sphInfo.TargetParticle;
     const fj::Particle& kNeighborParticle = sphInfo.NeighborParticle;
     const fj::ParticleID& kID = kTargetParticle.getID();
+    const fj::Scalar kC = sphInfo.Weight;
     
-    return getViscosity(kID) * (kNeighborParticle.getVelocity() - kTargetParticle.getVelocity()) * LaplacianKernel;
+    return getViscosity(kID) * (kNeighborParticle.getVelocity() - kTargetParticle.getVelocity()) * kC * LaplacianKernel;
 }
 
 fj::Vector3 fj::SPHMethod::computeExtraTerm(const fj::SPHMethod::SPHInformation &sphInfo)const
