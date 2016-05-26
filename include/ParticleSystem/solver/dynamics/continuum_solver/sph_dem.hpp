@@ -10,12 +10,14 @@
 #define sph_dem_hpp
 
 #include <functional>
+#include <unordered_map>
 
 #include <FUJIMath/type/scalar.h>
 
 #include "sph_method.hpp"
 
 namespace fj {
+    class ParticleID;
     class SPHDEM;
 }
 
@@ -34,10 +36,10 @@ public:
     SPHDEM(const fj::SPHDEM& other) = delete;
     SPHDEM& operator=(const fj::SPHDEM& other) = delete;
 
-    fj::Vector3 computeVelocityTerm(const fj::SPHMethod::SPHInformation& sphInfo)const override;
-
-    fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo)const override;
-
+    fj::Scalar computeSpikyScalarValue(const fj::SPHMethod::SPHInformation& sphInfo)override;
+    
+    fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo)override;
+    
 private:
     
     void computeFrictionCoefficient();
@@ -70,6 +72,8 @@ private:
      * 摩擦係数
      */
     fj::Scalar m_frictionCoefficient;
+    
+    std::unordered_map<fj::ParticleID, int> m_smoothedPressure;
 };
 
 #endif /* sph_dem_hpp */

@@ -52,23 +52,43 @@ protected:
     /**
      * ナビエストークス方程式の右辺を求める
      */
-    fj::Vector3 computeForce(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    fj::Vector3 computeForce(const fj::SPHMethod::SPHInformation& sphInfo);
     
     /**
-     * ナビエストークス方程式の右辺のにある圧力項を求める
+     * Spikyカーネルを利用した勾配項の計算
      */
-    virtual fj::Vector3 computePressureTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    virtual fj::Vector3 computeSpikyKernelTerm(const fj::SPHMethod::SPHInformation& sphInfo);
 
     /**
-     * ナビエストークス方程式の右辺にある粘性項を求める
+     * Spikyカーネルで平滑化するスカラ値
      */
-    virtual fj::Vector3 computeVelocityTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    virtual fj::Scalar computeSpikyScalarValue(const fj::SPHMethod::SPHInformation& sphInfo);
 
     /**
-     *  ナビエストークス方程式の右辺にあるその他の力を求める. 
+     * ラプラシアンカーネルを利用した項の計算
+     */
+    virtual fj::Vector3 computeLaplacianKernelTerm(const fj::SPHMethod::SPHInformation& sphInfo);
+
+    /**
+     * ラプラシアンカーネルで平滑化するベクトル
+     */
+    fj::Vector3 computeLaplacianVector(const fj::SPHMethod::SPHInformation& sphInfo);
+
+    /**
+     *  ナビエストークス方程式の右辺にあるその他の力を求める.
      * ここで求めるのは各粒子ごとに異なる力であり、重力のようにすべての粒子に一様にかかる力はここで計算するべきではない. See the ExternalForce class
      */
-    virtual fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    virtual fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo);
+
+    /**
+     * 圧力の計算
+     */
+    virtual fj::Scalar computePressureScalar(const fj::SPHMethod::SPHInformation& sphInfo)const;
+    
+    /**
+     * 粘性の計算
+     */
+    virtual fj::Vector3 computeViscosity(const fj::SPHMethod::SPHInformation& sphInfo)const;
     
 public:
     const SPHProperty& getPropertyAt(const fj::ParticleID& ID)const
