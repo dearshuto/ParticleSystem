@@ -36,7 +36,7 @@ public:
     SPHMethod() = default;
     virtual~SPHMethod() = default;
     
-    void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+    virtual void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
     fj::Scalar calculateScalar(const fj::ParticleID& ID)const override;
     
@@ -72,7 +72,7 @@ protected:
     /**
      * ラプラシアンカーネルで平滑化するベクトル
      */
-    fj::Vector3 computeLaplacianVector(const fj::SPHMethod::SPHInformation& sphInfo);
+    virtual fj::Vector3 computeLaplacianVector(const fj::SPHMethod::SPHInformation& sphInfo);
 
     /**
      *  ナビエストークス方程式の右辺にあるその他の力を求める.
