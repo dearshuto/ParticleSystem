@@ -6,8 +6,10 @@
 //
 //
 
+#include <algorithm>
 #include <cmath>
 
+#include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_method.hpp>
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_dem.hpp>
 #include <ParticleSystem/particle/particle_id.h>
@@ -29,6 +31,7 @@ void fj::SPHDEM::computeFrictionCoefficient()
 
 fj::Scalar fj::SPHDEM::getViscosity(const fj::ParticleID &ID)const
 {
+    // 圧力に比例するように粘性を変化させる. 0~200でclampしておく.
     const fj::Scalar kFrictinParameter = m_smoothedPressure.at(ID) * getFrictionCoefficient();
     return std::max(fj::Scalar(Super::getViscosity(ID)), std::min(kFrictinParameter, fj::Scalar(200)));
 }

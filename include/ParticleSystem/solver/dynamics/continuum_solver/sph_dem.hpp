@@ -36,19 +36,30 @@ public:
     SPHDEM(const fj::SPHDEM& other) = delete;
     SPHDEM& operator=(const fj::SPHDEM& other) = delete;
 
+    /**
+     * 摩擦力の計算には圧力が必要なので、計算結果を一時的に保存しておくためにオーバーライドする.
+     * Spikyカーネルで平滑化する対象は圧力だけなのはSPH法と変わらない.
+     */
     fj::Scalar computeSpikyScalarValue(const fj::SPHMethod::SPHInformation& sphInfo)override;
     
 private:
     
+    /**
+     * 現在設定されている安息角から摩擦係数を算出する
+     */
     void computeFrictionCoefficient();
-    
+
+    /**
+     * Viscosityを変化させることで、内部摩擦を表現する
+     */
     fj::Scalar getViscosity(const fj::ParticleID& ID)const override;
+
 public:
     const fj::Scalar& getAngleOfRepose()const
     {
         return std::cref(m_angleOfRepose);
     }
-    
+
     void setAngleOfRange(const fj::Scalar& angleOfRepose)
     {
         m_angleOfRepose = angleOfRepose;
@@ -59,7 +70,6 @@ public:
     {
         return std::cref(m_frictionCoefficient);
     }
-    
     
 private:
     
@@ -73,6 +83,9 @@ private:
      */
     fj::Scalar m_frictionCoefficient;
     
+    /**
+     * 粒子にかかっている圧力
+     */
     std::unordered_map<fj::ParticleID, int> m_smoothedPressure;
 };
 
