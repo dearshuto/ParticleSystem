@@ -16,6 +16,7 @@
 
 #include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
+#include <ParticleSystem/solver/surface_construction/surface_construction.hpp>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
@@ -30,6 +31,11 @@ void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatch
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
 {
     m_solverManager.addSolver(std::move(bbAlgorithm));
+}
+
+void fj::ParticleSystem::addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction)
+{
+    m_solverManager.addSolver(std::move(surfaceConstruction));
 }
 
 void fj::ParticleSystem::stepSimulation(const float timestep)
