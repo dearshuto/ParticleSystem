@@ -349,10 +349,10 @@ void fj::MarchingCubes::executeSurfaceConstruction(const fj::Scalar &timestep, f
 
 fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const
 {
-    const int kResolusionX = getMCBB().getRangeX().getResolusion();
-    const int kResolusionY = getMCBB().getRangeY().getResolusion();
-    const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
-    
+    const int kResolusionX = getBB().getRangeX().getResolusion();
+    const int kResolusionY = getBB().getRangeY().getResolusion();
+    const int kResolusionZ = getBB().getRangeZ().getResolusion();
+
     fj::Mesh mesh(level);
     CubeValue_t cubeValue;
     

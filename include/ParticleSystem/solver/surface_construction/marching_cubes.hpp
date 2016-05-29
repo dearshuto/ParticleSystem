@@ -80,7 +80,7 @@ private:
     
 public:
     
-    const fj::BoundingBox& getMCBB()const
+    const fj::BoundingBox& getBB()const
     {
         return  std::cref(*m_bb);
     }
