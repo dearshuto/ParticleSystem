@@ -342,6 +342,7 @@ int a2iTriangleConnectionTable[256][16] =
 
 void fj::MarchingCubes::executeSurfaceConstruction(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {
+    m_bb->execute(timestep, particleSystem);
     const fj::Dynamics& kDynamics = particleSystem->getDynamics();
     
     particleSystem->m_meshes[0] = createMesh(1, kDynamics);
@@ -349,10 +350,10 @@ void fj::MarchingCubes::executeSurfaceConstruction(const fj::Scalar &timestep, f
 
 fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const
 {
-    const int kResolusionX = getMCBB().getRangeX().getResolusion();
-    const int kResolusionY = getMCBB().getRangeY().getResolusion();
-    const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
-    
+    const int kResolusionX = getBB().getRangeX().getResolusion();
+    const int kResolusionY = getBB().getRangeY().getResolusion();
+    const int kResolusionZ = getBB().getRangeZ().getResolusion();
+
     fj::Mesh mesh(level);
     CubeValue_t cubeValue;
     
@@ -360,21 +361,34 @@ fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynami
         for (int j = 0; j < kResolusionY - 1; j++) {
             for (int k = 0; k < kResolusionZ - 1; k++) {
                 
-                cubeValue[0] = dynamics.calculateScalar(convertVolumePosition(i, j, k));
-                cubeValue[1] = dynamics.calculateScalar(convertVolumePosition(i+1, j, k));
-                cubeValue[2] = dynamics.calculateScalar(convertVolumePosition(i+1, j+1, k));
-                cubeValue[3] = dynamics.calculateScalar(convertVolumePosition(i, j+1, k));
-                cubeValue[4] = dynamics.calculateScalar(convertVolumePosition(i, j, k+1));
-                cubeValue[5] = dynamics.calculateScalar(convertVolumePosition(i+1, j, k+1));
-                cubeValue[6] = dynamics.calculateScalar(convertVolumePosition(i+1, j+1, k+1));
-                cubeValue[7] = dynamics.calculateScalar(convertVolumePosition(i, j+1, k+1));
+                cubeValue[0] = computeScalarAt(i, j, k, dynamics);
+                cubeValue[1] = computeScalarAt(i+1, j, k, dynamics);
+                cubeValue[2] = computeScalarAt(i+1, j+1, k, dynamics);
+                cubeValue[3] = computeScalarAt(i, j+1, k, dynamics);
+                cubeValue[4] = computeScalarAt(i, j, k+1, dynamics);
+                cubeValue[5] = computeScalarAt(i+1, j, k+1, dynamics);
+                cubeValue[6] = computeScalarAt(i+1, j+1, k+1, dynamics);
+                cubeValue[7] = computeScalarAt(i, j+1, k+1, dynamics);
                 
                 addMesh(&mesh, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
     
-    return std::move(mesh);
+    return mesh;
+}
+
+fj::Scalar fj::MarchingCubes::computeScalarAt(const int i, const int j, const int k, const fj::Dynamics& dynamics)const
+{
+    const auto& IDs = getBB().get(i, j, k);
+    fj::Scalar scalar = 0.0;
+    
+    for (const auto& ID : IDs)
+    {
+        scalar += dynamics.calculateScalar(ID);
+    }
+    
+    return scalar;
 }
 
 void fj::MarchingCubes::addMesh(fj::Mesh* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)const

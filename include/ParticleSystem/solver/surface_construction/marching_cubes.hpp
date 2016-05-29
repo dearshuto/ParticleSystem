@@ -76,11 +76,13 @@ private:
 
     fj::Vector3 computeInteractionPoint(const fj::Scalar& level, const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
     
+    fj::Scalar computeScalarAt(const int i, const int j, const int k, const fj::Dynamics& dynamics)const;
+    
     const fj::ParticleID& convertVolumePosition(const int x, const int y, const int z)const;
     
 public:
     
-    const fj::BoundingBox& getMCBB()const
+    const fj::BoundingBox& getBB()const
     {
         return  std::cref(*m_bb);
     }

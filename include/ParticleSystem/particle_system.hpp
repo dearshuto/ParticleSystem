@@ -52,6 +52,7 @@ public:
      */
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
+    void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
     
     /**
      * シミュレーションをタイムステップ分進める
