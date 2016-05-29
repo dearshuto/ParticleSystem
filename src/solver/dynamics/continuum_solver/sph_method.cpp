@@ -20,42 +20,6 @@ const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64)
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 const fj::Scalar fj::SPHMethod::LaplacianKernel = fj::Scalar(45) / (fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 
-/**
- * SPHの計算で必要なインスタンスの運搬.
- */
-class fj::SPHMethod::SPHInformation
-{
-public:
-    SPHInformation() = delete;
-    ~SPHInformation() = default;
-    
-    SPHInformation(
-                   const fj::Particle& targetParticle
-                   , const SPHProperty& property
-                   , const fj::Particle& neighbor
-                   , const SPHProperty& neighborProperty
-                   , const fj::NeighborMap::NeighborInformation& neighborInfo
-                   , const fj::Scalar& weight
-    )
-    : TargetParticle(targetParticle)
-    , Property(property)
-    , NeighborParticle(neighbor)
-    , NeighborProperty(neighborProperty)
-    , NeighborInformation( neighborInfo )
-    , Weight(weight)
-    {
-        
-    }
-    
-public:
-    const fj::Particle& TargetParticle;
-    const SPHProperty& Property;
-    const fj::Particle& NeighborParticle;
-    const SPHProperty& NeighborProperty;
-    const fj::NeighborMap::NeighborInformation& NeighborInformation;
-    const fj::Scalar Weight;
-};
-
 void fj::SPHMethod::executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particlesystem)
 {
     const fj::ParticleManager& kParticleManager = particlesystem->getParticleManager();
@@ -132,10 +96,10 @@ void fj::SPHMethod::updateAccel(const fj::ParticleManager& particleManager, cons
     }
 }
 
-fj::Vector3 fj::SPHMethod::computeForce(const fj::SPHMethod::SPHInformation &sphInfo)const
+fj::Vector3 fj::SPHMethod::computeForce(const fj::SPHMethod::SPHInformation &sphInfo)
 {
-    const fj::Vector3 kVelocityKernelTerm = computeVelocityTerm(sphInfo);
-    const fj::Vector3 kPressureKernelterm = computePressureTerm(sphInfo);
+    const fj::Vector3 kPressureKernelterm = computeSpikyKernelTerm(sphInfo);
+    const fj::Vector3 kVelocityKernelTerm = computeLaplacianKernelTerm(sphInfo);
     const fj::Vector3 kExtraTerm = computeExtraTerm(sphInfo);
     
     const fj::Vector3 kKernelTerm = kVelocityKernelTerm + kPressureKernelterm + kExtraTerm;
@@ -144,27 +108,51 @@ fj::Vector3 fj::SPHMethod::computeForce(const fj::SPHMethod::SPHInformation &sph
     return PARTICLE_MASS * kNeighborProperty.getInverseDensity() * kKernelTerm;
 }
 
-fj::Vector3 fj::SPHMethod::computePressureTerm(const fj::SPHMethod::SPHInformation& sphInfo)const
+fj::Vector3 fj::SPHMethod::computeSpikyKernelTerm(const fj::SPHMethod::SPHInformation &sphInfo)
+{
+    const fj::Vector3& kDirection = sphInfo.NeighborInformation.getDirection();
+    const fj::Scalar& kC = sphInfo.Weight;
+    const fj::Scalar kValue = computeSpikyScalarValue(sphInfo);
+    
+    return kValue * kC * kC * SpikyKernel * kDirection;
+}
+
+fj::Vector3 fj::SPHMethod::computeLaplacianKernelTerm(const fj::SPHMethod::SPHInformation &sphInfo)
+{
+    const fj::Vector3 kViscosityVector = computeLaplacianVector(sphInfo);
+    const fj::Scalar& kC = sphInfo.Weight;
+    
+    return kViscosityVector * kC * LaplacianKernel;
+}
+
+fj::Scalar fj::SPHMethod::computeSpikyScalarValue(const fj::SPHMethod::SPHInformation &sphInfo)
+{
+    return computePressureScalar(sphInfo);
+}
+
+fj::Scalar fj::SPHMethod::computePressureScalar(const fj::SPHMethod::SPHInformation &sphInfo)const
 {
     const SPHProperty& kProperty= sphInfo.Property;
     const SPHProperty& kNeighborProperty = sphInfo.NeighborProperty;
-    const fj::Vector3& kDirection = sphInfo.NeighborInformation.getDirection();
-    const fj::Scalar kC = sphInfo.Weight;
     
-    return -fj::Scalar(0.5 * (kProperty.getPressure() + kNeighborProperty.getPressure()) * SpikyKernel * std::pow(kC, 2)) * kDirection;
+    return -0.5 * (kProperty.getPressure() + kNeighborProperty.getPressure());
 }
 
-fj::Vector3 fj::SPHMethod::computeVelocityTerm(const fj::SPHMethod::SPHInformation &sphInfo)const
+fj::Vector3 fj::SPHMethod::computeLaplacianVector(const fj::SPHMethod::SPHInformation &sphInfo)
+{
+    return computeViscosity(sphInfo);
+}
+
+fj::Vector3 fj::SPHMethod::computeViscosity(const fj::SPHMethod::SPHInformation &sphInfo)const
 {
     const fj::Particle& kTargetParticle = sphInfo.TargetParticle;
     const fj::Particle& kNeighborParticle = sphInfo.NeighborParticle;
     const fj::ParticleID& kID = kTargetParticle.getID();
-    const fj::Scalar kC = sphInfo.Weight;
     
-    return getViscosity(kID) * (kNeighborParticle.getVelocity() - kTargetParticle.getVelocity()) * kC * LaplacianKernel;
+    return getViscosity(kID) * (kNeighborParticle.getVelocity() - kTargetParticle.getVelocity());
 }
 
-fj::Vector3 fj::SPHMethod::computeExtraTerm(const fj::SPHMethod::SPHInformation &sphInfo)const
+fj::Vector3 fj::SPHMethod::computeExtraTerm(const fj::SPHMethod::SPHInformation &sphInfo)
 {
     return fj::Vector3(0, 0, 0);
 }
