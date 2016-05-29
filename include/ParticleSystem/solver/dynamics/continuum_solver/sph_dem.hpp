@@ -26,7 +26,7 @@ class fj::SPHDEM : public fj::SPHMethod
     typedef fj::SPHMethod Super;
 public:
     SPHDEM()
-    : m_angleOfRepose( fj::Scalar(30) )
+    : m_angleOfRepose( fj::Scalar(20) )
     {
         computeFrictionCoefficient();
     }
@@ -38,12 +38,11 @@ public:
 
     fj::Scalar computeSpikyScalarValue(const fj::SPHMethod::SPHInformation& sphInfo)override;
     
-    fj::Vector3 computeExtraTerm(const fj::SPHMethod::SPHInformation& sphInfo)override;
-    
 private:
     
     void computeFrictionCoefficient();
     
+    fj::Scalar getViscosity(const fj::ParticleID& ID)const override;
 public:
     const fj::Scalar& getAngleOfRepose()const
     {
@@ -60,6 +59,7 @@ public:
     {
         return std::cref(m_frictionCoefficient);
     }
+    
     
 private:
     
