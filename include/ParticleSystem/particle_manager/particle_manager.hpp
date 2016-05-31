@@ -83,6 +83,11 @@ public:
         return m_flowParticles;
     }
     
+    ParticleArray* getFlowParticlesPtr()
+    {
+        return &m_flowParticles;
+    }
+    
     const ParticleArray& getBoundaryParticles()const
     {
         return m_boundaryParticles;

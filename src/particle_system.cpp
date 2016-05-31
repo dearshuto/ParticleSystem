@@ -62,7 +62,7 @@ void fj::ParticleSystem::stepSimulation(const float timestep)
 void fj::ParticleSystem::stepParticlePosition(const float timestep)
 {
     
-    for (auto& particle : *getParticleManagerPtr())
+    for (auto& particle : *getParticleManagerPtr()->getFlowParticlesPtr())
     {
         const fj::ParticleID& kID = particle->getID();
         const fj::Vector3& kAccel = getDynamicsPtr()->getAccellAt(kID);
