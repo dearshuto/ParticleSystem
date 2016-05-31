@@ -10,6 +10,7 @@
 #include <memory>
 
 #include <ParticleSystem/solver/solver.hpp>
+#include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
 #include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
@@ -45,6 +46,11 @@ void fj::SolverManager::addSolver(std::unique_ptr<fj::SurfaceConstruction> surfa
     
     m_surfaceConstrucsion = sharedSurface;
     stackSolver( sharedSurface );
+}
+
+void fj::SolverManager::addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSimulation)
+{
+    stackSolver( std::move(additionalSimulation) );
 }
 
 void fj::SolverManager::removeCurrentDynamics()

@@ -36,6 +36,12 @@ FILE(GLOB_RECURSE solvers
 	${CMAKE_SOURCE_DIR}/src/solver/solver_manager.cpp
 )
 
+FILE(GLOB_RECURSE additional_simulations
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/additional_simulation/*.hpp
+	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/additional_simulation/*.h
+	${CMAKE_SOURCE_DIR}/src/solver/additional_simulation/*.cpp
+)
+
 FILE(GLOB_RECURSE bb_algorithms
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/bb_algorithm/*.hpp
 	${CMAKE_SOURCE_DIR}/include/ParticleSystem/solver/bb_algorithm/*.h
@@ -86,6 +92,7 @@ SOURCE_GROUP(particle_system FILES ${particle_systems})
 SOURCE_GROUP(particle FILES ${particles})
 SOURCE_GROUP(particle_manager FILES ${particle_managers})
 SOURCE_GROUP(solver FILES ${solvers})
+SOURCE_GROUP(solver\\additional_simulation FILES ${additional_simulations})
 SOURCE_GROUP(solver\\bb_algorithm FILES ${bb_algorithms})
 SOURCE_GROUP(solver\\collision_dispatcher FILES ${collision_dispatchers})
 SOURCE_GROUP(solver\\dynamics FILES ${dynamics_})

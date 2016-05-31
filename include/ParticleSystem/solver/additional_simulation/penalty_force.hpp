@@ -12,33 +12,33 @@
 #include <memory>
 
 #include <FUJIMath/type/scalar.h>
-#include <ParticleSystem/solver/solver.hpp>
-#include "bounding_box.hpp"
+#include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
 
 namespace fj {
     class PenaltyForce;
 }
 
-class fj::PenaltyForce : public fj::Solver
+class fj::PenaltyForce : public fj::AdditionalSimulation
 {   
 public:
     PenaltyForce() = delete;
     ~PenaltyForce() = default;
     
     PenaltyForce(std::unique_ptr<fj::BoundingBox> bb, const fj::Scalar& K, const Priority& priority = Priority::kAdditionalSimulation)
-    : fj::Solver(priority)
+    : fj::AdditionalSimulation(priority)
     , m_bb( std::move(bb) )
     , m_K(K)
     {
         
     }
-
-    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem);
     
     const fj::Scalar& getK()const
     {
         return m_K;
     }
+    
+private:
+    void executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
 public:
     const fj::BoundingBox& getBB()const

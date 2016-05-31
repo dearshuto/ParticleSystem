@@ -8,14 +8,15 @@
 
 #include <FUJIMath/type/scalar.h>
 
+#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
-#include <ParticleSystem/solver/bb_algorithm/penalty_force.hpp>
+#include <ParticleSystem/solver/additional_simulation/penalty_force.hpp>
 
-void fj::PenaltyForce::execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
+void fj::PenaltyForce::executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
     const fj::Scalar kOffset = 0;
     const fj::BoundingBox::Range& kRangeX = getBB().getRangeX();
