@@ -6,4 +6,4 @@
 //
 //
 
-#include "partitioned_bounding_box.hpp"
+#include <ParticleSystem/solver/bb_algorithm/partitioned_bounding_box.hpp>

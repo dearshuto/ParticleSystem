@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#include "bounding_box.hpp"
+#include "partitioned_bounding_box.hpp"
 #include <ParticleSystem/solver/surface_construction/marching_cubes_interface.h>
 
 namespace fj {
@@ -20,19 +20,19 @@ namespace fj {
     class MCBoundingBox;
 }
 
-class fj::MCBoundingBox : public fj::BoundingBox, public MarchingCubesInterface
+class fj::MCBoundingBox : public fj::PartitionedBoundingBox<fj::Scalar>, public MarchingCubesInterface
 {
     typedef fj::BoundingBox Super;
 public:
     MCBoundingBox() = delete;
     ~MCBoundingBox() = default;
     
-    MCBoundingBox(const Range& xRange, const Range& yRange, const Range& zRange)
-    : BoundingBox(xRange, yRange, zRange)
+    MCBoundingBox(const Range& xRange, const Range& yRange, const Range& zRange, const Resolutions& resolution)
+    : PartitionedBoundingBox<fj::Scalar>(xRange, yRange, zRange, resolution)
     {
-        m_scalarMap.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
+
     }
-    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+    void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override;
     
 protected:
     void clearScalarMap(const fj::ParticleManager& particleManager);
@@ -45,6 +45,8 @@ protected:
     
     fj::Scalar* getShiftedScalar(const int kIndex, const int x, const int y, const int z);
     
+    int getShiftedIndex(const int kIndex, const int x, const int y, const int z)const;
+    
 public:
     
     fj::Scalar getScalar(const int x, const int y, const int z)const override;
@@ -56,9 +58,6 @@ public:
     void addScalar(const int index, const fj::Scalar& scalar);
     
     void addScalar(const int x, const int y, const int z, const fj::Scalar& scalar);
-    
-private:
-    std::vector<fj::Scalar> m_scalarMap;
 };
 
 #endif /* mc_bounding_box_hpp */

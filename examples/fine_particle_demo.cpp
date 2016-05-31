@@ -16,6 +16,7 @@
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_dem.hpp>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>
+#include <ParticleSystem/solver/additional_simulation/penalty_force.hpp>
 
 int main(int argc, char** argv)
 {
@@ -26,9 +27,15 @@ int main(int argc, char** argv)
     
     std::unique_ptr<fj::SPHDEM> solver(new fj::SPHDEM);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    fj::BoundingBox::Range kRange(0, 0.05, 0.001);
-    std::unique_ptr<fj::BoundingBox> bb(new fj::BoundingBox(kRange, kRange, kRange) );
+    fj::BoundingBox::Range kRange(0, 0.1);
+    const fj::Resolutions kResolutions(30, 30, 30);
+    
+    std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange, kResolutions) );
     std::unique_ptr<fj::SurfaceConstruction> surface(new fj::MarchingCubes(std::move(bb)));
+
+    std::unique_ptr<fj::BoundingBox> bbP(new fj::BoundingBox(kRange, kRange, kRange));
+    std::unique_ptr<fj::PenaltyForce> penaltyForce(new fj::PenaltyForce(std::move(bbP), 500));
+    
     fj::ParticleSystem particleSystem(std::move(solver) );
     
     particleSystem.addSolver( std::move(collisionDispatcher) );
@@ -43,7 +50,7 @@ int main(int argc, char** argv)
         }
     }
     
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
     {
         particleSystem.stepSimulation( kTimestep );
         particleSystem.stepParticlePosition(kTimestep);
