@@ -20,6 +20,7 @@
 #include "type/mesh.hpp"
 
 namespace fj {
+    class AdditionalSimulation;
     class BBAlgorithm;
     class Particle;
     class ParticleCollisionDispatcher;
@@ -53,6 +54,7 @@ public:
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
     void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
+    void addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSolver);
     
     /**
      * シミュレーションをタイムステップ分進める

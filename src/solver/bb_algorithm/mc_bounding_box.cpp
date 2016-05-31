@@ -16,8 +16,6 @@
 
 void fj::MCBoundingBox::execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
-    Super::execute(timestep, particleSystem);
-    
     clearScalarMap(particleSystem->getParticleManager());
     updateScalarMap(particleSystem->getParticleManager(), particleSystem->getDynamics());
 }
@@ -28,7 +26,7 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
     for (const auto& ID : getInBoxParticle())
     {
         const fj::Particle& kParticle = particleManager.search(ID);
-        const int kIndex = convertPositionToIndex(kParticle.getPosition());
+        const int kIndex = convertIndex(kParticle.getPosition());
         
         assert(0 <= kIndex);
         
@@ -39,14 +37,16 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
 
 void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManager, const fj::Dynamics& dynamics)
 {
+    auto iterator = particleManager.iterator();
     
-    for (const auto& ID : getInBoxParticle())
+    while (iterator->hasNext())
     {
-        const fj::Particle& kParticle = particleManager.search(ID);
-        const int kIndex = convertPositionToIndex(kParticle.getPosition());
-        const fj::Scalar kScalar = dynamics.calculateScalar(ID);
+        const fj::Particle& kParticle = iterator->next();
+        const fj::ParticleID& kID = kParticle.getID();
+        const int kIndex = convertIndex(kParticle.getPosition());
+        const fj::Scalar kScalar = dynamics.calculateScalar(kID);
         
-        setNDInterpolateValue(kIndex, 3, kScalar);
+        setNDInterpolateValue(kIndex, 1, kScalar);
     }
     
 }
@@ -55,28 +55,24 @@ void fj::MCBoundingBox::setNDInterpolateValue(const int index, const int n, cons
 {
     // 影響範囲 "H = 0.01"と仮定する
     constexpr fj::Scalar H = 0.01;
-    const fj::Scalar kDivisionSizeX = getRangeX().getDivisionSize();
-    const fj::Scalar kDivisionSizeY = getRangeY().getDivisionSize();
-    const fj::Scalar kDivisionSizeZ = getRangeZ().getDivisionSize();
+    const fj::Scalar kDivisionSizeX = getDivisionsSizeX();
+    const fj::Scalar kDivisionSizeY = getDivisionsSizeY();
+    const fj::Scalar kDivisionSizeZ = getDivisionsSizeZ();
     
-    const int kX = H / kDivisionSizeX;
-    const int kY = H / kDivisionSizeY;
-    const int kZ = H / kDivisionSizeZ;
-
-    
-    for (int x = -kX; x <= kX; x++){
-        for (int y = -kY; y <= kY; y++) {
-            for (int z = -kZ; z <= kZ; z++) {
+    for (int x = -n; x <= n; x++){
+        for (int y = -n; y <= n; y++) {
+            for (int z = -n; z <= n; z++) {
                 const fj::Scalar kSquaredDistance = std::pow((x * kDivisionSizeX), 2) + std::pow((y * kDivisionSizeY), 2) + std::pow((z * kDivisionSizeZ), 2);
                 const fj::Scalar kWeight = 1.0 - std::sqrt(kSquaredDistance) / H;
-                fj::Scalar* scalarPtr = getShiftedScalar(index, x, y, z);
+                const int kIndex = getShiftedIndex(index, x, y, z);
                 
-                if (scalarPtr) {
-                    
+                if (0 <= kIndex)
+                {
                     assert(std::isfinite(kSquaredDistance));
                     
-                    if (kSquaredDistance < H*H) {
-                        *scalarPtr += scalar * kWeight;
+                    if (kSquaredDistance < H*H)
+                    {
+                        addScalar(kIndex, scalar * kWeight);
                     }
                     
                 }
@@ -93,10 +89,11 @@ void fj::MCBoundingBox::resetNDInterpolateValue(const int index, const int n)
     for (int x = -n; x <= n; x++){
         for (int y = -n; y <= n; y++) {
             for (int z = -n; z <= n; z++) {
-                fj::Scalar* scalarPtr = getShiftedScalar(index, x, y, z);
+                const int kIndex = getShiftedIndex(index, x, y, z);
                 
-                if (scalarPtr) {
-                    *scalarPtr = 0;
+                if (0 <= kIndex)
+                {
+                    setScalar(kIndex, 0);
                 }
                 
             }
@@ -105,48 +102,38 @@ void fj::MCBoundingBox::resetNDInterpolateValue(const int index, const int n)
     
 }
 
-
 fj::Scalar fj::MCBoundingBox::getScalar(const int x, const int y, const int z)const
 {
-    const int kIndex = convertPositionToIndex(x, y, z);
-
-    return m_scalarMap[kIndex];
+    return get(x, y, z);
 }
 
 void fj::MCBoundingBox::setScalar(const int x, const int y, const int z, const fj::Scalar &scalar)
 {
-    const int kIndex = convertPositionToIndex(x, y, z);
-    
-    m_scalarMap[kIndex] = scalar;
+    set(x, y, z, scalar);
 }
 
 void fj::MCBoundingBox::setScalar(const int index, const fj::Scalar &scalar)
 {
-    m_scalarMap[index] = scalar;
+    set(index, scalar);
 }
-
 
 void fj::MCBoundingBox::addScalar(const int x, const int y, const int z, const fj::Scalar &scalar)
 {
-    const int kIndex = convertPositionToIndex(x, y, z);
-    
-    m_scalarMap[kIndex] += scalar;
+    add(x, y, z, scalar);
 }
 
-void fj::MCBoundingBox::addScalar(const int index, const fj::Scalar& scalar)
+void fj::MCBoundingBox::addScalar(const int index, const float &t)
 {
-    assert(index < m_scalarMap.size());
-    
-    m_scalarMap[index] += scalar;
+    add(index, t);
 }
 
-fj::Scalar* fj::MCBoundingBox::getShiftedScalar(const int kIndex, const int x, const int y, const int z)
+int fj::MCBoundingBox::getShiftedIndex(const int kIndex, const int x, const int y, const int z)const
 {
-    const int kShiftedIndex = kIndex + convertPositionToIndex(x, y, z);
-
-    if ((0 <= kShiftedIndex) && (kShiftedIndex < m_scalarMap.size()) ) {
-        return &m_scalarMap[kShiftedIndex];
+    const int kShiftedIndex = kIndex + convertIndex(x, y, z);
+    
+    if ((0 <= kShiftedIndex) && (kShiftedIndex < size()) ) {
+        return kShiftedIndex;
     }
     
-    return nullptr;
+    return -1;
 }

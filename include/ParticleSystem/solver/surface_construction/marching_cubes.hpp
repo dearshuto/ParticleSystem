@@ -53,8 +53,8 @@ public:
     MarchingCubes() = delete;
     virtual~MarchingCubes() = default;
     
-    MarchingCubes(std::unique_ptr<fj::BoundingBox> bb)
-    : m_bb( std::move(bb) )
+    MarchingCubes(std::unique_ptr<fj::MCBoundingBox> mcbb)
+    : m_mcbb( std::move(mcbb) )
     {
         
     }
@@ -76,19 +76,17 @@ private:
 
     fj::Vector3 computeInteractionPoint(const fj::Scalar& level, const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
     
-    fj::Scalar computeScalarAt(const int i, const int j, const int k, const fj::Dynamics& dynamics)const;
-    
     const fj::ParticleID& convertVolumePosition(const int x, const int y, const int z)const;
     
 public:
     
-    const fj::BoundingBox& getBB()const
+    const fj::MCBoundingBox& getMCBB()const
     {
-        return  std::cref(*m_bb);
+        return std::cref(*m_mcbb);
     }
     
 private:
-    std::unique_ptr<fj::BoundingBox> m_bb;
+    std::unique_ptr<fj::MCBoundingBox> m_mcbb;
 };
 
 #endif /* marching_cubes_hpp */
