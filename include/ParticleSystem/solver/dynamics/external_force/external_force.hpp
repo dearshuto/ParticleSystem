@@ -9,6 +9,7 @@
 #ifndef external_force_hpp
 #define external_force_hpp
 
+#include <memory>
 #include <functional>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
