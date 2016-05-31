@@ -27,8 +27,8 @@ int main(int argc, char** argv)
     
     std::unique_ptr<fj::SPHDEM> solver(new fj::SPHDEM);
     std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher( new fj::ParticleCollisionDispatcher(10, 10, 10, kBLockSize));
-    fj::BoundingBox::Range kRange(0, 0.1);
-    const fj::Resolutions kResolutions(30, 30, 30);
+    fj::BoundingBox::Range kRange(0, 0.2);
+    const fj::Resolutions kResolutions(100, 100, 100);
     
     std::unique_ptr<fj::MCBoundingBox> bb(new fj::MCBoundingBox(kRange, kRange, kRange, kResolutions) );
     std::unique_ptr<fj::SurfaceConstruction> surface(new fj::MarchingCubes(std::move(bb)));
@@ -44,13 +44,13 @@ int main(int argc, char** argv)
                                     
     for (int i = 0; i < 15; i++) {
         for (int j = 0; j < 15; j++) {
-            for (int k = 0; k < 1; k++) {
-                particleSystem.createParticle(fj::Vector3(fj::Scalar(i) * kOffset, fj::Scalar(j) * kOffset, 0));
+            for (int k = 0; k < 5; k++) {
+                particleSystem.createParticle(fj::Vector3(0.05, 0.05, 0.05) + fj::Vector3(fj::Scalar(i) * kOffset, fj::Scalar(j) * kOffset, 0));
             }
         }
     }
     
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 1; i++)
     {
         particleSystem.stepSimulation( kTimestep );
         particleSystem.stepParticlePosition(kTimestep);

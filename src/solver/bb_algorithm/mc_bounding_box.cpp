@@ -22,7 +22,7 @@ void fj::MCBoundingBox::execute(const fj::Scalar& timestep, fj::ParticleSystem* 
 
 void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManager)
 {
-
+    const fj::Scalar& kDiv = getDivisionsSizeX();
     for (const auto& ID : getInBoxParticle())
     {
         const fj::Particle& kParticle = particleManager.search(ID);
@@ -30,7 +30,8 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
         
         assert(0 <= kIndex);
         
-        resetNDInterpolateValue(kIndex, 3);
+        setNDInterpolateValue(kIndex, 0.01 / kDiv, 0);
+//        resetNDInterpolateValue(kIndex, 0.01/kDiv);
     }
 
 }
@@ -38,6 +39,7 @@ void fj::MCBoundingBox::clearScalarMap(const fj::ParticleManager& particleManage
 void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManager, const fj::Dynamics& dynamics)
 {
     auto iterator = particleManager.iterator();
+    const fj::Scalar& kDiv = getDivisionsSizeX();
     
     while (iterator->hasNext())
     {
@@ -46,7 +48,7 @@ void fj::MCBoundingBox::updateScalarMap(const fj::ParticleManager &particleManag
         const int kIndex = convertIndex(kParticle.getPosition());
         const fj::Scalar kScalar = dynamics.calculateScalar(kID);
         
-        setNDInterpolateValue(kIndex, 1, kScalar);
+        setNDInterpolateValue(kIndex, 0.01 / kDiv, kScalar);
     }
     
 }
