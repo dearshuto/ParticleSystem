@@ -15,12 +15,12 @@
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/solver/bb_algorithm/penalty_force.hpp>
 
-void fj::PenaltyForce::executeBBAlgorithm(fj::ParticleSystem* particleSystem)
+void fj::PenaltyForce::execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
-    const fj::Scalar kOffset = m_offset;
-    const fj::BoundingBox::Range& kRangeX = getBoundingBox().getRangeX();
-    const fj::BoundingBox::Range& kRangeY = getBoundingBox().getRangeY();
-    const fj::BoundingBox::Range& kRangeZ = getBoundingBox().getRangeZ();
+    const fj::Scalar kOffset = 0;
+    const fj::BoundingBox::Range& kRangeX = getBB().getRangeX();
+    const fj::BoundingBox::Range& kRangeY = getBB().getRangeY();
+    const fj::BoundingBox::Range& kRangeZ = getBB().getRangeZ();
 
     auto iterator = particleSystem->getParticleManager().iterator();
 
