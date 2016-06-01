@@ -62,7 +62,7 @@ public:
 
     void setAngleOfRange(const fj::Scalar& angleOfRepose)
     {
-        m_angleOfRepose = angleOfRepose;
+        m_angleOfRepose = 3.14 * angleOfRepose / 180.0;
         computeFrictionCoefficient();
     }
     
