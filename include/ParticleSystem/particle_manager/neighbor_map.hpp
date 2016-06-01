@@ -77,14 +77,23 @@ private:
     std::unordered_map<fj::ParticleID, NeighborInformations> m_neighbors;
 };
 
+/**
+ * ある粒子に注目したときに, この粒子に影響を与える近傍粒子の情報.
+ */
 class fj::NeighborMap::NeighborInformation
 {
 public:
     NeighborInformation() = delete;
     ~NeighborInformation() = default;
     
-    NeighborInformation(const fj::ParticleID& ID, const fj::Vector3& direction, const fj::Scalar& kSquaredDistance, const fj::Scalar& distance)
-    : m_ID( ID.getData() )
+    /**
+     * @params targetParticleID 注目している粒子
+     * @params ID 近傍粒子のID
+     * @params direction 近傍粒子から注目している粒子に向かうベクトル
+     */
+    NeighborInformation(const fj::ParticleID& targetParticleID, const fj::ParticleID& ID, const fj::Vector3& direction, const fj::Scalar& kSquaredDistance, const fj::Scalar& distance)
+    : m_targetParticleID( targetParticleID.getData() )
+    , m_ID( ID.getData() )
     , m_direction(direction)
     , m_squaredDistance(kSquaredDistance)
     , m_distance(distance)
@@ -92,11 +101,19 @@ public:
         
     }
     
+    const fj::ParticleID& getTargetParticleID()const
+    {
+        return m_targetParticleID;
+    }
+    
     const fj::ParticleID& getParticleID()const
     {
         return m_ID;
     }
     
+    /**
+     * 近傍から自分へと向かうベクトル
+     */
     const fj::Vector3& getDirection()const
     {
         return m_direction;
@@ -113,6 +130,15 @@ public:
     }
     
 private:
+    
+    /**
+     * 注目する粒子のID
+     */
+    const fj::ParticleID m_targetParticleID;
+    
+    /**
+     * 注目粒子の近傍粒子のID
+     */
     const fj::ParticleID m_ID;
     
     /**
