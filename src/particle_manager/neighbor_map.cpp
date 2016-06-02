@@ -16,7 +16,13 @@
 
 void fj::NeighborMap::allocateMemory(const fj::ParticleManager &particleManager)
 {
+    auto iterator = particleManager.iterator();
     
+    while ( iterator->hasNext() )
+    {
+        const fj::Particle& kParticle = iterator->next();
+        m_neighbors[ kParticle.getID() ].shrink_to_fit();
+    }
 }
 
 void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, const fj::ParticleID &particle2, const fj::ParticleManager& particleManager)

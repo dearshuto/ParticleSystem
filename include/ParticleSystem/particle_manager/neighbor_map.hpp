@@ -43,7 +43,7 @@ public:
     NeighborMap& operator=(const fj::NeighborMap& other) = delete;
     
     /**
-     *
+     * 粒子の数だけマップ領域を確保する.
      */
     void allocateMemory(const fj::ParticleManager& particleManager);
     
