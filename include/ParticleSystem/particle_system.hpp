@@ -52,6 +52,14 @@ public:
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
     
     /**
+     * 現在作成されている粒子の分だけ, シミュレーションに必要なメモリを確保する.
+     * この関数を呼ばなくてもシミュレーション内のメモリは自動的に確保されるように設計されているが、
+     * マルチスレッドで処理をするときにはあらかじめメモリを割り当てておかないと競合がおきてしまう.
+     * 粒子の数を変えたときにもこの関数を呼び出すべきである.
+     */
+    void allocateMemory();
+    
+    /**
      * 毎フレーム更新する処理を登録する
      */
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);

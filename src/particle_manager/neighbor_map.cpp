@@ -14,9 +14,9 @@
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-void fj::NeighborMap::registerParticle(const fj::ParticleID &particleID)
+void fj::NeighborMap::allocateMemory(const fj::ParticleManager &particleManager)
 {
-    m_neighbors[particleID].clear();
+    
 }
 
 void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, const fj::ParticleID &particle2, const fj::ParticleManager& particleManager)

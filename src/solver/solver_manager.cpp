@@ -18,6 +18,15 @@
 
 #include <ParticleSystem/solver/solver_manager.hpp>
 
+void fj::SolverManager::allocateMomory(const fj::ParticleManager& particleManager)
+{
+    for (auto& solver : getSolversPtr())
+    {
+        solver->allocateMemory(particleManager);
+    }
+    
+}
+
 void fj::SolverManager::addSolver(std::unique_ptr<fj::Dynamics> dynamics)
 {
     std::shared_ptr<fj::Dynamics> sharedDynamics = std::move(dynamics);

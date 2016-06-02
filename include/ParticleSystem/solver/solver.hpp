@@ -58,7 +58,15 @@ public:
     {
         // デフォルトは空
     }
-        
+
+    /**
+     * シミュレーションに必要なメモリを事前に割り当てるための処理.
+     */
+    virtual void allocateMemory(const fj::ParticleManager& particleManager)
+    {
+        //
+    }
+    
 public:
     fj::Solver::Priority getPriority()const
     {
