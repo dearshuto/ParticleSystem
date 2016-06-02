@@ -36,12 +36,24 @@ public:
     SPHDEM(const fj::SPHDEM& other) = delete;
     SPHDEM& operator=(const fj::SPHDEM& other) = delete;
 
+    void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+private:
+    
+    /**
+     * ファンデルワールス力による今日着力を計算する
+     */
+    void addVanderWaalsForce(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
     /**
      * 摩擦力の計算には圧力が必要なので、計算結果を一時的に保存しておくためにオーバーライドする.
      * Spikyカーネルで平滑化する対象は圧力だけなのはSPH法と変わらない.
      */
     fj::Scalar computeSpikyScalarValue(const fj::SPHMethod::SPHInformation& sphInfo)override;
     
+    /**
+     *
+     */
+    fj::Vector3 computeLaplacianVector(const fj::SPHMethod::SPHInformation& sphInfo)override;
 private:
     
     /**

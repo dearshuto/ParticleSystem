@@ -39,7 +39,7 @@ void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, co
     const fj::Scalar kSquaredDistance = std::pow(kDistance, 2);
     const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
     
-    m_neighbors[particle1].emplace_back(particle2, kNormalizedDirection21, kSquaredDistance, kDistance);
+    m_neighbors[particle1].emplace_back(particle1, particle2, kNormalizedDirection21, kSquaredDistance, kDistance);
 }
 
 void fj::NeighborMap::clear()

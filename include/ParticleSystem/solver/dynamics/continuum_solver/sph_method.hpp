@@ -102,7 +102,7 @@ public:
     }
 private:
     std::unordered_map<fj::ParticleID, std::unique_ptr<SPHProperty>> m_propertyMap;
-    
+protected:
     constexpr static const fj::Scalar RESTDENSITY = 600;//[kg/m^3] 水の密度
     constexpr static const fj::Scalar PARTICLE_RADIUS = 0.005;//[m]
     constexpr static const fj::Scalar PARTICLE_VOLUME = (4 / 3) * M_PI * PARTICLE_RADIUS * PARTICLE_RADIUS * PARTICLE_RADIUS;//[m^3]
