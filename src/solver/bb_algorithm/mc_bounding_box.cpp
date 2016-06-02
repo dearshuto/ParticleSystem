@@ -10,6 +10,7 @@
 #include <numeric>
 
 #include <ParticleSystem/particle_system.hpp>
+#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/solver/solver.hpp>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
 #include <ParticleSystem/solver/bb_algorithm/mc_bounding_box.hpp>

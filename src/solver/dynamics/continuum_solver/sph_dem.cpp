@@ -11,6 +11,7 @@
 
 #include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/particle_system.hpp>
+#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_method.hpp>
 #include <ParticleSystem/solver/dynamics/continuum_solver/sph_dem.hpp>
 #include <ParticleSystem/particle/particle_id.h>

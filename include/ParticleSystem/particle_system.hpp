@@ -16,7 +16,7 @@
 #include "particle_manager/particle_manager.hpp"
 #include "particle_manager/neighbor_map.hpp"
 #include "solver/solver_manager.hpp"
-#include "solver/dynamics/dynamics.hpp" //コンストラクタで必要
+#include "solver/dynamics/dynamics.hpp"
 #include "type/mesh.hpp"
 
 namespace fj {
@@ -30,7 +30,7 @@ namespace fj {
 }
 
 /**
- * 粒子の作成、シミュレーション、管理などなど.
+ * 粒子の作成やシミュレーションなど、外部とのインタラクションを担う.
  */
 class fj::ParticleSystem
 {
@@ -40,9 +40,12 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Dynamics> solver)
+    /**
+     * @params dynamics 粒子法の解法
+     */
+    ParticleSystem(std::unique_ptr<fj::Dynamics> dynamics)
     {
-        m_solverManager.addSolver( std::move(solver) );
+        m_solverManager.addSolver( std::move(dynamics) );
     }
 
     
@@ -96,8 +99,6 @@ public:
     {
         m_meshes.emplace_back(level);
     }
-    
-    bool hasNextSurfaceTriangle()const;
     
     /**
      * 粒子間の衝突を作る
@@ -210,6 +211,10 @@ private:
     fj::NeighborMap m_neighborMap;
     
 public:
+    
+    /**
+     * 等値面. TODO: クラス化して管理しやすくする.
+     */
     std::vector<fj::Mesh> m_meshes;
 };
 

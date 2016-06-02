@@ -7,6 +7,7 @@
 //
 
 #include <ParticleSystem/particle_system.hpp>
+#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
 #include <ParticleSystem/solver/dynamics/external_force/gravity_force.hpp>

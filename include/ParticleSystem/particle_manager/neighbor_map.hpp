@@ -10,15 +10,12 @@
 #define neighbor_map_hpp
 
 #include <cassert>
-#include <iostream>
 #include <functional>
-#include <tuple>
 #include <unordered_map>
 #include <vector>
 
 #include <FUJIMath/type/scalar.h>
 #include <FUJIMath/type/vector3.hpp>
-#include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/solver/solver.hpp>
 
@@ -30,7 +27,7 @@ namespace fj {
 }
 
 /**
- * 近傍の情報の監視役
+ * 近傍の情報の管理役
  */
 class fj::NeighborMap
 {
@@ -42,6 +39,8 @@ public:
     NeighborMap() = default;
     ~NeighborMap() = default;
     
+    NeighborMap(const fj::NeighborMap& other) = delete;
+    NeighborMap& operator=(const fj::NeighborMap& other) = delete;
     
     /**
      * 衝突判定対象となる粒子を登録する
@@ -67,6 +66,9 @@ public:
      */
     void clear();
     
+    /**
+     * 指定した粒子の近傍情報を取得する
+     */
     const NeighborInformations& getAt(const fj::ParticleID& ID)const
     {
         assert(m_neighbors.find(ID) != std::end(m_neighbors));
@@ -100,6 +102,9 @@ public:
     {
         
     }
+    
+    NeighborInformation(const NeighborInformation& other) = default;
+    NeighborInformation& operator=(const NeighborInformation& other) = delete;
     
     const fj::ParticleID& getTargetParticleID()const
     {
