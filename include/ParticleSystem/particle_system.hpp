@@ -81,6 +81,8 @@ public:
      */
     void stepParticlePosition(const float timestep);
     
+    void allocateIsosurface(const fj::Scalar& level);
+    
     /**
      * 表面抽出されたメッシュを初期化する
      */

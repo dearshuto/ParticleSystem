@@ -96,11 +96,15 @@ void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::Part
     getNeighborMapPtr()->addNeighborInformation(ID1, ID2, getParticleManager());
 }
 
-void fj::ParticleSystem::clearMesh()
+void fj::ParticleSystem::allocateIsosurface(const fj::Scalar &level)
 {
     
 }
 
+void fj::ParticleSystem::clearMesh()
+{
+    
+}
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)
 {
