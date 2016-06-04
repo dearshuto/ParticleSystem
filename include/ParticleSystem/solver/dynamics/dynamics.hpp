@@ -23,6 +23,7 @@ class fj::Dynamics : public fj::Solver
 public:
     Dynamics()
     : fj::Solver( fj::Solver::Priority::kSimulation )
+    , m_threadNum(1)
     {
         
     }
@@ -53,7 +54,13 @@ public:
     
     void setThreadNum(const unsigned int threadNum)
     {
-        m_threadNum = threadNum;
+        if (threadNum == 0)
+        {
+            m_threadNum = 1;
+        }
+        else
+        {   m_threadNum = threadNum;
+        }
     }
     
 private:
