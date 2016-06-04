@@ -35,12 +35,9 @@ public:
      * メッシュデータは膨大な容量になるので、コピーは禁止でムーブのみをサポートさせる
      */
     Mesh(const fj::Mesh& other) = delete;
-    fj::Mesh& operator=(const fj::Mesh& other) = default;
+    fj::Mesh& operator=(const fj::Mesh& other) = delete;
     
-    Mesh(fj::Mesh&& other)
-    {
-        *this = std::move(other);
-    }
+    Mesh(fj::Mesh&& other) = default;
     
     fj::Mesh& operator=(fj::Mesh&& other) = default;
     

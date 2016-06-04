@@ -39,8 +39,10 @@ class fj::SurfaceConstruction : public fj::Solver
             
         }
         
-        Isosurface(const Isosurface& other) = default;
-        Isosurface& operator=(const Isosurface& other) = default;
+        Isosurface(const Isosurface& other) = delete;
+        Isosurface& operator=(const Isosurface& other) = delete;
+        
+        Isosurface(Isosurface&& other) = default;
         
     public:
         const fj::Scalar& getLevel()const

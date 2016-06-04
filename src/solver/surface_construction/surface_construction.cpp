@@ -21,5 +21,6 @@ void fj::SurfaceConstruction::execute(const fj::Scalar &timestep, fj::ParticleSy
 void fj::SurfaceConstruction::allocateIsosurface(const fj::Scalar &level)
 {
     Isosurface surface(level);
-    m_surfaces.emplace_back(surface);
+//    m_surfaces.push_back(std::move(surface));
+    m_surfaces.emplace_back(level);
 }
