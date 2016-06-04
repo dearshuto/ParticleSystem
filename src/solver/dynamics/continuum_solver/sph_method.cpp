@@ -45,6 +45,18 @@ void fj::SPHMethod::executeDynamics(const fj::Scalar& timestep, fj::ParticleSyst
 
 void fj::SPHMethod::updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap)
 {
+    if (getThreadNum() > 1)
+    {
+        updateProperty_MT(particleManager, neighborMap);
+    }
+    else
+    {
+        updateProperty_ST(particleManager, neighborMap);
+    }
+}
+
+void fj::SPHMethod::updateProperty_ST(const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
+{
     auto iterator = particleManager.iterator();
     
     while (iterator->hasNext())
@@ -55,6 +67,11 @@ void fj::SPHMethod::updateProperty(const fj::ParticleManager& particleManager, c
         m_propertyMap[kID] = std::move( computePropertyAt(kParticle, neighborMap) );
     }
     
+}
+
+void fj::SPHMethod::updateProperty_MT(const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
+{
+    updateProperty_ST(particleManager, neighborMap);
 }
 
 std::unique_ptr<fj::SPHMethod::SPHProperty> fj::SPHMethod::computePropertyAt(const fj::Particle &particle, const fj::NeighborMap &neighborMap)

@@ -48,6 +48,10 @@ public:
     
 protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
+    void updateProperty_ST(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    void updateProperty_MT(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     
     /**
