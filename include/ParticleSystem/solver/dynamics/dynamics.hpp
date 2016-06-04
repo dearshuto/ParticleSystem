@@ -44,6 +44,20 @@ public:
     virtual void clearAccel() = 0;
     
     virtual fj::Scalar calculateScalar(const fj::ParticleID& ID)const = 0;
+    
+public:
+    unsigned int getThreadNum()const
+    {
+        return m_threadNum;
+    }
+    
+    void setThreadNum(const unsigned int threadNum)
+    {
+        m_threadNum = threadNum;
+    }
+    
+private:
+    unsigned int m_threadNum;
 };
 
 #endif /* dynamics_hpp */
