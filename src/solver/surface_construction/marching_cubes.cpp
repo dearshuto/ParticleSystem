@@ -340,12 +340,10 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-void fj::MarchingCubes::executeSurfaceConstruction(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
+fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem, const fj::Scalar &level)
 {
-    m_mcbb->execute(timestep, particleSystem);
-    const fj::Dynamics& kDynamics = particleSystem->getDynamics();
-    
-    particleSystem->setMeshAt(0, createMesh(1, kDynamics));
+    const fj::Dynamics& kDyamics = particleSystem->getDynamics();
+    return createMesh(level,kDyamics);
 }
 
 fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const

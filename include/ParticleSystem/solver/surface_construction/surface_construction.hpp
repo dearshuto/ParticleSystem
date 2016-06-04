@@ -68,13 +68,8 @@ public:
     void allocateIsosurface(const fj::Scalar& level);
     
 private:
-
-    /**
-     * fj::Solver::executeを通じて呼ばれる関数.
-     */
-    virtual void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;
     
-    virtual fj::Mesh createMesh(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem, const fj::Scalar& level);
+    virtual fj::Mesh createMesh(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem, const fj::Scalar& level) = 0;
     
 public:
     
