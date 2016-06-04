@@ -24,39 +24,6 @@
 
 #include <ParticleSystem/particle_system.hpp>
 
-fj::ParticleSystem::Surface::Surface()
-{
-    
-}
-
-void fj::ParticleSystem::Surface::allocateIsoSurface(const fj::Scalar &level)
-{
-    m_mesh.push_back(std::make_pair(fj::Mesh(), level));
-}
-
-void fj::ParticleSystem::Surface::clearAll()
-{
-    for (auto& meshData : m_mesh)
-    {
-        meshData.first.clear();
-    }
-}
-
-bool fj::ParticleSystem::Surface::isActiveAt(const unsigned int index)const
-{
-    return (index < m_mesh.size());
-}
-
-const fj::Mesh& fj::ParticleSystem::Surface::getMesh(const unsigned int index)const
-{
-    return std::cref(m_mesh[index].first);
-}
-
-void fj::ParticleSystem::Surface::setMeshAt(const unsigned int index, fj::Mesh &&mesh)
-{
-    m_mesh[index].first = std::move(mesh);
-}
-
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
 {
     m_solverManager.addSolver( std::move(collisionDispatcher) );
@@ -128,6 +95,12 @@ void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::Part
 {
     getNeighborMapPtr()->addNeighborInformation(ID1, ID2, getParticleManager());
 }
+
+void fj::ParticleSystem::clearMesh()
+{
+    
+}
+
 
 void fj::ParticleSystem::applyForceFromObject(const fj::ParticleID& ID, const fj::Vector3 &collisionPoint)
 {

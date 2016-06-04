@@ -35,20 +35,14 @@ public:
      * メッシュデータは膨大な容量になるので、コピーは禁止でムーブのみをサポートさせる
      */
     Mesh(const fj::Mesh& other) = delete;
-    fj::Mesh& operator=(const fj::Mesh& other) = delete;
+    fj::Mesh& operator=(const fj::Mesh& other) = default;
     
     Mesh(fj::Mesh&& other)
     {
         *this = std::move(other);
     }
     
-    fj::Mesh& operator=(fj::Mesh&& other)
-    {
-        m_level = other.getLevel();
-        m_vertices = std::move( *other.getVerticesPtr() );
-        m_triangleIndices = std::move(other.getTriangleIndices());
-        return std::ref(*this);
-    }
+    fj::Mesh& operator=(fj::Mesh&& other) = default;
     
     Mesh(const fj::Scalar& level)
     : m_level(level)

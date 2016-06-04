@@ -46,23 +46,6 @@ namespace fj {
  */
 class fj::ParticleSystem
 {
-protected:
-    class Surface
-    {
-    public:
-        Surface();
-        ~Surface() = default;
-        
-        void allocateIsoSurface(const fj::Scalar& level);
-        void clearAll();
-        bool isActiveAt(const unsigned int index)const;
-        
-    public:
-        const fj::Mesh& getMesh(const unsigned int index)const;
-        void setMeshAt(const unsigned int index, fj::Mesh&& mesh);
-    private:
-        std::vector<std::pair<fj::Mesh, fj::Scalar>> m_mesh;
-    };
 public:
     ParticleSystem() = delete;
     virtual~ParticleSystem() = default;
@@ -101,10 +84,7 @@ public:
     /**
      * 表面抽出されたメッシュを初期化する
      */
-    void clearMesh()
-    {
-        m_surface.clearAll();
-    }
+    void clearMesh();
     
     const fj::Mesh& getMesh(const unsigned int index)
     {
@@ -117,19 +97,6 @@ public:
      * @param movable 移動可能の判断
      */
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
-
-    /**
-     * 等置面を定義する.
-     */
-    void createIsosurface(const fj::Scalar& level)
-    {
-        
-    }
-    
-    void setMeshAt(const unsigned int index, fj::Mesh&& mesh)
-    {
-        m_surface.setMeshAt(index, std::move(mesh));
-    }
     
     /**
      * 粒子間の衝突を作る
@@ -194,7 +161,7 @@ public:
     
     const fj::Mesh& getMesheAt(const unsigned int index)const
     {
-        return m_surface.getMesh(index);
+        return m_solverManager.getMesh(index);
     }
     
     const fj::Dynamics& getDynamics()const
@@ -235,9 +202,6 @@ private:
      * 近傍情報の管理
      */
     fj::NeighborMap m_neighborMap;
-    
-    
-    Surface m_surface;
 };
 
 #endif /* particle_system_hpp */
