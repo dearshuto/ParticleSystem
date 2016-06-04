@@ -17,6 +17,20 @@
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 
+void fj::SPHMethod::allocateMemory(const fj::ParticleManager &particleManager)
+{
+    Super::allocateMemory(particleManager);
+    
+    auto iterator = particleManager.iterator();
+    
+    while (iterator->hasNext())
+    {
+        const Particle& kParticle = iterator->next();
+        
+        m_propertyMap[ kParticle.getID() ] = nullptr;
+    }
+}
+
 void fj::SPHDEM::executeDynamics(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {
     Super::executeDynamics(timestep, particleSystem);

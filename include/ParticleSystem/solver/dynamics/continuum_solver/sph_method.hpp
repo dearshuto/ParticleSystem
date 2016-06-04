@@ -29,6 +29,7 @@ namespace fj {
 
 class fj::SPHMethod : public fj::ContinuumSolver
 {
+    typedef fj::ContinuumSolver Super;
 protected:
     class SPHProperty;
     class SPHInformation;
@@ -39,6 +40,11 @@ public:
     virtual void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
     fj::Scalar calculateScalar(const fj::ParticleID& ID)const override;
+    
+    /**
+     * SPH法で計算した値を保持しておくマップが必要なのでオーバーライドする
+     */
+    virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
     
 protected:
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);

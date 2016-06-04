@@ -47,7 +47,7 @@ public:
     /**
      * 算出した粒子の加速度を確保しておくマップ領域を割り当てる
      */
-    void allocateMemory(const fj::ParticleManager& particleManager)override;
+    virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
     
 protected:
     void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
