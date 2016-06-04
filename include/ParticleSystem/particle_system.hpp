@@ -46,6 +46,23 @@ namespace fj {
  */
 class fj::ParticleSystem
 {
+protected:
+    class Surface
+    {
+    public:
+        Surface();
+        ~Surface() = default;
+        
+        void allocateIsoSurface(const fj::Scalar& level);
+        void clearAll();
+        bool isActiveAt(const unsigned int index)const;
+        
+    public:
+        const fj::Mesh& getMesh(const unsigned int index)const;
+        void setMeshAt(const unsigned int index, fj::Mesh&& mesh);
+    private:
+        std::vector<std::pair<fj::Mesh, fj::Scalar>> m_mesh;
+    };
 public:
     ParticleSystem() = delete;
     virtual~ParticleSystem() = default;
@@ -86,10 +103,7 @@ public:
      */
     void clearMesh()
     {
-        for (auto& mesh : *getMeshesPtr())
-        {
-            mesh.clear();
-        }
+        m_surface.clearAll();
     }
     
     const fj::Mesh& getMesh(const unsigned int index)
@@ -109,7 +123,12 @@ public:
      */
     void createIsosurface(const fj::Scalar& level)
     {
-        m_meshes.emplace_back(level);
+        
+    }
+    
+    void setMeshAt(const unsigned int index, fj::Mesh&& mesh)
+    {
+        m_surface.setMeshAt(index, std::move(mesh));
     }
     
     /**
@@ -173,14 +192,9 @@ public:
         return std::cref(m_neighborMap);
     }
     
-    const std::vector<fj::Mesh>& getMeshes()const
+    const fj::Mesh& getMesheAt(const unsigned int index)const
     {
-        return std::cref(m_meshes);
-    }
-    
-    std::vector<fj::Mesh>* getMeshesPtr()
-    {
-        return &m_meshes;
+        return m_surface.getMesh(index);
     }
     
     const fj::Dynamics& getDynamics()const
@@ -222,12 +236,8 @@ private:
      */
     fj::NeighborMap m_neighborMap;
     
-public:
     
-    /**
-     * 等値面. TODO: クラス化して管理しやすくする.
-     */
-    std::vector<fj::Mesh> m_meshes;
+    Surface m_surface;
 };
 
 #endif /* particle_system_hpp */
