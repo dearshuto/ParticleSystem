@@ -28,7 +28,7 @@ public:
     typedef std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > TriangleIndices_t;
     typedef std::vector<fj::Vector3> Vertices_t;
 public:
-    Mesh() = delete;
+    Mesh() = default;
     ~Mesh() = default;
     
     /**
