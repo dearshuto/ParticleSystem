@@ -37,6 +37,12 @@ public:
     
     ParticleManager(const fj::ParticleManager& other) = delete;
     ParticleManager& operator=(const fj::ParticleManager& other) = delete;
+
+    const fj::Particle& operator[](const unsigned int index)const
+    {
+        assert(index < m_particles.size());
+        return std::cref( *m_particles[index] );
+    }
     
     const fj::Particle& registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
 

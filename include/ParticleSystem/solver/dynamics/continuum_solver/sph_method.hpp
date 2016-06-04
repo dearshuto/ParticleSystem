@@ -51,6 +51,7 @@ protected:
     
     void updateProperty_ST(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     void updateProperty_MT(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
+    void updatePropertyIn(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap, const unsigned int min, const unsigned int max);
     
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     

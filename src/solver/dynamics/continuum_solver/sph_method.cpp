@@ -8,7 +8,10 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h> //for using M_PI
+#include <algorithm>
 #include <cmath>
+#include <thread>
+#include <vector>
 
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle.hpp>
@@ -71,7 +74,36 @@ void fj::SPHMethod::updateProperty_ST(const fj::ParticleManager &particleManager
 
 void fj::SPHMethod::updateProperty_MT(const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap)
 {
-    updateProperty_ST(particleManager, neighborMap);
+    const int kParticleNum = particleManager.getRegisteredParticleNum();
+    const int kPartition = kParticleNum / getThreadNum();
+    int min = 0;
+    std::vector<std::thread> threadVector;
+    
+    for (int i = 0; i < getThreadNum(); i++)
+    {
+        const unsigned int kMax = std::min(min + kPartition, kParticleNum);
+        const unsigned int kMin = min;
+        
+        threadVector.emplace_back(&fj::SPHMethod::updatePropertyIn, this, std::cref(particleManager), std::cref(neighborMap), kMin, kMax);
+        
+        min = kMax;
+    }
+
+    for (auto& thread : threadVector)
+    {
+        thread.join();
+    }
+}
+
+void fj::SPHMethod::updatePropertyIn(const fj::ParticleManager &particleManager, const fj::NeighborMap &neighborMap, const unsigned int min, const unsigned int max)
+{
+    for (unsigned int i = min; i < max; i++)
+    {
+        const fj::Particle& kParticle = particleManager[i];
+        const fj::ParticleID& kID = kParticle.getID();
+        
+        m_propertyMap[kID] = std::move( computePropertyAt(kParticle, neighborMap) );
+    }
 }
 
 std::unique_ptr<fj::SPHMethod::SPHProperty> fj::SPHMethod::computePropertyAt(const fj::Particle &particle, const fj::NeighborMap &neighborMap)
