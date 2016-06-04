@@ -17,7 +17,7 @@
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 
-void fj::SPHMethod::allocateMemory(const fj::ParticleManager &particleManager)
+void fj::SPHDEM::allocateMemory(const fj::ParticleManager &particleManager)
 {
     Super::allocateMemory(particleManager);
     
@@ -27,7 +27,7 @@ void fj::SPHMethod::allocateMemory(const fj::ParticleManager &particleManager)
     {
         const Particle& kParticle = iterator->next();
         
-        m_propertyMap[ kParticle.getID() ] = nullptr;
+        m_smoothedPressure[ kParticle.getID() ] = fj::Scalar(0);
     }
 }
 
