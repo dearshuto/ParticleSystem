@@ -28,7 +28,7 @@ namespace fj {
     class BoundingBox;
 }
 
-class fj::BoundingBox// : public fj::BBAlgorithm
+class fj::BoundingBox
 {
 public:
    class Range
@@ -72,23 +72,7 @@ public:
     
 protected:
 
-
-    
-//    void update(const fj::ParticleManager& particleManager);
-    
     bool isWithinRange(const fj::Particle& particle)const;
-    
-//    bool isOutOfRange(const int x, const int y, const int z)const;
-//    
-//    void registerParticle(const fj::Particle& particle);
-//    
-//    void registerInBox(const fj::Particle& particle);
-    
-//    int convertPositionToIndex(const fj::Vector3& position)const;
-//    
-//    int convertPositionToIndex(const int x, const int y, const int z)const;
-//    
-//    int clamp(const int value, const Range& range)const;
     
 public:
 
@@ -111,8 +95,6 @@ public:
     {
         return m_inBox;
     }
-    
-//    const std::vector<fj::ParticleID>& get(const int x, const int y, const int z)const;
     
     const std::vector<fj::ParticleID>& getInBoxParticle()const
     {
