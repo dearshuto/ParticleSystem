@@ -77,11 +77,10 @@ public:
     
     const fj::Mesh& getMesh(const unsigned int index)
     {
-        return std::cref(m_mesh[index]);
+        return std::cref(m_surfaces[index].Mesh);
     }
     
 private:
-    std::vector<fj::Mesh> m_mesh;
     std::vector<Isosurface> m_surfaces;
 };
 

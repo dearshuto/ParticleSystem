@@ -98,7 +98,7 @@ void fj::ParticleSystem::makeCollision(const fj::ParticleID &ID1, const fj::Part
 
 void fj::ParticleSystem::allocateIsosurface(const fj::Scalar &level)
 {
-    
+    m_solverManager.allocateIsosurface(level);
 }
 
 void fj::ParticleSystem::clearMesh()

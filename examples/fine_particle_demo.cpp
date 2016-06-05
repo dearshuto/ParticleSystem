@@ -41,9 +41,9 @@ int main(int argc, char** argv)
     particleSystem.addSolver( std::move(collisionDispatcher) );
     particleSystem.addSolver( std::move(surface) );
     particleSystem.allocateIsosurface(fj::Scalar(120));
-                                    
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
+    
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
             for (int k = 0; k < 5; k++) {
                 particleSystem.createParticle(fj::Vector3(0.05, 0.05, 0.05) + fj::Vector3(fj::Scalar(i) * kOffset, fj::Scalar(j) * kOffset, 0));
             }
