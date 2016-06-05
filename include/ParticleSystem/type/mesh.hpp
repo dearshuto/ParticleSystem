@@ -28,7 +28,7 @@ public:
     typedef std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > TriangleIndices_t;
     typedef std::vector<fj::Vector3> Vertices_t;
 public:
-    Mesh() = delete;
+    Mesh() = default;
     ~Mesh() = default;
     
     /**
@@ -37,24 +37,9 @@ public:
     Mesh(const fj::Mesh& other) = delete;
     fj::Mesh& operator=(const fj::Mesh& other) = delete;
     
-    Mesh(fj::Mesh&& other)
-    {
-        *this = std::move(other);
-    }
+    Mesh(fj::Mesh&& other) = default;
     
-    fj::Mesh& operator=(fj::Mesh&& other)
-    {
-        m_level = other.getLevel();
-        m_vertices = std::move( *other.getVerticesPtr() );
-        m_triangleIndices = std::move(other.getTriangleIndices());
-        return std::ref(*this);
-    }
-    
-    Mesh(const fj::Scalar& level)
-    : m_level(level)
-    {
-        
-    }
+    fj::Mesh& operator=(fj::Mesh&& other) = default;
     
     /**
      * メッシュ上の頂点を追加する
@@ -69,16 +54,6 @@ public:
     void clear();
     
 public:
-    const fj::Scalar& getLevel()const
-    {
-        return m_level;
-    }
-    
-    void setLevel(const fj::Scalar& level)
-    {
-        m_level = level;
-    }
-    
     const Vertices_t& getVertices()const
     {
         return m_vertices;
@@ -96,9 +71,6 @@ public:
     }
     
 private:
-    // レベルセット法の閾値
-    fj::Scalar m_level;
-    
     Vertices_t m_vertices;
     TriangleIndices_t m_triangleIndices;
 };

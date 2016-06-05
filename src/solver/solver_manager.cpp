@@ -82,6 +82,11 @@ void fj::SolverManager::stackSolver(std::shared_ptr<fj::Solver> solver)
               );
 }
 
+void fj::SolverManager::allocateIsosurface(const fj::Scalar &level)
+{
+    getSurfaceSolverPtr()->allocateIsosurface(level);
+}
+
 const fj::Mesh& fj::SolverManager::getMesh(const unsigned int index)const
 {
     return std::cref( m_surfaceConstrucsion->getMesh(index) );

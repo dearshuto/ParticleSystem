@@ -81,16 +81,12 @@ public:
      */
     void stepParticlePosition(const float timestep);
     
+    void allocateIsosurface(const fj::Scalar& level);
+    
     /**
      * 表面抽出されたメッシュを初期化する
      */
-    void clearMesh()
-    {
-        for (auto& mesh : *getMeshesPtr())
-        {
-            mesh.clear();
-        }
-    }
+    void clearMesh();
     
     const fj::Mesh& getMesh(const unsigned int index)
     {
@@ -103,14 +99,6 @@ public:
      * @param movable 移動可能の判断
      */
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
-
-    /**
-     * 等置面を定義する.
-     */
-    void createIsosurface(const fj::Scalar& level)
-    {
-        m_meshes.emplace_back(level);
-    }
     
     /**
      * 粒子間の衝突を作る
@@ -173,14 +161,9 @@ public:
         return std::cref(m_neighborMap);
     }
     
-    const std::vector<fj::Mesh>& getMeshes()const
+    const fj::Mesh& getMesheAt(const unsigned int index)const
     {
-        return std::cref(m_meshes);
-    }
-    
-    std::vector<fj::Mesh>* getMeshesPtr()
-    {
-        return &m_meshes;
+        return m_solverManager.getMesh(index);
     }
     
     const fj::Dynamics& getDynamics()const
@@ -221,13 +204,6 @@ private:
      * 近傍情報の管理
      */
     fj::NeighborMap m_neighborMap;
-    
-public:
-    
-    /**
-     * 等値面. TODO: クラス化して管理しやすくする.
-     */
-    std::vector<fj::Mesh> m_meshes;
 };
 
 #endif /* particle_system_hpp */

@@ -49,16 +49,15 @@ public:
     
 private:
     
-    void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
-    
+    fj::Mesh createMesh(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem, const fj::Scalar& level) override;
     /**
      * Levelを閾値として内部と外部を定義したメッシュを作成する
      */
-    virtual fj::Mesh createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const;
+    fj::Mesh createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const;
     
-    void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
+    void addMesh(fj::Mesh* mesh, const fj::Scalar& level, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
-    void setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
+    void setMeshFromTable(fj::Mesh* mesh, const fj::Scalar& level, const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
     uint8_t calculateFlagIndex(const fj::Scalar& level, const CubeValue_t& cubeValue)const;
 

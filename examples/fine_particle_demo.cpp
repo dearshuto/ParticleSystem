@@ -40,10 +40,10 @@ int main(int argc, char** argv)
     
     particleSystem.addSolver( std::move(collisionDispatcher) );
     particleSystem.addSolver( std::move(surface) );
-    particleSystem.createIsosurface(fj::Scalar(120));
-                                    
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
+    particleSystem.allocateIsosurface(fj::Scalar(120));
+    
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
             for (int k = 0; k < 5; k++) {
                 particleSystem.createParticle(fj::Vector3(0.05, 0.05, 0.05) + fj::Vector3(fj::Scalar(i) * kOffset, fj::Scalar(j) * kOffset, 0));
             }
@@ -56,17 +56,16 @@ int main(int argc, char** argv)
         particleSystem.stepParticlePosition(kTimestep);
     }
     
-    const auto& verticesSub = particleSystem.getMeshes()[0].getVertices();
-    const auto& indicesSub = particleSystem.getMeshes()[0].getTriangleIndices();
+    const auto& verticesSub = particleSystem.getMesh(0);
     
     std::ofstream ofsSub("testSub.obj");
     
-    for (const auto& vertexSub : verticesSub)
+    for (const auto& vertexSub : verticesSub.getVertices())
     {
         ofsSub << "v " << vertexSub.x() << " " << vertexSub.y() << " " << vertexSub.z() << std::endl;
     }
     
-    for (const auto& indexSub : indicesSub)
+    for (const auto& indexSub : verticesSub.getTriangleIndices())
     {
         ofsSub << "f " << std::get<0>(indexSub) + 1 << "// " << std::get<1>(indexSub) + 1 << "// " << std::get<2>(indexSub) + 1 << "//" << std::endl;
     }

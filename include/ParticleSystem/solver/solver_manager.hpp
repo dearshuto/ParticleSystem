@@ -71,12 +71,19 @@ public:
     
     const fj::Mesh& getMesh(const unsigned int index)const;
 
+    void allocateIsosurface(const fj::Scalar& level);
+    
 private:
     std::vector<std::shared_ptr<fj::Solver>>& getSolversPtr()
     {
         return std::ref(m_solvers);
     }
     
+    std::shared_ptr<fj::SurfaceConstruction>& getSurfaceSolverPtr()
+    {
+        return std::ref(m_surfaceConstrucsion);
+    }
+
 private:
     
     /**
