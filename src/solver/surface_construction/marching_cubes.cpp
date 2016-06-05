@@ -342,6 +342,7 @@ int a2iTriangleConnectionTable[256][16] =
 
 fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem, const fj::Scalar &level)
 {
+    m_mcbb->execute(timestep, particleSystem);
     const fj::Dynamics& kDyamics = particleSystem->getDynamics();
     return createMesh(level,kDyamics);
 }
