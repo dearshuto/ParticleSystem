@@ -352,7 +352,7 @@ fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynami
     const int kResolusionY = getMCBB().getResolutions().ResolutionY;
     const int kResolusionZ = getMCBB().getResolutions().ResolutionZ;
 
-    fj::Mesh mesh(level);
+    fj::Mesh mesh;
     CubeValue_t cubeValue;
     
     for (int i = 0; i < kResolusionX - 1; i++) {
@@ -368,7 +368,7 @@ fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynami
                 cubeValue[6] = getMCBB().getScalar(i+1, j+1, k+1);
                 cubeValue[7] = getMCBB().getScalar(i, j+1, k+1);
                 
-                addMesh(&mesh, cubeValue, fj::Vector3(i, j, k));
+                addMesh(&mesh, level, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
@@ -376,19 +376,19 @@ fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynami
     return mesh;
 }
 
-void fj::MarchingCubes::addMesh(fj::Mesh* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)const
+void fj::MarchingCubes::addMesh(fj::Mesh* mesh, const fj::Scalar& level, const CubeValue_t &cube, const fj::Vector3& kOffset)const
 {
-    const uint8_t kFlagIndex = calculateFlagIndex(mesh->getLevel(), std::cref(cube) );
+    const uint8_t kFlagIndex = calculateFlagIndex(level, std::cref(cube) );
     const uint32_t kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
     
     if (kEdgeFlags == 0) {
         return;
     }
     
-    setMeshFromTable(mesh, kFlagIndex, kEdgeFlags, kOffset);
+    setMeshFromTable(mesh, level, kFlagIndex, kEdgeFlags, kOffset);
 }
 
-void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3 &offset)const
+void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh, const fj::Scalar& level,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3 &offset)const
 {
     fj::Vector3 asEdgeVertex[12];
     
@@ -407,7 +407,7 @@ void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex,
             asEdgeVertex[iEdge].y() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][1]);
             asEdgeVertex[iEdge].z() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][2]);
             
-            asEdgeVertex[iEdge] = offset + computeInteractionPoint(mesh->getLevel(), kRight, kLeft);
+            asEdgeVertex[iEdge] = offset + computeInteractionPoint(level, kRight, kLeft);
         }
     }
     

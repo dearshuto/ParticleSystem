@@ -41,12 +41,6 @@ public:
     
     fj::Mesh& operator=(fj::Mesh&& other) = default;
     
-    Mesh(const fj::Scalar& level)
-    : m_level(level)
-    {
-        
-    }
-    
     /**
      * メッシュ上の頂点を追加する
      */
@@ -60,16 +54,6 @@ public:
     void clear();
     
 public:
-    const fj::Scalar& getLevel()const
-    {
-        return m_level;
-    }
-    
-    void setLevel(const fj::Scalar& level)
-    {
-        m_level = level;
-    }
-    
     const Vertices_t& getVertices()const
     {
         return m_vertices;
@@ -87,9 +71,6 @@ public:
     }
     
 private:
-    // レベルセット法の閾値
-    fj::Scalar m_level;
-    
     Vertices_t m_vertices;
     TriangleIndices_t m_triangleIndices;
 };

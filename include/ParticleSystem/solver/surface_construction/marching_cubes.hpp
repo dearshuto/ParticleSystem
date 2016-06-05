@@ -55,9 +55,9 @@ private:
      */
     fj::Mesh createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const;
     
-    void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
+    void addMesh(fj::Mesh* mesh, const fj::Scalar& level, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
-    void setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
+    void setMeshFromTable(fj::Mesh* mesh, const fj::Scalar& level, const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
     uint8_t calculateFlagIndex(const fj::Scalar& level, const CubeValue_t& cubeValue)const;
 
