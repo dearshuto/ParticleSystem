@@ -33,13 +33,16 @@ namespace fj {
     class MarchingCubes;
 }
 
-
+/**
+ * マーチング・キューブ法による表面抽出.
+ * 僕はこの手法の拡張を聞いたことがないので, このクラスは継承できないように実装してあります.
+ */
 class fj::MarchingCubes : public fj::SurfaceConstruction
 {
     typedef std::array<float, 8> CubeValue_t;
 public:
     MarchingCubes() = delete;
-    virtual~MarchingCubes() = default;
+    ~MarchingCubes() = default;
     
     MarchingCubes(std::unique_ptr<fj::MCBoundingBox> mcbb)
     : m_mcbb( std::move(mcbb) )
@@ -64,6 +67,11 @@ private:
     fj::Vector3 computeInteractionPoint(const fj::Scalar& level, const fj::Vector3& vertex1, const fj::Vector3& vertex2)const;
     
     const fj::ParticleID& convertVolumePosition(const int x, const int y, const int z)const;
+    
+    void freeSurfaceMemoryAt(const fj::ParticleID& ID)override
+    {
+        
+    }
     
 public:
     

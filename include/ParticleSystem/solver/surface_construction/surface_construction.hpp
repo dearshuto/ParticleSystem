@@ -69,7 +69,14 @@ public:
     
     void allocateIsosurface(const fj::Scalar& level);
     
-private:
+    void freeSimulationMemoryAt(const fj::ParticleID& ID) override
+    {
+        freeSurfaceMemoryAt(ID);
+    }
+    
+protected:
+    
+    virtual void freeSurfaceMemoryAt(const fj::ParticleID& ID) = 0;
     
     virtual fj::Mesh createMesh(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem, const fj::Scalar& level) = 0;
     
