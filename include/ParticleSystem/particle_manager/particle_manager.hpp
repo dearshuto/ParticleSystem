@@ -46,6 +46,8 @@ public:
     
     const fj::Particle& registerParticle(std::unique_ptr<fj::Particle> particle, const bool movable = true);
 
+    void removeParticle(const fj::ParticleID& ID);
+    
     /**
      * 指定されたIDをもつ粒子を返す.
      */
@@ -77,6 +79,13 @@ public:
     std::unique_ptr<fj::ParticleManager::ConstIterator> iterator()const;
     
 private:
+    
+    void removeFromArray(const fj::ParticleID& particle);
+    
+    void removeParticleFromArray(const std::shared_ptr<fj::Particle>& particle, ParticleArray* array);
+    
+    void removeFromHashMap(const fj::ParticleID& particle);
+    
     const fj::Particle& getLastRegisteredParticle()const
     {
         return std::cref( *m_particles[m_particles.size() - 1] );
@@ -117,18 +126,18 @@ public:
     
 private:
     // ひとつの粒子をいろいろな形式で保持することで、ランダムアクセスやイテレートを可能にする
-    // STLを利用すると、仕様上例外が投げられてしまう。そうならないようにこのクラスで徹底的に管理すること
-    
-    /**
-     * 1次配列として保管された粒子
-     */
-    ParticleArray m_particles;
+    // STLを利用すると、仕様上例外が投げられてしまうが、そうならないようにこのクラスで徹底的に管理すること
     
     /**
      * IDをハッシュ値とするハッシュマップで保管された粒子
      */
     std::unordered_map<fj::ParticleID, std::shared_ptr<fj::Particle>> m_hashMap;
     
+    /**
+     * 1次配列として保管された粒子
+     */
+    ParticleArray m_particles;
+
     ParticleArray m_flowParticles;
     ParticleArray m_boundaryParticles;
 };

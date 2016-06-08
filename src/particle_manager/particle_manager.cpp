@@ -32,6 +32,43 @@ const fj::Particle& fj::ParticleManager::registerParticle(std::unique_ptr<fj::Pa
     return getLastRegisteredParticle();
 }
 
+void fj::ParticleManager::removeParticle(const fj::ParticleID &ID)
+{
+    removeFromArray(ID);
+    removeFromHashMap(ID);
+}
+
+void fj::ParticleManager::removeFromArray(const fj::ParticleID &ID)
+{
+    const std::shared_ptr<fj::Particle>& kParticle = this->search(ID);
+    
+    removeParticleFromArray(kParticle, &m_particles);
+    removeParticleFromArray(kParticle, &m_flowParticles);
+    removeParticleFromArray(kParticle, &m_boundaryParticles);
+}
+
+void fj::ParticleManager::removeParticleFromArray(const std::shared_ptr<fj::Particle> &particle, ParticleArray *array)
+{
+    const auto& end = std::end(*array);
+    const auto& iterator = std::find(std::begin(*array), end, particle);
+
+    if (iterator != end)
+    {
+        array->erase(iterator);
+    }
+}
+
+void fj::ParticleManager::removeFromHashMap(const fj::ParticleID &ID)
+{
+    const auto& end = std::end(m_hashMap);
+    const auto& found = m_hashMap.find(ID);
+    
+    if (found != end)
+    {
+        m_hashMap.erase(found);
+    }
+}
+
 std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const
 {
     return std::unique_ptr<fj::ParticleManager::ConstIterator>( new ConstIterator(std::cref(*this)) );
