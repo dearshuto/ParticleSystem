@@ -46,6 +46,14 @@ public:
     
     virtual fj::Scalar calculateScalar(const fj::ParticleID& ID)const = 0;
     
+    void freeSimulationMemoryAt(const fj::ParticleID& ID)override
+    {
+        freeDynamicsMemoryAt(ID);
+    }
+    
+protected:
+    virtual void freeDynamicsMemoryAt(const fj::ParticleID& ID) = 0;;
+    
 public:
     unsigned int getThreadNum()const
     {
