@@ -19,6 +19,24 @@
 
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 
+void fj::ParticleCollisionDispatcher::freeSimulationMemoryAt(const fj::ParticleID &ID)
+{
+    this->freeFromCell(ID);
+    this->freeFromHashMap(ID);
+}
+
+void fj::ParticleCollisionDispatcher::freeFromCell(const fj::ParticleID &ID)
+{
+    for (auto& particles : m_cells)
+    {
+        particles.erase( std::remove(std::begin(particles), std::end(particles), ID) );
+    }
+}
+
+void fj::ParticleCollisionDispatcher::freeFromHashMap(const fj::ParticleID &ID)
+{
+    m_hashTable.erase(ID);
+}
 
 void fj::ParticleCollisionDispatcher::execute(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {

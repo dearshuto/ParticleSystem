@@ -47,7 +47,12 @@ public:
         
     void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
+    void freeSimulationMemoryAt(const fj::ParticleID& ID) override;
+    
 private:
+    
+    void freeFromCell(const fj::ParticleID& ID);
+    void freeFromHashMap(const fj::ParticleID& ID);
     
     /**
      * 全粒子において所属するセルを更新する
