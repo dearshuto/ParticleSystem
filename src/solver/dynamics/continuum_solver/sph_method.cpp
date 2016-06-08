@@ -37,6 +37,11 @@ void fj::SPHMethod::allocateMemory(const fj::ParticleManager &particleManager)
     }
 }
 
+void fj::SPHMethod::freeContinuumMemoryAt(const fj::ParticleID &ID)
+{
+    m_propertyMap.erase(ID);
+}
+
 void fj::SPHMethod::executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particlesystem)
 {
     const fj::ParticleManager& kParticleManager = particlesystem->getParticleManager();
