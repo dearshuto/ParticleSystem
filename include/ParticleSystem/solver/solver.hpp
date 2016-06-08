@@ -67,6 +67,14 @@ public:
         //
     }
     
+    
+    /**
+     * IDで指定された粒子が削除だれたときによばれる関数。
+     * 削除された粒子分のメモリを解放する。
+     * @params ID 削除された粒子
+     */
+    virtual void freeSimulationMemoryAt(const fj::ParticleID& ID) = 0;
+    
 public:
     fj::Solver::Priority getPriority()const
     {
