@@ -33,6 +33,13 @@ public:
     SolverManager(const fj::SolverManager& other) = delete;
     SolverManager& operator=(const fj::SolverManager& other) = delete;
     
+    /**
+     * 現在作成されている粒子の分のシミュレーションに必要なメモリを確保する.
+     * この関数を呼ばなくてもシミュレーション内のメモリは自動的に確保されるように設計されているが、
+     * マルチスレッドで処理をするときにはあらかじめメモリを割り当てておかないと競合がおきてしまう.
+     */
+    void allocateMomory(const fj::ParticleManager& particleManager);
+    
     void addSolver(std::unique_ptr<fj::Dynamics> dynamics);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);

@@ -24,25 +24,30 @@ public:
     ContinuumSolver() = default;
     virtual~ContinuumSolver() = default;
     
-    const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const
+    const fj::Vector3& getAccellAt(const fj::ParticleID& ID)const override
     {
         assert(m_accelMap.find(ID) != std::end(m_accelMap));
         return m_accelMap.at(ID);
     }
     
-    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
+    void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)override
     {
         
         m_accelMap[ID] += accel;
     }
     
-    void clearAccel()
+    void clearAccel()override
     {
         for (auto& accel: m_accelMap)
         {
             accel.second = fj::Vector3(0, 0, 0);
         }
     }
+    
+    /**
+     * 算出した粒子の加速度を確保しておくマップ領域を割り当てる
+     */
+    virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
     
 protected:
     void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)

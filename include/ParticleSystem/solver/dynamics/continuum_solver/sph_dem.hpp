@@ -37,6 +37,8 @@ public:
     SPHDEM& operator=(const fj::SPHDEM& other) = delete;
 
     void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
+    
+    void allocateMemory(const fj::ParticleManager& particleManager)override;
 private:
     
     /**
@@ -98,7 +100,7 @@ private:
     /**
      * 粒子にかかっている圧力
      */
-    std::unordered_map<fj::ParticleID, int> m_smoothedPressure;
+    std::unordered_map<fj::ParticleID, fj::Scalar> m_smoothedPressure;
 };
 
 #endif /* sph_dem_hpp */

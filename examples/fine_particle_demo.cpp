@@ -50,6 +50,8 @@ int main(int argc, char** argv)
         }
     }
     
+    particleSystem.allocateMemory();
+    
     for (int i = 0; i < 1; i++)
     {
         particleSystem.stepSimulation( kTimestep );

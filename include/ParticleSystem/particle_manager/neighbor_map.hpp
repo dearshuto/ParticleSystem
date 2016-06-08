@@ -43,9 +43,9 @@ public:
     NeighborMap& operator=(const fj::NeighborMap& other) = delete;
     
     /**
-     * 衝突判定対象となる粒子を登録する
+     * 粒子の数だけマップ領域を確保する.
      */
-    void registerParticle(const fj::ParticleID& particle);
+    void allocateMemory(const fj::ParticleManager& particleManager);
     
     /**
      * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!

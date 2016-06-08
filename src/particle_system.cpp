@@ -24,6 +24,12 @@
 
 #include <ParticleSystem/particle_system.hpp>
 
+void fj::ParticleSystem::allocateMemory()
+{
+    m_solverManager.allocateMomory( getParticleManager() );
+    m_neighborMap.allocateMemory( getParticleManager() );
+}
+
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
 {
     m_solverManager.addSolver( std::move(collisionDispatcher) );
@@ -81,8 +87,6 @@ const fj::ParticleID& fj::ParticleSystem::createParticle(const fj::Vector3& posi
     std::unique_ptr<fj::Particle> particle(new fj::Particle(kID, position));
     const fj::Particle& kRegisteredParticle = getParticleManagerPtr()->registerParticle( std::move(particle), movable );
     
-    getNeighborMapPtr()->registerParticle( kID );
-        
     return kRegisteredParticle.getID();
 }
 
