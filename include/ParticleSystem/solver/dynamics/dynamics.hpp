@@ -51,8 +51,8 @@ public:
         freeDynamicsMemoryAt(ID);
     }
     
-protected:
-    virtual void freeDynamicsMemoryAt(const fj::ParticleID& ID) = 0;;
+private:
+    virtual void freeDynamicsMemoryAt(const fj::ParticleID& ID) = 0;
     
 public:
     unsigned int getThreadNum()const

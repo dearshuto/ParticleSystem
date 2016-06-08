@@ -57,6 +57,12 @@ public:
         getDynamicsPtr()->allocateMemory(particleManager);
     }
     
+private:
+    void freeDynamicsMemoryAt(const fj::ParticleID& ID)override
+    {
+        //とくにやることなし
+    }
+    
 public:
     const fj::Dynamics& getDynamics()const
     {
