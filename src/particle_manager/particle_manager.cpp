@@ -49,24 +49,12 @@ void fj::ParticleManager::removeFromArray(const fj::ParticleID &ID)
 
 void fj::ParticleManager::removeParticleFromArray(const std::shared_ptr<fj::Particle> &particle, ParticleArray *array)
 {
-    const auto& end = std::end(*array);
-    const auto& iterator = std::find(std::begin(*array), end, particle);
-
-    if (iterator != end)
-    {
-        array->erase(iterator);
-    }
+    array->erase(std::remove(std::begin(*array), std::end(*array), particle));
 }
 
 void fj::ParticleManager::removeFromHashMap(const fj::ParticleID &ID)
 {
-    const auto& end = std::end(m_hashMap);
-    const auto& found = m_hashMap.find(ID);
-    
-    if (found != end)
-    {
-        m_hashMap.erase(found);
-    }
+    m_hashMap.erase(ID);
 }
 
 std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const
