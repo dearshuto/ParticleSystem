@@ -30,6 +30,16 @@ void fj::ParticleSystem::allocateMemory()
     m_neighborMap.allocateMemory( getParticleManager() );
 }
 
+void fj::ParticleSystem::removeParticle(const fj::ParticleID &ID)
+{
+    // ParticleManagerから粒子を削除する
+    // 削除が終わったら、各クラスにおいてメモリを削除して最適化する
+    
+    m_particleManager.removeParticle(ID);
+//    m_solverManager.freeSimulationMemory(ID);
+    m_neighborMap.freeMemoryAt(ID);
+}
+
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
 {
     m_solverManager.addSolver( std::move(collisionDispatcher) );

@@ -109,6 +109,11 @@ public:
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
     
     /**
+     * IDで指定された粒子を削除する.
+     */
+    void removeParticle(const fj::ParticleID& ID);
+    
+    /**
      * 粒子間の衝突を作る
      * @param index1 衝突を検知した粒子のID
      * @param index2 ID1と衝突した粒子のID
