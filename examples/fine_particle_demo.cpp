@@ -42,15 +42,18 @@ int main(int argc, char** argv)
     particleSystem.addSolver( std::move(surface) );
     particleSystem.allocateIsosurface(fj::Scalar(120));
     
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            for (int k = 0; k < 5; k++) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 1; j++) {
+            for (int k = 0; k < 1; k++) {
                 particleSystem.createParticle(fj::Vector3(0.05, 0.05, 0.05) + fj::Vector3(fj::Scalar(i) * kOffset, fj::Scalar(j) * kOffset, 0));
             }
         }
     }
     
-    particleSystem.allocateMemory();
+    particleSystem.initSimulation();
+
+    particleSystem.removeParticle(fj::ParticleID(0));
+    particleSystem.removeParticle(fj::ParticleID(1));
     
     for (int i = 0; i < 1; i++)
     {
