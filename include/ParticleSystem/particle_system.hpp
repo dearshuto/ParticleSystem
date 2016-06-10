@@ -106,7 +106,9 @@ public:
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
     
     /**
-     * IDで指定された粒子を削除する.
+     * IDで指定された粒子をシミュレーションの途中で動的に削除する.
+     * シミュレーションが一回も回らない状態で粒子を消すと、確保されていないメモリまで解放しようとするので注意.
+     * 要素が見つからないときはアサートが投げられる
      */
     void removeParticle(const fj::ParticleID& ID);
     
