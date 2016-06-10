@@ -20,3 +20,9 @@ void fj::ContinuumSolver::allocateMemory(const fj::ParticleManager &particleMana
         m_accelMap[ kParticle.getID() ] = fj::Vector3(0, 0, 0);
     }
 }
+
+void fj::ContinuumSolver::freeDynamicsMemoryAt(const fj::ParticleID &ID)
+{
+    m_accelMap.erase(ID);
+    freeContinuumMemoryAt(ID);
+}

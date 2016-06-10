@@ -39,7 +39,11 @@ public:
     
 private:
     void executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
-    
+
+    void freeAdditionalMemoryAt(const fj::ParticleID& ID)
+    {
+        // とくにやることなし
+    }
 public:
     const fj::BoundingBox& getBB()const
     {

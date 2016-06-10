@@ -40,6 +40,12 @@ public:
      */
     void allocateMomory(const fj::ParticleManager& particleManager);
     
+    /**
+     * IDで指定された粒子が削除されたときに呼ばれる関数
+     * 削除された粒子分のシミュレーション用メモリを, メンバにもつSolverすべてから削除する
+     */
+    void freeSimulationMemory(const fj::ParticleID& ID);
+    
     void addSolver(std::unique_ptr<fj::Dynamics> dynamics);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer);
     void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);

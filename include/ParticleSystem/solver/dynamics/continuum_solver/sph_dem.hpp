@@ -41,6 +41,8 @@ public:
     void allocateMemory(const fj::ParticleManager& particleManager)override;
 private:
     
+    void freeSPHMemoryAt(const fj::ParticleID& ID)override;
+    
     /**
      * ファンデルワールス力による今日着力を計算する
      */

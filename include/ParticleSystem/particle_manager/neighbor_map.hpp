@@ -75,6 +75,7 @@ public:
         return std::cref( m_neighbors.at(ID) );
     }
     
+    void freeMemoryAt(const fj::ParticleID& ID);
 private:
     std::unordered_map<fj::ParticleID, NeighborInformations> m_neighbors;
 };

@@ -62,15 +62,12 @@ public:
 
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
-    
+
     /**
-     * 現在作成されている粒子の分だけ, シミュレーションに必要なメモリを確保する.
-     * この関数を呼ばなくてもシミュレーション内のメモリは自動的に確保されるように設計されているが、
-     * マルチスレッドで処理をするときにはあらかじめメモリを割り当てておかないと競合がおきてしまう.
-     * 粒子の数を変えたときにもこの関数を呼び出すべきである.
+     * シミュレーションの初期化処理. シミュレーションを始める前に必ずいちど呼ぶ必要がある
      */
-    void allocateMemory();
-    
+    void initSimulation();
+        
     /**
      * 毎フレーム更新する処理を登録する
      */
@@ -107,6 +104,13 @@ public:
      * @param movable 移動可能の判断
      */
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
+    
+    /**
+     * IDで指定された粒子をシミュレーションの途中で動的に削除する.
+     * シミュレーションが一回も回らない状態で粒子を消すと、確保されていないメモリまで解放しようとするので注意.
+     * 要素が見つからないときはアサートが投げられる
+     */
+    void removeParticle(const fj::ParticleID& ID);
     
     /**
      * 粒子間の衝突を作る
@@ -155,6 +159,13 @@ public:
      * 強制的に粒子の速度を変更する
      */
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
+    
+protected:
+    /**
+     * 現在作成されている粒子の分だけ, シミュレーションに必要なメモリを確保する.
+     */
+    void allocateMemory();
+
     
 //getters & setters
 public:

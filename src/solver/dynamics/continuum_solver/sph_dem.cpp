@@ -31,6 +31,11 @@ void fj::SPHDEM::allocateMemory(const fj::ParticleManager &particleManager)
     }
 }
 
+void fj::SPHDEM::freeSPHMemoryAt(const fj::ParticleID &ID)
+{
+    m_smoothedPressure.erase(ID);
+}
+
 void fj::SPHDEM::executeDynamics(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
 {
     Super::executeDynamics(timestep, particleSystem);

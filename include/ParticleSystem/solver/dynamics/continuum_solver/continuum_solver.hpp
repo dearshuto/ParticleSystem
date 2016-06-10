@@ -49,6 +49,11 @@ public:
      */
     virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
     
+private:
+    void freeDynamicsMemoryAt(const fj::ParticleID& ID)override;
+    
+    virtual void freeContinuumMemoryAt(const fj::ParticleID& ID) = 0;
+    
 protected:
     void setAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel)
     {

@@ -24,7 +24,15 @@ void fj::SolverManager::allocateMomory(const fj::ParticleManager& particleManage
     {
         solver->allocateMemory(particleManager);
     }
-    
+}
+
+void fj::SolverManager::freeSimulationMemory(const fj::ParticleID &ID)
+{
+    // 各Solverの関数を順に呼べばOK
+    for (auto& solver : getSolversPtr())
+    {
+        solver->freeSimulationMemoryAt(ID);
+    }
 }
 
 void fj::SolverManager::addSolver(std::unique_ptr<fj::Dynamics> dynamics)
@@ -93,7 +101,12 @@ void fj::SolverManager::stackSolver(std::shared_ptr<fj::Solver> solver)
 
 void fj::SolverManager::allocateIsosurface(const fj::Scalar &level)
 {
-    getSurfaceSolverPtr()->allocateIsosurface(level);
+    auto& surfaceSolver = getSurfaceSolverPtr();
+    
+    if (surfaceSolver)
+    {
+        getSurfaceSolverPtr()->allocateIsosurface(level);
+    }
 }
 
 const fj::Mesh& fj::SolverManager::getMesh(const unsigned int index)const

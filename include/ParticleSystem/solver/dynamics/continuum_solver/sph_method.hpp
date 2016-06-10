@@ -46,7 +46,11 @@ public:
      */
     virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
     
-protected:
+private:
+    void freeContinuumMemoryAt(const fj::ParticleID& ID) override;
+    
+    virtual void freeSPHMemoryAt(const fj::ParticleID& ID) = 0;
+    
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     
     void updateProperty_ST(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
@@ -54,7 +58,7 @@ protected:
     void updatePropertyIn(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap, const unsigned int min, const unsigned int max);
     
     void updateAccel(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
-    
+protected:
     /**
      * 離散化された粒子の密度と圧力を求める
      */

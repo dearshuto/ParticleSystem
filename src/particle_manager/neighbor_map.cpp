@@ -25,6 +25,11 @@ void fj::NeighborMap::allocateMemory(const fj::ParticleManager &particleManager)
     }
 }
 
+void fj::NeighborMap::freeMemoryAt(const fj::ParticleID &ID)
+{
+    m_neighbors.erase(ID);
+}
+
 void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, const fj::ParticleID &particle2, const fj::ParticleManager& particleManager)
 {
     const fj::Particle& kParticle1 =  particleManager.search(particle1);

@@ -36,6 +36,16 @@ public:
         executeAdditionalSimulation(timestep, particleSystem);
     }
     
+private:
+    
+    void freeSimulationMemoryAt(const fj::ParticleID& ID)override
+    {
+        //このクラスで解放すべきメモリは存在しない。
+        // 継承先から呼ばれる関数を呼ぶだけでOK
+        freeAdditionalMemoryAt(ID);
+    }
+    
+    virtual void freeAdditionalMemoryAt(const fj::ParticleID& ID) = 0;
 protected:
     
     virtual void executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;
