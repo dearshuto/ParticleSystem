@@ -24,6 +24,11 @@
 
 #include <ParticleSystem/particle_system.hpp>
 
+void fj::ParticleSystem::initSimulation()
+{
+    allocateMemory();
+}
+
 void fj::ParticleSystem::allocateMemory()
 {
     m_solverManager.allocateMomory( getParticleManager() );
