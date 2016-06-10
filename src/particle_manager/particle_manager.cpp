@@ -49,7 +49,7 @@ void fj::ParticleManager::removeFromArray(const fj::ParticleID &ID)
 
 void fj::ParticleManager::removeParticleFromArray(const std::shared_ptr<fj::Particle> &particle, ParticleArray *array)
 {
-    array->erase(std::remove(std::begin(*array), std::end(*array), particle));
+    array->erase(std::remove(std::begin(*array), std::end(*array), particle), std::end(*array));
 }
 
 void fj::ParticleManager::removeFromHashMap(const fj::ParticleID &ID)
