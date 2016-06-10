@@ -29,7 +29,7 @@ void fj::ParticleCollisionDispatcher::freeFromCell(const fj::ParticleID &ID)
 {
     for (auto& particles : m_cells)
     {
-        particles.erase( std::remove(std::begin(particles), std::end(particles), ID) );
+        particles.erase( std::remove(std::begin(particles), std::end(particles), ID), std::end(particles) );
     }
 }
 
