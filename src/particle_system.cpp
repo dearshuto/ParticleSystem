@@ -15,7 +15,6 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
-#include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/surface_construction/surface_construction.hpp>
 #include <ParticleSystem/particle/particle.hpp>
@@ -48,11 +47,6 @@ void fj::ParticleSystem::removeParticle(const fj::ParticleID &ID)
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher)
 {
     m_solverManager.addSolver( std::move(collisionDispatcher) );
-}
-
-void fj::ParticleSystem::addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
-{
-    m_solverManager.addSolver(std::move(bbAlgorithm));
 }
 
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction)

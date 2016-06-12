@@ -18,7 +18,6 @@
 #include <FUJIMath/type/scalar.h>
 #include <FUJIMath/type/vector3.hpp>
 
-#include <ParticleSystem/solver/bb_algorithm/bb_algorithm_decorator.hpp>
 #include <ParticleSystem/solver/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/type/mesh.hpp>
 
