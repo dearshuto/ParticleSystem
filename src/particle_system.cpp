@@ -28,11 +28,6 @@ void fj::ParticleSystem::addSolver(std::unique_ptr<fj::ParticleCollisionDispatch
     m_solverManager.addSolver( std::move(collisionDispatcher) );
 }
 
-void fj::ParticleSystem::addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
-{
-    m_solverManager.addSolver(std::move(bbAlgorithm));
-}
-
 void fj::ParticleSystem::addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction)
 {
     m_solverManager.addSolver(std::move(surfaceConstruction));

@@ -35,7 +35,6 @@ public:
     
     void addSolver(std::unique_ptr<fj::Dynamics> dynamics);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer);
-    void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
     void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
     void addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSimulation);
     

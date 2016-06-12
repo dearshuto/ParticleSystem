@@ -67,7 +67,6 @@ public:
      * 毎フレーム更新する処理を登録する
      */
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
-    void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
     void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
     void addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSolver);
     
