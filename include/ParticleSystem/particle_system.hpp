@@ -33,7 +33,6 @@
 
 namespace fj {
     class AdditionalSimulation;
-    class BBAlgorithm;
     class Particle;
     class ParticleCollisionDispatcher;
     class ParticleID;

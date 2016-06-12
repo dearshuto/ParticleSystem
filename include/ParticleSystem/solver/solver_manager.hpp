@@ -15,7 +15,6 @@
 
 namespace fj {
     class AdditionalSimulation;
-    class BBAlgorithm;
     class Dynamics;
     class Mesh;
     class ParticleCollisionDispatcher;
