@@ -18,7 +18,6 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/particle/particle_id.h>
-#include "bb_algorithm.h"
 
 namespace fj {
     class Particle;

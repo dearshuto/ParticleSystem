@@ -15,7 +15,6 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
-#include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/surface_construction/surface_construction.hpp>
 #include <ParticleSystem/particle/particle.hpp>
