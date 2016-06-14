@@ -90,9 +90,9 @@ public:
     ~NeighborInformation() = default;
     
     /**
-     * @params targetParticleID 注目している粒子
-     * @params ID 近傍粒子のID
-     * @params direction 近傍粒子から注目している粒子に向かうベクトル
+     * @param targetParticleID 注目している粒子
+     * @param ID 近傍粒子のID
+     * @param direction 近傍粒子から注目している粒子に向かうベクトル
      */
     NeighborInformation(const fj::ParticleID& targetParticleID, const fj::ParticleID& ID, const fj::Vector3& direction, const fj::Scalar& kSquaredDistance, const fj::Scalar& distance)
     : m_targetParticleID( targetParticleID.getData() )

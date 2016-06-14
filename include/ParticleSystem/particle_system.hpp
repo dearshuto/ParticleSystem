@@ -52,7 +52,7 @@ public:
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
     /**
-     * @params dynamics 粒子法の解法
+     * @param dynamics 粒子法の解法
      */
     ParticleSystem(std::unique_ptr<fj::Dynamics> dynamics)
     {
@@ -144,7 +144,7 @@ public:
     
     /**
      * 粒子に加速度を追加する
-     * @params ID 粒子の識別子
+     * @param ID 粒子の識別子
      */
     void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
 
