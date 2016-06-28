@@ -15,6 +15,7 @@
 #include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
 
 namespace fj {
+    class BoundingBox;
     class PenaltyForce;
 }
 
