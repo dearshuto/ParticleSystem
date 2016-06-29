@@ -107,6 +107,13 @@ const fj::ParticleID& fj::ParticleSystem::createParticle(const fj::Vector3& posi
     return kRegisteredParticle.getID();
 }
 
+const fj::ParticleID& fj::ParticleSystem::createParticeWithAccel(const fj::Vector3 &position, const fj::Vector3 &accel)
+{
+    const fj::ParticleID& kID = createParticle(position, true);
+    addAccelAt(kID, accel);
+    return kID;
+}
+
 void fj::ParticleSystem::makeCollision(const fj::ParticleID& ID1, const fj::ParticleID& ID2, const fj::Scalar& distance)
 {
     getNeighborMapPtr()->addNeighborInformation(ID1, ID2, distance, getParticleManager());
