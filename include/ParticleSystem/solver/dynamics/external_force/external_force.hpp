@@ -52,9 +52,9 @@ public:
         return getDynamics().calculateScalar(ID);
     }
     
-    virtual void allocateMemory(const fj::ParticleManager& particleManager) override
+    void allocateMemoryAt(const fj::ParticleID& ID)override
     {
-        getDynamicsPtr()->allocateMemory(particleManager);
+        getDynamicsPtr()->allocateMemoryAt(ID);
     }
     
 private:

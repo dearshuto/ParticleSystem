@@ -41,15 +41,17 @@ public:
     
     fj::Scalar calculateScalar(const fj::ParticleID& ID)const override;
     
-    /**
-     * SPH法で計算した値を保持しておくマップが必要なのでオーバーライドする
-     */
-    virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
-    
 private:
+    void allocateContinuumMemoryAt(const fj::ParticleID& ID) override;
+    
+    virtual void allocateSPHMemoryAt(const fj::ParticleID& ID) = 0;
+    
     void freeContinuumMemoryAt(const fj::ParticleID& ID) override;
     
-    virtual void freeSPHMemoryAt(const fj::ParticleID& ID) = 0;
+    virtual void freeSPHMemoryAt(const fj::ParticleID& ID)
+    {
+        
+    }
     
     void updateProperty(const fj::ParticleManager& particleManager, const fj::NeighborMap& neighborMap);
     

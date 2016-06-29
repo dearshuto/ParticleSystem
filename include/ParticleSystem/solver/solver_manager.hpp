@@ -39,6 +39,8 @@ public:
      */
     void allocateMomory(const fj::ParticleManager& particleManager);
     
+    void allocateMomoryAt(const fj::ParticleID& ID);
+    
     /**
      * IDで指定された粒子が削除されたときに呼ばれる関数
      * 削除された粒子分のシミュレーション用メモリを, メンバにもつSolverすべてから削除する

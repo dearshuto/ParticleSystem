@@ -66,7 +66,7 @@ public:
      * シミュレーションの初期化処理. シミュレーションを始める前に必ずいちど呼ぶ必要がある
      */
     void initSimulation();
-        
+    
     /**
      * 毎フレーム更新する処理を登録する
      */
@@ -102,6 +102,11 @@ public:
      * @param movable 移動可能の判断
      */
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
+    
+    /**
+     * 初加速度を設定して粒子を生成する
+     */
+    const fj::ParticleID& createParticeWithAccel(const fj::Vector3& position, const fj::Vector3& accel);
     
     /**
      * IDで指定された粒子をシミュレーションの途中で動的に削除する.
@@ -164,6 +169,8 @@ protected:
      */
     void allocateMemory();
 
+    void allocateMemoryAt(const fj::ParticleID& ID);
+    
     
 //getters & setters
 public:

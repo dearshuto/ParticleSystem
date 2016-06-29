@@ -44,12 +44,11 @@ public:
         }
     }
     
-    /**
-     * 算出した粒子の加速度を確保しておくマップ領域を割り当てる
-     */
-    virtual void allocateMemory(const fj::ParticleManager& particleManager)override;
+    void allocateMemoryAt(const fj::ParticleID& ID) override;
     
 private:
+    virtual void allocateContinuumMemoryAt(const fj::ParticleID& ID) = 0;
+    
     void freeDynamicsMemoryAt(const fj::ParticleID& ID)override;
     
     virtual void freeContinuumMemoryAt(const fj::ParticleID& ID) = 0;

@@ -47,6 +47,8 @@ public:
      */
     void allocateMemory(const fj::ParticleManager& particleManager);
     
+    void allocateMemoryAt(const fj::ParticleID& ID);
+    
     /**
      * 影響範囲に入った粒子と距離情報を追加する. 引数の順番に注意!
      * @param ID 注目粒子

@@ -25,6 +25,11 @@ void fj::NeighborMap::allocateMemory(const fj::ParticleManager &particleManager)
     }
 }
 
+void fj::NeighborMap::allocateMemoryAt(const fj::ParticleID &ID)
+{
+    m_neighbors[ ID ].shrink_to_fit();
+}
+
 void fj::NeighborMap::freeMemoryAt(const fj::ParticleID &ID)
 {
     m_neighbors.erase(ID);
