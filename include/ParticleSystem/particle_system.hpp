@@ -66,7 +66,7 @@ public:
      * シミュレーションの初期化処理. シミュレーションを始める前に必ずいちど呼ぶ必要がある
      */
     void initSimulation();
-        
+    
     /**
      * 毎フレーム更新する処理を登録する
      */
@@ -164,6 +164,8 @@ protected:
      */
     void allocateMemory();
 
+    void allocateMemoryAt(const fj::ParticleID& ID);
+    
     
 //getters & setters
 public:

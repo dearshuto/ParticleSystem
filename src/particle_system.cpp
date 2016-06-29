@@ -34,6 +34,12 @@ void fj::ParticleSystem::allocateMemory()
     m_neighborMap.allocateMemory( getParticleManager() );
 }
 
+void fj::ParticleSystem::allocateMemoryAt(const fj::ParticleID &ID)
+{
+    m_solverManager.allocateMomoryAt( ID );
+    m_neighborMap.allocateMemoryAt( ID );
+}
+
 void fj::ParticleSystem::removeParticle(const fj::ParticleID &ID)
 {
     // ParticleManagerから粒子を削除する
@@ -95,6 +101,8 @@ const fj::ParticleID& fj::ParticleSystem::createParticle(const fj::Vector3& posi
     const fj::ParticleID& kID = getParticleManagerPtr()->getUnusedID();
     std::unique_ptr<fj::Particle> particle(new fj::Particle(kID, position));
     const fj::Particle& kRegisteredParticle = getParticleManagerPtr()->registerParticle( std::move(particle), movable );
+    
+    allocateMemoryAt(kID);
     
     return kRegisteredParticle.getID();
 }

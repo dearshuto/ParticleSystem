@@ -25,6 +25,14 @@ void fj::SolverManager::allocateMomory(const fj::ParticleManager& particleManage
     }
 }
 
+void fj::SolverManager::allocateMomoryAt(const fj::ParticleID& ID)
+{
+    for (auto& solver : getSolversPtr())
+    {
+        solver->allocateMemoryAt(ID);
+    }
+}
+
 void fj::SolverManager::freeSimulationMemory(const fj::ParticleID &ID)
 {
     // 各Solverの関数を順に呼べばOK
