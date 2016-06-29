@@ -23,18 +23,15 @@ const fj::Scalar fj::SPHMethod::Poly6Kernel = fj::Scalar(315) / ( fj::Scalar(64)
 const fj::Scalar fj::SPHMethod::SpikyKernel = fj::Scalar(-45) / ( fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 const fj::Scalar fj::SPHMethod::LaplacianKernel = fj::Scalar(45) / (fj::Scalar(M_PI) * std::pow( H, fj::Scalar(6) ));
 
-void fj::SPHMethod::allocateMemory(const fj::ParticleManager &particleManager)
+void fj::SPHMethod::allocateContinuumMemoryAt(const fj::ParticleID &ID)
 {
-    Super::allocateMemory(particleManager);
+    m_propertyMap[ ID ] = nullptr;
+    allocateSPHMemoryAt( ID );
+}
+
+void fj::SPHMethod::allocateSPHMemoryAt(const fj::ParticleID &ID)
+{
     
-    auto iterator = particleManager.iterator();
-    
-    while (iterator->hasNext())
-    {
-        const Particle& kParticle = iterator->next();
-        
-        m_propertyMap[ kParticle.getID() ] = nullptr;
-    }
 }
 
 void fj::SPHMethod::freeContinuumMemoryAt(const fj::ParticleID &ID)

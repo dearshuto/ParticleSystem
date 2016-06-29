@@ -38,6 +38,11 @@ public:
         return m_K;
     }
     
+    void allocateMemoryAt(const fj::ParticleID& ID)
+    {
+        // とくになし
+    }
+    
 private:
     void executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
 

@@ -60,12 +60,14 @@ public:
     }
 
     /**
-     * シミュレーションに必要なメモリを事前に割り当てるための処理.
+     * この関数が呼ばれた時点で作成済みのすべての粒子をシミュレーションするに必要なメモリを割当てて、そのメモリを初期化する.
      */
-    virtual void allocateMemory(const fj::ParticleManager& particleManager)
-    {
-        //
-    }
+    void allocateMemory(const fj::ParticleManager& particleManager);
+    
+    /**
+     * パーティクル単位でシミュレーションに必要なメモリ割当てをして、そのメモリを初期化する
+     */
+    virtual void allocateMemoryAt(const fj::ParticleID& ID) = 0;
     
     
     /**

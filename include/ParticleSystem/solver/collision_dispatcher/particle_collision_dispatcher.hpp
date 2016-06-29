@@ -51,6 +51,11 @@ public:
     
 private:
     
+    void allocateMemoryAt(const fj::ParticleID& ID)override
+    {
+        // とくにやることなし
+    }
+    
     void freeFromCell(const fj::ParticleID& ID);
     void freeFromHashMap(const fj::ParticleID& ID);
     

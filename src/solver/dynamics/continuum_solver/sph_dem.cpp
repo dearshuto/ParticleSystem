@@ -17,18 +17,9 @@
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 
-void fj::SPHDEM::allocateMemory(const fj::ParticleManager &particleManager)
+void fj::SPHDEM::allocateSPHMemoryAt(const fj::ParticleID &ID)
 {
-    Super::allocateMemory(particleManager);
-    
-    auto iterator = particleManager.iterator();
-    
-    while (iterator->hasNext())
-    {
-        const Particle& kParticle = iterator->next();
-        
-        m_smoothedPressure[ kParticle.getID() ] = fj::Scalar(0);
-    }
+    m_smoothedPressure[ ID ] = fj::Scalar(0);
 }
 
 void fj::SPHDEM::freeSPHMemoryAt(const fj::ParticleID &ID)

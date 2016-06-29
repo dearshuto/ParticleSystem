@@ -49,6 +49,11 @@ public:
         
     }
     
+    void allocateMemoryAt(const fj::ParticleID& ID)override
+    {
+        // とくになし
+    }
+    
 private:
     
     fj::Mesh createMesh(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem, const fj::Scalar& level) override;

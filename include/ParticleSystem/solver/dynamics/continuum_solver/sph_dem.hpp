@@ -38,8 +38,9 @@ public:
 
     void executeDynamics(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
     
-    void allocateMemory(const fj::ParticleManager& particleManager)override;
 private:
+    
+    void allocateSPHMemoryAt(const fj::ParticleID& ID)override;
     
     void freeSPHMemoryAt(const fj::ParticleID& ID)override;
     
