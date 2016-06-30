@@ -33,7 +33,7 @@ public:
     /**
      * ペナルティ法が適用される領域に入っているときに押し出される方向を返す. 領域外の時は0ベクトルを返す
      */
-    virtual fj::Vector3 direction(const fj::Vector3& position)const
+    fj::Vector3 direction(const fj::Vector3& position)const
     {
         return computeDirection(position) + ( m_other ?  getOther().computeDirection(position) : fj::Vector3(0, 0, 0));
     }
