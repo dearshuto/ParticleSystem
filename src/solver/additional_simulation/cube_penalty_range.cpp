@@ -14,10 +14,16 @@
 
 fj::Vector3 fj::CubePenaltyRange::direction(const fj::Vector3 &position)const
 {
+    fj::Vector3 returnDirection(0, 0, 0);
     const fj::BoundingBox& kBB = getBB();
     
-    const fj::Scalar kMinX = std::min(fj::Scalar(0), kBB.getRangeX().getMin() - position.x());
+    for (int i = 0; i < 3; i++)
+    {
+        const fj::Scalar kMin = std::max(fj::Scalar(0), kBB.getRange(i).getMin() - position[i]);
+        const fj::Scalar kMax = std::max(fj::Scalar(0), position[i] - kBB.getRange(i).getMax());
+        
+        returnDirection[i] = kMin + kMax;
+    }
     
-    
-    return fj::Vector3(0, 0, 0);
+    return returnDirection;
 }
