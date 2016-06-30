@@ -15,7 +15,7 @@
 #include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
 
 namespace fj {
-    class BoundingBox;
+    class IPenaltyForceRange;
     class PenaltyForce;
 }
 
@@ -25,9 +25,9 @@ public:
     PenaltyForce() = delete;
     ~PenaltyForce() = default;
     
-    PenaltyForce(std::unique_ptr<fj::BoundingBox> bb, const fj::Scalar& K, const Priority& priority = Priority::kAdditionalSimulation)
+    PenaltyForce(std::unique_ptr<fj::IPenaltyForceRange> pfRange, const fj::Scalar& K, const Priority& priority = Priority::kAdditionalSimulation)
     : fj::AdditionalSimulation(priority)
-    , m_bb( std::move(bb) )
+    , m_pfRange( std::move(pfRange) )
     , m_K(K)
     {
         
@@ -51,14 +51,14 @@ private:
         // とくにやることなし
     }
 public:
-    const fj::BoundingBox& getBB()const
+    const fj::IPenaltyForceRange& getPFRrange()const
     {
-        return std::cref(*m_bb);
+        return std::cref(*m_pfRange);
     }
     
 private:
     
-    std::unique_ptr<fj::BoundingBox> m_bb;
+    std::unique_ptr<fj::IPenaltyForceRange> m_pfRange;
     
     fj::Scalar m_K;
 };

@@ -8,59 +8,24 @@
 
 #include <FUJIMath/type/scalar.h>
 
-#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/particle_system.hpp>
 #include <ParticleSystem/particle/particle_id.h>
 #include <ParticleSystem/particle/particle.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
-#include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
+#include <ParticleSystem/solver/additional_simulation/i_penalty_force_range.h>
 #include <ParticleSystem/solver/additional_simulation/penalty_force.hpp>
 
 void fj::PenaltyForce::executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
-    const fj::Scalar kOffset = 0;
-    const fj::BoundingBox::Range& kRangeX = getBB().getRangeX();
-    const fj::BoundingBox::Range& kRangeY = getBB().getRangeY();
-    const fj::BoundingBox::Range& kRangeZ = getBB().getRangeZ();
-
+    const fj::IPenaltyForceRange& kPenaltyForceRange = getPFRrange();
     auto iterator = particleSystem->getParticleManager().iterator();
 
     while ( iterator->hasNext() )
     {
         const fj::Particle& kParticle = iterator->next();
-        const fj::ParticleID& kID = kParticle.getID();
-        const fj::Vector3& kPosition = kParticle.getPosition();
+        const fj::Vector3 kDirection = kPenaltyForceRange.direction( kParticle.getPosition() );
         
-        if( fj::Scalar kIX = (kRangeX.getMin() - kPosition.x()) > kOffset)
-        {
-            particleSystem->addAccelAt(kID, m_K * kIX * fj::Vector3(1, 0, 0) );
-        }
-
-        if( fj::Scalar kAX = (kRangeX.getMax() - kPosition.x()) < kOffset)
-        {
-            particleSystem->addAccelAt(kID, m_K * kAX * fj::Vector3(-1, 0, 0) );
-        }
-
-        if( fj::Scalar kY = (kRangeY.getMin() - kPosition.y()) > kOffset)
-        {
-            particleSystem->addAccelAt(kID, m_K * kY * fj::Vector3(0, 1, 0) );
-        }
-
-        if( fj::Scalar kY = (kRangeY.getMax() - kPosition.y()) < kOffset)
-        {
-            particleSystem->addAccelAt(kID, m_K * kY * fj::Vector3(0, -1, 0) );
-        }
-
-        if( fj::Scalar kZ = (kRangeZ.getMin() - kPosition.z()) > kOffset)
-        {
-            particleSystem->addAccelAt(kID, m_K * kZ * fj::Vector3(0, 0, 1) );
-        }
-
-        if( fj::Scalar kZ = (kRangeZ.getMax() - kPosition.z()) < kOffset)
-        {
-            particleSystem->addAccelAt(kID, m_K * kZ * fj::Vector3(0, 0, -1) );
-        }
-
+        particleSystem->addAccelAt(kParticle.getID(), m_K * kDirection );
     }
     
 }
