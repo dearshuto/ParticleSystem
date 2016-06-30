@@ -75,6 +75,25 @@ protected:
     
 public:
 
+    const Range& getRange(const int index)const
+    {
+        switch (index) {
+            case 0:
+                return getRangeX();
+                break;
+            case 1:
+                return getRangeY();
+                break;
+            case 2:
+                return getRangeZ();
+                break;
+            default:
+                break;
+        }
+        
+        return getRangeX();
+    }
+    
     const Range& getRangeX()const
     {
         return m_xRange;
