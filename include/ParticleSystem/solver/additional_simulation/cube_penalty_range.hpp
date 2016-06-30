@@ -26,6 +26,7 @@ public:
     ~CubePenaltyRange() = default;
     
     CubePenaltyRange(std::unique_ptr<fj::BoundingBox> bbBox)
+    : fj::IPenaltyForceRange( std::move(nullptr) )
     {
 
     }
