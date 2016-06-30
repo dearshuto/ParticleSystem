@@ -31,7 +31,8 @@ public:
 
     }
     
-     fj::Vector3 direction(const fj::Vector3& position)const override;
+private:
+     fj::Vector3 computeDirection(const fj::Vector3& position)const override;
     
 protected:
     const fj::BoundingBox& getBB()const
