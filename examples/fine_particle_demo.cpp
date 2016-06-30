@@ -17,6 +17,7 @@
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/surface_construction/marching_cubes.hpp>
 #include <ParticleSystem/solver/additional_simulation/penalty_force.hpp>
+#include <ParticleSystem/solver/additional_simulation/cylinder_penalty_range.hpp>
 
 int main(int argc, char** argv)
 {
@@ -34,7 +35,8 @@ int main(int argc, char** argv)
     std::unique_ptr<fj::SurfaceConstruction> surface(new fj::MarchingCubes(std::move(bb)));
 
     std::unique_ptr<fj::BoundingBox> bbP(new fj::BoundingBox(kRange, kRange, kRange));
-    std::unique_ptr<fj::PenaltyForce> penaltyForce(new fj::PenaltyForce(std::move(bbP), 500));
+    std::unique_ptr<fj::IPenaltyForceRange> penaltyForceRange(new fj::CylinderPenaltyRange(fj::Scalar(0.2), fj::Vector3(0, 0, 0)) );
+    std::unique_ptr<fj::PenaltyForce> penaltyForce(new fj::PenaltyForce(std::move(penaltyForceRange), 500));
     
     fj::ParticleSystem particleSystem(std::move(solver) );
     
