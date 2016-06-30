@@ -23,5 +23,5 @@ fj::Vector3 fj::CylinderPenaltyRange::computeDirection(const fj::Vector3 &positi
         return fj::Vector3(0, 0, 0);
     }
     
-    return kDirectionToCenter;
+    return -kDirectionToCenter;
 }

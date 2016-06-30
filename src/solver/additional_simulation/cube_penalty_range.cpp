@@ -20,7 +20,7 @@ fj::Vector3 fj::CubePenaltyRange::computeDirection(const fj::Vector3 &position)c
     for (int i = 0; i < 3; i++)
     {
         const fj::Scalar kMin = std::max(fj::Scalar(0), kBB.getRange(i).getMin() - position[i]);
-        const fj::Scalar kMax = std::max(fj::Scalar(0), position[i] - kBB.getRange(i).getMax());
+        const fj::Scalar kMax = std::min(fj::Scalar(0), kBB.getRange(i).getMax() - position[i]);
         
         returnDirection[i] = kMin + kMax;
     }
