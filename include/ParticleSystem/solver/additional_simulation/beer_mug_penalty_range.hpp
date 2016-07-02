@@ -23,9 +23,8 @@ public:
     BeerMugPenaltyRange() = delete;
     ~BeerMugPenaltyRange() = default;
     
-    BeerMugPenaltyRange(const fj::Scalar& radius, const fj::Vector3& center, const fj::Scalar& height, const bool transpose, std::unique_ptr<fj::IPenaltyForceRange> other)
-    : fj::IPenaltyForceRange( std::move(other) )
-    , m_radius(radius)
+    BeerMugPenaltyRange(const fj::Scalar& radius, const fj::Vector3& center, const fj::Scalar& height, const bool transpose)
+    : m_radius(radius)
     , m_center(center)
     , m_height(height)
     , m_transpose(transpose)
@@ -33,7 +32,7 @@ public:
         
     }
     
-    fj::Vector3 computeDirection(const fj::Vector3& position)const override;
+    fj::Vector3 direction(const fj::Vector3& position)const override;
     
 public:
     const fj::Scalar& getRadius()const

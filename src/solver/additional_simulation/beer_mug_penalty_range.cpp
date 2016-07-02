@@ -11,7 +11,7 @@
 #include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/solver/additional_simulation/beer_mug_penalty_range.hpp>
 
-fj::Vector3 fj::BeerMugPenaltyRange::computeDirection(const fj::Vector3 &position)const
+fj::Vector3 fj::BeerMugPenaltyRange::direction(const fj::Vector3 &position)const
 {
     // 円柱を定義して、円柱の中では上方に力を加える
     // 「円の内部か→高さは範囲内か」のようにチェックする

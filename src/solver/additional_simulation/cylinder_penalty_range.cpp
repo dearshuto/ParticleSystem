@@ -9,7 +9,7 @@
 #include <FUJIMath/type/vector3.hpp>
 #include <ParticleSystem/solver/additional_simulation/cylinder_penalty_range.hpp>
 
-fj::Vector3 fj::CylinderPenaltyRange::computeDirection(const fj::Vector3 &position)const
+fj::Vector3 fj::CylinderPenaltyRange::direction(const fj::Vector3 &position)const
 {
     fj::Vector3 kDirectionToCenter = position - getCenter();
     
