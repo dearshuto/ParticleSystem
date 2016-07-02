@@ -17,16 +17,31 @@ namespace fj {
     class IPenaltyForceRange;
 }
 
+// TODO: インタフェースじゃじゃないので名前を変えたい
 class fj::IPenaltyForceRange
 {
 public:
-    IPenaltyForceRange() = default;
+    IPenaltyForceRange() = delete;
     virtual~IPenaltyForceRange() = default;
     
+    IPenaltyForceRange(const fj::Scalar& K)
+    : m_K(K)
+    {
+        
+    }
+    
     /**
-     * ペナルティ法が適用される領域に入っているときに押し出される方向を返す. 領域外の時は0ベクトルを返す
+     * ペナルティ法が適用される領域に入っているときに押し出される力を返す. 領域外の時は0ベクトルを返す
      */
     virtual fj::Vector3 direction(const fj::Vector3& position)const = 0;
+    
+protected:
+    const fj::Scalar& getK()const
+    {
+        return m_K;
+    }
+private:
+    const fj::Scalar m_K;
 };
 
 #endif /* i_penalty_force_range_h */

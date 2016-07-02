@@ -32,9 +32,7 @@ void fj::PenaltyForce::executeAdditionalSimulation(const fj::Scalar& timestep, f
         {
             // TODO: kRangeにポインタがはいってくるのを改善したい。const変数に->を使うのは一貫性を失うため
             const fj::Vector3 kDirection = kRange->direction( kParticle.getPosition() );
-
-            kRange->direction( kParticle.getPosition() );
-            particleSystem->addAccelAt(kParticle.getID(), m_K * kDirection );
+            particleSystem->addAccelAt(kParticle.getID(), kDirection );
         }
         
     }

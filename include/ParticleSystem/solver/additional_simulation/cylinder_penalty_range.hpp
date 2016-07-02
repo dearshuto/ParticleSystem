@@ -26,8 +26,9 @@ public:
     CylinderPenaltyRange() = delete;
     ~CylinderPenaltyRange() = default;
     
-    CylinderPenaltyRange(const fj::Scalar& radius, const fj::Vector3& center, const bool enableTranspose = false)
-    : m_radius(radius)
+    CylinderPenaltyRange(const fj::Scalar& K, const fj::Scalar& radius, const fj::Vector3& center, const bool enableTranspose = false)
+    : fj::IPenaltyForceRange(K)
+    , m_radius(radius)
     , m_center(center)
     , m_transpose(enableTranspose)
     {

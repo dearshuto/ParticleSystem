@@ -62,8 +62,6 @@ public:
 private:
     
     PenaltyRangePtrContainer m_penaltyRanges;
-    
-    fj::Scalar m_K;
 };
 
 #endif /* penalty_force_hpp */

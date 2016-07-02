@@ -23,8 +23,9 @@ public:
     BeerMugPenaltyRange() = delete;
     ~BeerMugPenaltyRange() = default;
     
-    BeerMugPenaltyRange(const fj::Scalar& radius, const fj::Vector3& center, const fj::Scalar& height, const bool transpose)
-    : m_radius(radius)
+    BeerMugPenaltyRange(const fj::Scalar& K, const fj::Scalar& radius, const fj::Vector3& center, const fj::Scalar& height, const bool transpose)
+    : fj::IPenaltyForceRange(K)
+    , m_radius(radius)
     , m_center(center)
     , m_height(height)
     , m_transpose(transpose)
