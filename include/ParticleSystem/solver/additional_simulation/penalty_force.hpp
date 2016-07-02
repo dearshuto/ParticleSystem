@@ -9,7 +9,9 @@
 #ifndef penalty_force_hpp
 #define penalty_force_hpp
 
+#include <functional>
 #include <memory>
+#include <vector>
 
 #include <FUJIMath/type/scalar.h>
 #include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
@@ -20,28 +22,29 @@ namespace fj {
 }
 
 class fj::PenaltyForce : public fj::AdditionalSimulation
-{   
+{
+    typedef std::vector<std::unique_ptr<fj::IPenaltyForceRange>> PenaltyRangePtrContainer;
 public:
-    PenaltyForce() = delete;
-    ~PenaltyForce() = default;
-    
-    PenaltyForce(std::unique_ptr<fj::IPenaltyForceRange> pfRange, const fj::Scalar& K, const Priority& priority = Priority::kAdditionalSimulation)
-    : fj::AdditionalSimulation(priority)
-    , m_pfRange( std::move(pfRange) )
-    , m_K(K)
+    PenaltyForce()
+    : fj::AdditionalSimulation(Priority::kAdditionalSimulation)
     {
         
     }
     
-    const fj::Scalar& getK()const
+    ~PenaltyForce() = default;
+    
+    PenaltyForce(const Priority& priority)
+    : fj::AdditionalSimulation(priority)
     {
-        return m_K;
+        
     }
     
     void allocateMemoryAt(const fj::ParticleID& ID)override
     {
         // とくになし
     }
+    
+    void addPenaltyForceRange(std::unique_ptr<fj::IPenaltyForceRange> pfRange);
     
 private:
     void executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
@@ -51,16 +54,14 @@ private:
         // とくにやることなし
     }
 public:
-    const fj::IPenaltyForceRange& getPFRrange()const
+    const PenaltyRangePtrContainer& getPenaltyRanges()const
     {
-        return std::cref(*m_pfRange);
+        return std::cref(m_penaltyRanges);
     }
     
 private:
     
-    std::unique_ptr<fj::IPenaltyForceRange> m_pfRange;
-    
-    fj::Scalar m_K;
+    PenaltyRangePtrContainer m_penaltyRanges;
 };
 
 #endif /* penalty_force_hpp */

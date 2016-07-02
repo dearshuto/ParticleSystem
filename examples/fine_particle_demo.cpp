@@ -36,9 +36,13 @@ int main(int argc, char** argv)
     std::unique_ptr<fj::SurfaceConstruction> surface(new fj::MarchingCubes(std::move(bb)));
 
     std::unique_ptr<fj::BoundingBox> bbP(new fj::BoundingBox(kRange, kRange, kRange));
-    std::unique_ptr<fj::IPenaltyForceRange> penaltyForceRange(new fj::CylinderPenaltyRange(fj::Scalar(0.2), fj::Vector3(0, 0, 0), nullptr) );
-    std::unique_ptr<fj::IPenaltyForceRange> cube(new fj::CubePenaltyRange(std::move(bbP)) );
-    std::unique_ptr<fj::PenaltyForce> penaltyForce(new fj::PenaltyForce(std::move(cube), 500));
+    std::unique_ptr<fj::IPenaltyForceRange> penaltyForceRange(new fj::CylinderPenaltyRange(1000, fj::Scalar(0.2), fj::Vector3(0, 0, 0), nullptr) );
+    std::unique_ptr<fj::IPenaltyForceRange> cube(new fj::CubePenaltyRange(1000, std::move(bbP)) );
+    std::unique_ptr<fj::IPenaltyForceRange> cylinder(new fj::CylinderPenaltyRange(1000, fj::Scalar(0.1), fj::Vector3(0, 0, 0), fj::Scalar(0.5)));
+    std::unique_ptr<fj::PenaltyForce> penaltyForce(new fj::PenaltyForce());
+    
+    penaltyForce->addPenaltyForceRange( std::move(cube) );
+    penaltyForce->addPenaltyForceRange( std::move(cylinder) );
     
     fj::ParticleSystem particleSystem(std::move(solver) );
     

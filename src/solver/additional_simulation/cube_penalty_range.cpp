@@ -12,7 +12,7 @@
 #include <ParticleSystem/solver/bb_algorithm/bounding_box.hpp>
 #include <ParticleSystem/solver/additional_simulation/cube_penalty_range.hpp>
 
-fj::Vector3 fj::CubePenaltyRange::computeDirection(const fj::Vector3 &position)const
+fj::Vector3 fj::CubePenaltyRange::direction(const fj::Vector3 &position)const
 {
     fj::Vector3 returnDirection(0, 0, 0);
     const fj::BoundingBox& kBB = getBB();
@@ -25,5 +25,5 @@ fj::Vector3 fj::CubePenaltyRange::computeDirection(const fj::Vector3 &position)c
         returnDirection[i] = kMin + kMax;
     }
     
-    return returnDirection;
+    return getK() * returnDirection;
 }
