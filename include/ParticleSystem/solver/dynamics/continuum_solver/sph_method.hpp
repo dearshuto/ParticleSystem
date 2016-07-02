@@ -44,7 +44,7 @@ public:
 private:
     void allocateContinuumMemoryAt(const fj::ParticleID& ID) override;
     
-    virtual void allocateSPHMemoryAt(const fj::ParticleID& ID) = 0;
+    virtual void allocateSPHMemoryAt(const fj::ParticleID& ID);
     
     void freeContinuumMemoryAt(const fj::ParticleID& ID) override;
     
