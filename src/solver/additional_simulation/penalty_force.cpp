@@ -15,17 +15,28 @@
 #include <ParticleSystem/solver/additional_simulation/i_penalty_force_range.h>
 #include <ParticleSystem/solver/additional_simulation/penalty_force.hpp>
 
+void fj::PenaltyForce::addPenaltyForceRange(std::unique_ptr<fj::IPenaltyForceRange> pfRange)
+{
+    m_penaltyRanges.push_back( std::move(pfRange) );
+}
+
 void fj::PenaltyForce::executeAdditionalSimulation(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)
 {
-    const fj::IPenaltyForceRange& kPenaltyForceRange = getPFRrange();
     auto iterator = particleSystem->getParticleManager().iterator();
 
     while ( iterator->hasNext() )
     {
         const fj::Particle& kParticle = iterator->next();
-        const fj::Vector3 kDirection = kPenaltyForceRange.direction( kParticle.getPosition() );
         
-        particleSystem->addAccelAt(kParticle.getID(), m_K * kDirection );
+        for (const auto& kRange : getPenaltyRanges())
+        {
+            // TODO: kRangeにポインタがはいってくるのを改善したい。const変数に->を使うのは一貫性を失うため
+            const fj::Vector3 kDirection = kRange->direction( kParticle.getPosition() );
+
+            kRange->direction( kParticle.getPosition() );
+            particleSystem->addAccelAt(kParticle.getID(), m_K * kDirection );
+        }
+        
     }
     
 }
