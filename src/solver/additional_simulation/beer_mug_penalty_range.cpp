@@ -35,8 +35,17 @@ fj::Vector3 fj::BeerMugPenaltyRange::direction(const fj::Vector3 &position)const
     
     if ( std::max(fj::Scalar(0), getRadius() - direction.norm()) )
     {
-        direction.y() = 0.01;
-        return direction.normalized();
+        const fj::Scalar kHeight = isTranspose() ? position.z() : position.y();
+        
+        if ( getHeight() < kHeight)
+        {
+            return kNoForce;
+        }
+        
+        isTranspose() ? direction.z() : direction.y() = 1;
+        direction.normalize();
+        
+        return getK() * direction;
     }
     
     return kNoForce;

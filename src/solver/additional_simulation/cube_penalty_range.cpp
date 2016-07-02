@@ -25,5 +25,5 @@ fj::Vector3 fj::CubePenaltyRange::direction(const fj::Vector3 &position)const
         returnDirection[i] = kMin + kMax;
     }
     
-    return returnDirection;
+    return getK() * returnDirection;
 }
