@@ -25,10 +25,15 @@ class fj::PenaltyForce : public fj::AdditionalSimulation
 {
     typedef std::vector<std::unique_ptr<fj::IPenaltyForceRange>> PenaltyRangePtrContainer;
 public:
-    PenaltyForce() = delete;
+    PenaltyForce()
+    : fj::AdditionalSimulation(Priority::kAdditionalSimulation)
+    {
+        
+    }
+    
     ~PenaltyForce() = default;
     
-    PenaltyForce(const Priority& priority = Priority::kAdditionalSimulation)
+    PenaltyForce(const Priority& priority)
     : fj::AdditionalSimulation(priority)
     {
         
