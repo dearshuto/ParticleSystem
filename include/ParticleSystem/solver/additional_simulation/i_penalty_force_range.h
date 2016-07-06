@@ -36,6 +36,10 @@ public:
     virtual fj::Vector3 direction(const fj::Vector3& position)const = 0;
     
 protected:
+    
+    /**
+     * バネ係数を取得する
+     */
     const fj::Scalar& getK()const
     {
         return m_K;
