@@ -9,6 +9,7 @@
 #ifndef external_force_hpp
 #define external_force_hpp
 
+#include <memory>
 #include <functional>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
 
@@ -49,6 +50,17 @@ public:
     fj::Scalar calculateScalar(const fj::ParticleID& ID)const override
     {
         return getDynamics().calculateScalar(ID);
+    }
+    
+    void allocateMemoryAt(const fj::ParticleID& ID)override
+    {
+        getDynamicsPtr()->allocateMemoryAt(ID);
+    }
+    
+private:
+    void freeDynamicsMemoryAt(const fj::ParticleID& ID)override
+    {
+        //とくにやることなし
     }
     
 public:

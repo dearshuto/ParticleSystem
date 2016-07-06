@@ -6,6 +6,7 @@
 //
 //
 
+#include <functional>
 #include <memory>
 #include <ParticleSystem/particle/particle.hpp>
 
@@ -29,6 +30,31 @@ const fj::Particle& fj::ParticleManager::registerParticle(std::unique_ptr<fj::Pa
     }
     
     return getLastRegisteredParticle();
+}
+
+void fj::ParticleManager::removeParticle(const fj::ParticleID &ID)
+{
+    removeFromArray(ID);
+    removeFromHashMap(ID);
+}
+
+void fj::ParticleManager::removeFromArray(const fj::ParticleID &ID)
+{
+    const std::shared_ptr<fj::Particle>& kParticle = this->search(ID);
+    
+    removeParticleFromArray(kParticle, &m_particles);
+    removeParticleFromArray(kParticle, &m_flowParticles);
+    removeParticleFromArray(kParticle, &m_boundaryParticles);
+}
+
+void fj::ParticleManager::removeParticleFromArray(const std::shared_ptr<fj::Particle> &particle, ParticleArray *array)
+{
+    array->erase(std::remove(std::begin(*array), std::end(*array), particle), std::end(*array));
+}
+
+void fj::ParticleManager::removeFromHashMap(const fj::ParticleID &ID)
+{
+    m_hashMap.erase(ID);
 }
 
 std::unique_ptr<fj::ParticleManager::ConstIterator> fj::ParticleManager::iterator()const

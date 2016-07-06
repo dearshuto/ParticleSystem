@@ -58,7 +58,25 @@ public:
     {
         // デフォルトは空
     }
-        
+
+    /**
+     * この関数が呼ばれた時点で作成済みのすべての粒子をシミュレーションするに必要なメモリを割当てて、そのメモリを初期化する.
+     */
+    void allocateMemory(const fj::ParticleManager& particleManager);
+    
+    /**
+     * パーティクル単位でシミュレーションに必要なメモリ割当てをして、そのメモリを初期化する
+     */
+    virtual void allocateMemoryAt(const fj::ParticleID& ID) = 0;
+    
+    
+    /**
+     * IDで指定された粒子が削除だれたときによばれる関数。
+     * 削除された粒子分のメモリを解放する。
+     * @param ID 削除された粒子
+     */
+    virtual void freeSimulationMemoryAt(const fj::ParticleID& ID) = 0;
+    
 public:
     fj::Solver::Priority getPriority()const
     {

@@ -14,9 +14,25 @@
 #include <ParticleSystem/particle_manager/neighbor_map.hpp>
 #include <ParticleSystem/particle_manager/particle_manager.hpp>
 
-void fj::NeighborMap::registerParticle(const fj::ParticleID &particleID)
+void fj::NeighborMap::allocateMemory(const fj::ParticleManager &particleManager)
 {
-    m_neighbors[particleID].clear();
+    auto iterator = particleManager.iterator();
+    
+    while ( iterator->hasNext() )
+    {
+        const fj::Particle& kParticle = iterator->next();
+        m_neighbors[ kParticle.getID() ].shrink_to_fit();
+    }
+}
+
+void fj::NeighborMap::allocateMemoryAt(const fj::ParticleID &ID)
+{
+    m_neighbors[ ID ].shrink_to_fit();
+}
+
+void fj::NeighborMap::freeMemoryAt(const fj::ParticleID &ID)
+{
+    m_neighbors.erase(ID);
 }
 
 void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, const fj::ParticleID &particle2, const fj::ParticleManager& particleManager)
@@ -39,7 +55,7 @@ void fj::NeighborMap::addNeighborInformation(const fj::ParticleID &particle1, co
     const fj::Scalar kSquaredDistance = std::pow(kDistance, 2);
     const fj::Vector3 kNormalizedDirection21 = kDirection21 / kDistance;
     
-    m_neighbors[particle1].emplace_back(particle2, kNormalizedDirection21, kSquaredDistance, kDistance);
+    m_neighbors[particle1].emplace_back(particle1, particle2, kNormalizedDirection21, kSquaredDistance, kDistance);
 }
 
 void fj::NeighborMap::clear()

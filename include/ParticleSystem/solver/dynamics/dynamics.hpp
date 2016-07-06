@@ -23,6 +23,7 @@ class fj::Dynamics : public fj::Solver
 public:
     Dynamics()
     : fj::Solver( fj::Solver::Priority::kSimulation )
+    , m_threadNum(1)
     {
         
     }
@@ -44,6 +45,34 @@ public:
     virtual void clearAccel() = 0;
     
     virtual fj::Scalar calculateScalar(const fj::ParticleID& ID)const = 0;
+    
+    void freeSimulationMemoryAt(const fj::ParticleID& ID)override
+    {
+        freeDynamicsMemoryAt(ID);
+    }
+    
+private:
+    virtual void freeDynamicsMemoryAt(const fj::ParticleID& ID) = 0;
+    
+public:
+    unsigned int getThreadNum()const
+    {
+        return m_threadNum;
+    }
+    
+    void setThreadNum(const unsigned int threadNum)
+    {
+        if (threadNum == 0)
+        {
+            m_threadNum = 1;
+        }
+        else
+        {   m_threadNum = threadNum;
+        }
+    }
+    
+private:
+    unsigned int m_threadNum;
 };
 
 #endif /* dynamics_hpp */

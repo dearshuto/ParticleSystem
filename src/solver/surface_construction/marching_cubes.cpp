@@ -340,56 +340,56 @@ int a2iTriangleConnectionTable[256][16] =
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-void fj::MarchingCubes::executeSurfaceConstruction(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem)
+fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar &timestep, fj::ParticleSystem *particleSystem, const fj::Scalar &level)
 {
-    const fj::Dynamics& kDynamics = particleSystem->getDynamics();
-    
-    particleSystem->m_meshes[0] = createMesh(1, kDynamics);
+    m_mcbb->execute(timestep, particleSystem);
+    const fj::Dynamics& kDyamics = particleSystem->getDynamics();
+    return createMesh(level,kDyamics);
 }
 
 fj::Mesh fj::MarchingCubes::createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const
 {
-    const int kResolusionX = getMCBB().getRangeX().getResolusion();
-    const int kResolusionY = getMCBB().getRangeY().getResolusion();
-    const int kResolusionZ = getMCBB().getRangeZ().getResolusion();
-    
-    fj::Mesh mesh(level);
+    const int kResolusionX = getMCBB().getResolutions().ResolutionX;
+    const int kResolusionY = getMCBB().getResolutions().ResolutionY;
+    const int kResolusionZ = getMCBB().getResolutions().ResolutionZ;
+
+    fj::Mesh mesh;
     CubeValue_t cubeValue;
     
     for (int i = 0; i < kResolusionX - 1; i++) {
         for (int j = 0; j < kResolusionY - 1; j++) {
             for (int k = 0; k < kResolusionZ - 1; k++) {
                 
-                cubeValue[0] = dynamics.calculateScalar(convertVolumePosition(i, j, k));
-                cubeValue[1] = dynamics.calculateScalar(convertVolumePosition(i+1, j, k));
-                cubeValue[2] = dynamics.calculateScalar(convertVolumePosition(i+1, j+1, k));
-                cubeValue[3] = dynamics.calculateScalar(convertVolumePosition(i, j+1, k));
-                cubeValue[4] = dynamics.calculateScalar(convertVolumePosition(i, j, k+1));
-                cubeValue[5] = dynamics.calculateScalar(convertVolumePosition(i+1, j, k+1));
-                cubeValue[6] = dynamics.calculateScalar(convertVolumePosition(i+1, j+1, k+1));
-                cubeValue[7] = dynamics.calculateScalar(convertVolumePosition(i, j+1, k+1));
+                cubeValue[0] = getMCBB().getScalar(i, j, k);
+                cubeValue[1] = getMCBB().getScalar(i+1, j, k);
+                cubeValue[2] = getMCBB().getScalar(i+1, j+1, k);
+                cubeValue[3] = getMCBB().getScalar(i, j+1, k);
+                cubeValue[4] = getMCBB().getScalar(i, j, k+1);
+                cubeValue[5] = getMCBB().getScalar(i+1, j, k+1);
+                cubeValue[6] = getMCBB().getScalar(i+1, j+1, k+1);
+                cubeValue[7] = getMCBB().getScalar(i, j+1, k+1);
                 
-                addMesh(&mesh, cubeValue, fj::Vector3(i, j, k));
+                addMesh(&mesh, level, cubeValue, fj::Vector3(i, j, k));
             }
         }
     }
     
-    return std::move(mesh);
+    return mesh;
 }
 
-void fj::MarchingCubes::addMesh(fj::Mesh* mesh, const CubeValue_t &cube, const fj::Vector3& kOffset)const
+void fj::MarchingCubes::addMesh(fj::Mesh* mesh, const fj::Scalar& level, const CubeValue_t &cube, const fj::Vector3& kOffset)const
 {
-    const uint8_t kFlagIndex = calculateFlagIndex(mesh->getLevel(), std::cref(cube) );
+    const uint8_t kFlagIndex = calculateFlagIndex(level, std::cref(cube) );
     const uint32_t kEdgeFlags = aiCubeEdgeFlags[kFlagIndex];
     
     if (kEdgeFlags == 0) {
         return;
     }
     
-    setMeshFromTable(mesh, kFlagIndex, kEdgeFlags, kOffset);
+    setMeshFromTable(mesh, level, kFlagIndex, kEdgeFlags, kOffset);
 }
 
-void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3 &offset)const
+void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh, const fj::Scalar& level,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3 &offset)const
 {
     fj::Vector3 asEdgeVertex[12];
     
@@ -408,7 +408,7 @@ void fj::MarchingCubes::setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex,
             asEdgeVertex[iEdge].y() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][1]);
             asEdgeVertex[iEdge].z() = (a2fVertexOffset[ a2iEdgeConnection[iEdge][0] ][2]);
             
-            asEdgeVertex[iEdge] = offset + computeInteractionPoint(mesh->getLevel(), kRight, kLeft);
+            asEdgeVertex[iEdge] = offset + computeInteractionPoint(level, kRight, kLeft);
         }
     }
     

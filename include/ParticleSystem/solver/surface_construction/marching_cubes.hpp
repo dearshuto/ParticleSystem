@@ -6,18 +6,6 @@
 //
 //
 
-/*! \mainpage Particle-Based Simulation
- *
- * \section intro_sec Introduction
- *
- * 粒子法を実装した最強プログラム. ParticleSystemクラスがすべてを統括するクラスなので、まずは彼を見てください.
- *
- * \section install_sec Installation
- *
- * \subsection step1 Step 1: buildフォルダを作成する
- *
- */
-
 #ifndef marching_cubes_hpp
 #define marching_cubes_hpp
 
@@ -30,7 +18,6 @@
 #include <FUJIMath/type/scalar.h>
 #include <FUJIMath/type/vector3.hpp>
 
-#include <ParticleSystem/solver/bb_algorithm/bb_algorithm_decorator.hpp>
 #include <ParticleSystem/solver/bb_algorithm/mc_bounding_box.hpp>
 #include <ParticleSystem/type/mesh.hpp>
 
@@ -45,32 +32,39 @@ namespace fj {
     class MarchingCubes;
 }
 
-
+/**
+ * マーチング・キューブ法による表面抽出.
+ * 僕はこの手法の拡張を聞いたことがないので, このクラスは継承できないように実装してあります.
+ */
 class fj::MarchingCubes : public fj::SurfaceConstruction
 {
     typedef std::array<float, 8> CubeValue_t;
 public:
     MarchingCubes() = delete;
-    virtual~MarchingCubes() = default;
+    ~MarchingCubes() = default;
     
-    MarchingCubes(std::unique_ptr<fj::BoundingBox> bb)
-    : m_bb( std::move(bb) )
+    MarchingCubes(std::unique_ptr<fj::MCBoundingBox> mcbb)
+    : m_mcbb( std::move(mcbb) )
     {
         
     }
     
+    void allocateMemoryAt(const fj::ParticleID& ID)override
+    {
+        // とくになし
+    }
+    
 private:
     
-    void executeSurfaceConstruction(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) override;
-    
+    fj::Mesh createMesh(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem, const fj::Scalar& level) override;
     /**
      * Levelを閾値として内部と外部を定義したメッシュを作成する
      */
-    virtual fj::Mesh createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const;
+    fj::Mesh createMesh(const fj::Scalar& level, const fj::Dynamics& dynamics)const;
     
-    void addMesh(fj::Mesh* mesh, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
+    void addMesh(fj::Mesh* mesh, const fj::Scalar& level, const CubeValue_t& cube, const fj::Vector3& kOffset)const;
     
-    void setMeshFromTable(fj::Mesh* mesh,const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
+    void setMeshFromTable(fj::Mesh* mesh, const fj::Scalar& level, const uint8_t flagIndex, const uint32_t edgeFlags, const fj::Vector3& offset)const;
     
     uint8_t calculateFlagIndex(const fj::Scalar& level, const CubeValue_t& cubeValue)const;
 
@@ -78,15 +72,20 @@ private:
     
     const fj::ParticleID& convertVolumePosition(const int x, const int y, const int z)const;
     
+    void freeSurfaceMemoryAt(const fj::ParticleID& ID)override
+    {
+        
+    }
+    
 public:
     
-    const fj::BoundingBox& getMCBB()const
+    const fj::MCBoundingBox& getMCBB()const
     {
-        return  std::cref(*m_bb);
+        return std::cref(*m_mcbb);
     }
     
 private:
-    std::unique_ptr<fj::BoundingBox> m_bb;
+    std::unique_ptr<fj::MCBoundingBox> m_mcbb;
 };
 
 #endif /* marching_cubes_hpp */

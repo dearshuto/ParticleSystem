@@ -20,6 +20,7 @@ public:
     virtual ~MarchingCubesInterface() = default;
     
     virtual fj::Scalar getScalar(const int x, const int y, const int z)const = 0;
+    virtual void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem) = 0;
 };
 
 #endif /* marching_cubes_interface_h */

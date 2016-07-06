@@ -6,6 +6,18 @@
 //
 //
 
+/*! \mainpage Particle-Based Simulation
+ *
+ * \section intro_sec Introduction
+ *
+ * 粒子法を実装した最強プログラム. ParticleSystemクラスがすべてを統括するクラスなので、まずは彼を見てください.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: buildフォルダを作成する
+ *
+ */
+
 #ifndef particle_system_hpp
 #define particle_system_hpp
 
@@ -16,11 +28,11 @@
 #include "particle_manager/particle_manager.hpp"
 #include "particle_manager/neighbor_map.hpp"
 #include "solver/solver_manager.hpp"
-#include "solver/dynamics/dynamics.hpp" //コンストラクタで必要
+#include "solver/dynamics/dynamics.hpp"
 #include "type/mesh.hpp"
 
 namespace fj {
-    class BBAlgorithm;
+    class AdditionalSimulation;
     class Particle;
     class ParticleCollisionDispatcher;
     class ParticleID;
@@ -29,7 +41,7 @@ namespace fj {
 }
 
 /**
- * 粒子の作成、シミュレーション、管理などなど.
+ * 粒子の作成やシミュレーションなど、外部とのインタラクションを担う.
  */
 class fj::ParticleSystem
 {
@@ -39,19 +51,28 @@ public:
 
     ParticleSystem(const fj::ParticleSystem& particleSystem) = delete;
     
-    ParticleSystem(std::unique_ptr<fj::Dynamics> solver)
+    /**
+     * @param dynamics 粒子法の解法
+     */
+    ParticleSystem(std::unique_ptr<fj::Dynamics> dynamics)
     {
-        m_solverManager.addSolver( std::move(solver) );
+        m_solverManager.addSolver( std::move(dynamics) );
     }
 
     
     fj::ParticleSystem& operator=(const fj::ParticleSystem& other) = delete;
+
+    /**
+     * シミュレーションの初期化処理. シミュレーションを始める前に必ずいちど呼ぶ必要がある
+     */
+    void initSimulation();
     
     /**
      * 毎フレーム更新する処理を登録する
      */
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispatcher);
-    void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
+    void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
+    void addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSolver);
     
     /**
      * シミュレーションをタイムステップ分進める
@@ -63,16 +84,12 @@ public:
      */
     void stepParticlePosition(const float timestep);
     
+    void allocateIsosurface(const fj::Scalar& level);
+    
     /**
      * 表面抽出されたメッシュを初期化する
      */
-    void clearMesh()
-    {
-        for (auto& mesh : *getMeshesPtr())
-        {
-            mesh.clear();
-        }
-    }
+    void clearMesh();
     
     const fj::Mesh& getMesh(const unsigned int index)
     {
@@ -85,16 +102,18 @@ public:
      * @param movable 移動可能の判断
      */
     const fj::ParticleID& createParticle(const fj::Vector3& position, const bool movable = true);
-
-    /**
-     * 等置面を定義する.
-     */
-    void createIsosurface(const fj::Scalar& level)
-    {
-        m_meshes.emplace_back(level);
-    }
     
-    bool hasNextSurfaceTriangle()const;
+    /**
+     * 初加速度を設定して粒子を生成する
+     */
+    const fj::ParticleID& createParticeWithAccel(const fj::Vector3& position, const fj::Vector3& accel);
+    
+    /**
+     * IDで指定された粒子をシミュレーションの途中で動的に削除する.
+     * シミュレーションが一回も回らない状態で粒子を消すと、確保されていないメモリまで解放しようとするので注意.
+     * 要素が見つからないときはアサートが投げられる
+     */
+    void removeParticle(const fj::ParticleID& ID);
     
     /**
      * 粒子間の衝突を作る
@@ -130,7 +149,7 @@ public:
     
     /**
      * 粒子に加速度を追加する
-     * @params ID 粒子の識別子
+     * @param ID 粒子の識別子
      */
     void addAccelAt(const fj::ParticleID& ID, const fj::Vector3& accel);
 
@@ -143,6 +162,15 @@ public:
      * 強制的に粒子の速度を変更する
      */
     void setParticleVelocityAt(const fj::ParticleID& ID, const fj::Vector3& velocity);
+    
+protected:
+    /**
+     * 現在作成されている粒子の分だけ, シミュレーションに必要なメモリを確保する.
+     */
+    void allocateMemory();
+
+    void allocateMemoryAt(const fj::ParticleID& ID);
+    
     
 //getters & setters
 public:
@@ -157,14 +185,9 @@ public:
         return std::cref(m_neighborMap);
     }
     
-    const std::vector<fj::Mesh>& getMeshes()const
+    const fj::Mesh& getMesheAt(const unsigned int index)const
     {
-        return std::cref(m_meshes);
-    }
-    
-    std::vector<fj::Mesh>* getMeshesPtr()
-    {
-        return &m_meshes;
+        return m_solverManager.getMesh(index);
     }
     
     const fj::Dynamics& getDynamics()const
@@ -205,9 +228,6 @@ private:
      * 近傍情報の管理
      */
     fj::NeighborMap m_neighborMap;
-    
-public:
-    std::vector<fj::Mesh> m_meshes;
 };
 
 #endif /* particle_system_hpp */

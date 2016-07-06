@@ -14,7 +14,7 @@
 #include <vector>
 
 namespace fj {
-    class BBAlgorithm;
+    class AdditionalSimulation;
     class Dynamics;
     class Mesh;
     class ParticleCollisionDispatcher;
@@ -32,10 +32,25 @@ public:
     SolverManager(const fj::SolverManager& other) = delete;
     SolverManager& operator=(const fj::SolverManager& other) = delete;
     
+    /**
+     * 現在作成されている粒子の分のシミュレーションに必要なメモリを確保する.
+     * この関数を呼ばなくてもシミュレーション内のメモリは自動的に確保されるように設計されているが、
+     * マルチスレッドで処理をするときにはあらかじめメモリを割り当てておかないと競合がおきてしまう.
+     */
+    void allocateMomory(const fj::ParticleManager& particleManager);
+    
+    void allocateMomoryAt(const fj::ParticleID& ID);
+    
+    /**
+     * IDで指定された粒子が削除されたときに呼ばれる関数
+     * 削除された粒子分のシミュレーション用メモリを, メンバにもつSolverすべてから削除する
+     */
+    void freeSimulationMemory(const fj::ParticleID& ID);
+    
     void addSolver(std::unique_ptr<fj::Dynamics> dynamics);
     void addSolver(std::unique_ptr<fj::ParticleCollisionDispatcher> collisionDispathcer);
-    void addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm);
     void addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction);
+    void addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSimulation);
     
     std::vector<std::shared_ptr<fj::Solver>>::iterator begin()
     {
@@ -69,12 +84,19 @@ public:
     
     const fj::Mesh& getMesh(const unsigned int index)const;
 
+    void allocateIsosurface(const fj::Scalar& level);
+    
 private:
     std::vector<std::shared_ptr<fj::Solver>>& getSolversPtr()
     {
         return std::ref(m_solvers);
     }
     
+    std::shared_ptr<fj::SurfaceConstruction>& getSurfaceSolverPtr()
+    {
+        return std::ref(m_surfaceConstrucsion);
+    }
+
 private:
     
     /**

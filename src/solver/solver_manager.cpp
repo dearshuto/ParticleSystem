@@ -10,12 +10,37 @@
 #include <memory>
 
 #include <ParticleSystem/solver/solver.hpp>
-#include <ParticleSystem/solver/bb_algorithm/bb_algorithm.h>
+#include <ParticleSystem/solver/additional_simulation/additional_simulation.hpp>
 #include <ParticleSystem/solver/collision_dispatcher/particle_collision_dispatcher.hpp>
 #include <ParticleSystem/solver/dynamics/dynamics.hpp>
 #include <ParticleSystem/solver/surface_construction/surface_construction.hpp>
 
 #include <ParticleSystem/solver/solver_manager.hpp>
+
+void fj::SolverManager::allocateMomory(const fj::ParticleManager& particleManager)
+{
+    for (auto& solver : getSolversPtr())
+    {
+        solver->allocateMemory(particleManager);
+    }
+}
+
+void fj::SolverManager::allocateMomoryAt(const fj::ParticleID& ID)
+{
+    for (auto& solver : getSolversPtr())
+    {
+        solver->allocateMemoryAt(ID);
+    }
+}
+
+void fj::SolverManager::freeSimulationMemory(const fj::ParticleID &ID)
+{
+    // 各Solverの関数を順に呼べばOK
+    for (auto& solver : getSolversPtr())
+    {
+        solver->freeSimulationMemoryAt(ID);
+    }
+}
 
 void fj::SolverManager::addSolver(std::unique_ptr<fj::Dynamics> dynamics)
 {
@@ -32,11 +57,6 @@ void fj::SolverManager::addSolver(std::unique_ptr<fj::ParticleCollisionDispatche
     stackSolver( std::move(collisionDispathcer) );
 }
 
-void fj::SolverManager::addSolver(std::unique_ptr<fj::BBAlgorithm> bbAlgorithm)
-{
-    stackSolver( std::move(bbAlgorithm) );
-}
-
 void fj::SolverManager::addSolver(std::unique_ptr<fj::SurfaceConstruction> surfaceConstruction)
 {
     std::shared_ptr<fj::SurfaceConstruction> sharedSurface = std::move(surfaceConstruction);
@@ -45,6 +65,11 @@ void fj::SolverManager::addSolver(std::unique_ptr<fj::SurfaceConstruction> surfa
     
     m_surfaceConstrucsion = sharedSurface;
     stackSolver( sharedSurface );
+}
+
+void fj::SolverManager::addSolver(std::unique_ptr<fj::AdditionalSimulation> additionalSimulation)
+{
+    stackSolver( std::move(additionalSimulation) );
 }
 
 void fj::SolverManager::removeCurrentDynamics()
@@ -74,6 +99,16 @@ void fj::SolverManager::stackSolver(std::shared_ptr<fj::Solver> solver)
                   return  (s2->getPriority() < s1->getPriority() );
               }
               );
+}
+
+void fj::SolverManager::allocateIsosurface(const fj::Scalar &level)
+{
+    auto& surfaceSolver = getSurfaceSolverPtr();
+    
+    if (surfaceSolver)
+    {
+        getSurfaceSolverPtr()->allocateIsosurface(level);
+    }
 }
 
 const fj::Mesh& fj::SolverManager::getMesh(const unsigned int index)const

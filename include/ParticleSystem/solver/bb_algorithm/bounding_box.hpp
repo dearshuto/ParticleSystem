@@ -18,7 +18,6 @@
 #include <FUJIMath/type/vector3.hpp>
 
 #include <ParticleSystem/particle/particle_id.h>
-#include "bb_algorithm.h"
 
 namespace fj {
     class Particle;
@@ -28,7 +27,7 @@ namespace fj {
     class BoundingBox;
 }
 
-class fj::BoundingBox : public fj::BBAlgorithm
+class fj::BoundingBox
 {
 public:
    class Range
@@ -37,10 +36,8 @@ public:
         Range() = delete;
         ~Range() = default;
         
-        Range(const fj::Scalar& min, const fj::Scalar& max, const fj::Scalar& divisionSize)
+        Range(const fj::Scalar& min, const fj::Scalar& max)
         : m_range(min, max)
-        , m_resolution( (max - min) / divisionSize )
-        , m_divisionSize( divisionSize )
         {
             
         }
@@ -55,65 +52,48 @@ public:
             return std::get<1>(m_range);
         }
         
-        const int getResolusion()const
-        {
-            return m_resolution;
-        }
-        
-        const fj::Scalar& getDivisionSize()const
-        {
-            return m_divisionSize;
-        }
-        
     private:
         const std::pair<fj::Scalar, fj::Scalar> m_range;
-        const int m_resolution;
-        const fj::Scalar m_divisionSize;
     };
 
 public:
     BoundingBox() = delete;
     ~BoundingBox() = default;
     
-    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange, const Priority priority = Priority::kAdditionalSimulation)
-    : fj::BBAlgorithm(priority)
-    , m_xRange(xRange)
+    BoundingBox(const Range& xRange, const Range& yRange, const Range& zRange)
+    : m_xRange(xRange)
     , m_yRange(yRange)
     , m_zRange(zRange)
 
     {
-        m_inBox.resize(xRange.getResolusion() * yRange.getResolusion() * zRange.getResolusion());
-    }
-    
-    virtual void execute(const fj::Scalar& timestep, fj::ParticleSystem* particleSystem)override;
-    
-    const fj::BoundingBox& getBoundingBox()const override
-    {
-        return *this;
-    }
 
+    }
+    
 protected:
 
-    void clear();
-    
-    void update(const fj::ParticleManager& particleManager);
-    
-    bool isOutOfRange(const fj::Particle& particle)const;
-    
-    bool isOutOfRange(const int x, const int y, const int z)const;
-    
-    void registerParticle(const fj::Particle& particle);
-    
-    void registerInBox(const fj::Particle& particle);
-    
-    int convertPositionToIndex(const fj::Vector3& position)const;
-    
-    int convertPositionToIndex(const int x, const int y, const int z)const;
-    
-    int clamp(const int value, const Range& range)const;
+    bool isWithinRange(const fj::Particle& particle)const;
     
 public:
 
+    const Range& getRange(const int index)const
+    {
+        switch (index) {
+            case 0:
+                return getRangeX();
+                break;
+            case 1:
+                return getRangeY();
+                break;
+            case 2:
+                return getRangeZ();
+                break;
+            default:
+                break;
+        }
+        
+        return getRangeX();
+    }
+    
     const Range& getRangeX()const
     {
         return m_xRange;
@@ -133,8 +113,6 @@ public:
     {
         return m_inBox;
     }
-    
-    const std::vector<fj::ParticleID>& get(const int x, const int y, const int z)const;
     
     const std::vector<fj::ParticleID>& getInBoxParticle()const
     {
