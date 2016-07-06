@@ -19,6 +19,9 @@ namespace fj {
     class CubePenaltyRange;
 }
 
+/**
+ * 軸平行バウンディングボックスの内部に戻るようなペナルティレンジ
+ */
 class fj::CubePenaltyRange : public IPenaltyForceRange
 {
 public:
