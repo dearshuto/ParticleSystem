@@ -6,7 +6,7 @@
  1. C++11コンパイラ
  2. cmake3.0以降
 * 依存ライブラリ
- * [FUJI-Math](https://github.com/dearshuto/FUJIMath): 
+ * [FUJI-Math](https://github.com/dearshuto/FUJIMath ):
 * コンパイル セッティング. cmakeは大量のファイルを吐き出すので, 作業用ディレクトリを用意しておくことをお勧めします.
  > ~$ cd path/to/ParticleSystem/root   
  > ~$ git submodule update --init //依存ライブラリの取得  
@@ -19,3 +19,6 @@ y
 
  # How to Use
  * "include/"にヘッダサーチパスを通してください. リンクもお忘れなく. 各クラスについてはドキュメントをご覧ください.
+
+# The Idea of This Program
+このプログラムは粒子法のシミュレーションのみを担当します。描画は外部のライブラリに投げる必要があります。そこで、このプログラムは外部のシステムと連携しやすいような設計になっています。  
