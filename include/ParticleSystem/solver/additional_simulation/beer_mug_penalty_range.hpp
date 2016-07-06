@@ -17,6 +17,11 @@ namespace fj {
     class BeerMugPenaltyRange;
 }
 
+/**
+ * ビールジョッキのシーンを作るために用意したペナルティレンジ
+ * 形状は単純なシリンダーで、デフォルトはyアップ.
+ * 内部では上方に一定の力が働く
+ */
 class fj::BeerMugPenaltyRange : public fj::IPenaltyForceRange
 {
 public:
@@ -36,21 +41,33 @@ public:
     fj::Vector3 direction(const fj::Vector3& position)const override;
     
 public:
+    /**
+     * 底辺の円の半径
+     */
     const fj::Scalar& getRadius()const
     {
         return m_radius;
     }
     
+    /**
+     * 底辺の中心
+     */
     const fj::Vector3& getCenter()const
     {
         return m_center;
     }
     
+    /**
+     * 底辺からの高さ
+     */
     const fj::Scalar& getHeight()const
     {
         return m_height;
     }
     
+    /**
+     * yアップならtrue, zアップならfalseを返す
+     */
     bool isTranspose()const
     {
         return m_transpose;
